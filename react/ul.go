@@ -23,8 +23,8 @@ func (d *UlDef) reactElement() {}
 func Ul(props *UlPropsDef, children ...*LiDef) *UlDef {
 	args := []interface{}{"ul", props}
 
-	for _, c := range children {
-		args = append(args, c)
+	for _, v := range children {
+		args = append(args, elementToReactObj(v))
 	}
 
 	underlying := react.Call("createElement", args...)

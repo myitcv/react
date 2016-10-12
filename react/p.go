@@ -23,8 +23,8 @@ func (d *PDef) reactElement() {}
 func P(props *PPropsDef, children ...Element) *PDef {
 	args := []interface{}{"p", props}
 
-	for _, c := range children {
-		args = append(args, c)
+	for _, v := range children {
+		args = append(args, elementToReactObj(v))
 	}
 
 	underlying := react.Call("createElement", args...)

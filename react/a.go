@@ -26,8 +26,8 @@ func (d *ADef) reactElement() {}
 func A(props *APropsDef, children ...Element) *ADef {
 	args := []interface{}{"a", props}
 
-	for _, c := range children {
-		args = append(args, c)
+	for _, v := range children {
+		args = append(args, elementToReactObj(v))
 	}
 
 	underlying := react.Call("createElement", args...)

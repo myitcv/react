@@ -25,8 +25,8 @@ func (d *LiDef) reactElement() {}
 func Li(props *LiPropsDef, children ...Element) *LiDef {
 	args := []interface{}{"li", props}
 
-	for _, c := range children {
-		args = append(args, c)
+	for _, v := range children {
+		args = append(args, elementToReactObj(v))
 	}
 
 	underlying := react.Call("createElement", args...)

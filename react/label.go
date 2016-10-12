@@ -23,7 +23,7 @@ func LabelProps(f func(p *LabelPropsDef)) *LabelPropsDef {
 func (d *LabelDef) reactElement() {}
 
 func Label(props *LabelPropsDef, child Element) *LabelDef {
-	underlying := react.Call("createElement", "label", props, child)
+	underlying := react.Call("createElement", "label", props, elementToReactObj(child))
 
 	return &LabelDef{underlying: underlying}
 }

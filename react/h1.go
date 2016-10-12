@@ -21,7 +21,7 @@ func H1Props(f func(p *H1PropsDef)) *H1PropsDef {
 func (d *H1Def) reactElement() {}
 
 func H1(props *H1PropsDef, child Element) *H1Def {
-	underlying := react.Call("createElement", "h1", props, child)
+	underlying := react.Call("createElement", "h1", props, elementToReactObj(child))
 
 	return &H1Def{underlying: underlying}
 }

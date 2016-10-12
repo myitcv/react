@@ -23,9 +23,6 @@ func (d *DivDef) reactElement() {}
 func Div(props *DivPropsDef, children ...Element) *DivDef {
 	args := []interface{}{"div", props}
 
-	// for _, c := range children {
-	// 	args = append(args, c)
-	// }
 	for _, v := range children {
 		args = append(args, elementToReactObj(v))
 	}

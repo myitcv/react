@@ -27,8 +27,8 @@ func (d *TextAreaDef) reactElement() {}
 func TextArea(props *TextAreaPropsDef, children ...Element) *TextAreaDef {
 	args := []interface{}{"textarea", props}
 
-	for _, c := range children {
-		args = append(args, c)
+	for _, v := range children {
+		args = append(args, elementToReactObj(v))
 	}
 
 	underlying := react.Call("createElement", args...)

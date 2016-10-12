@@ -23,8 +23,8 @@ func (d *CodeDef) reactElement() {}
 func Code(props *CodePropsDef, children ...Element) *CodeDef {
 	args := []interface{}{"code", props}
 
-	for _, c := range children {
-		args = append(args, c)
+	for _, v := range children {
+		args = append(args, elementToReactObj(v))
 	}
 
 	underlying := react.Call("createElement", args...)

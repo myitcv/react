@@ -22,9 +22,8 @@ func ButtonProps(f func(p *ButtonPropsDef)) *ButtonPropsDef {
 
 func (d *ButtonDef) reactElement() {}
 
-// TODO move from string to single child
 func Button(props *ButtonPropsDef, child Element) *ButtonDef {
-	args := []interface{}{"button", props, child}
+	args := []interface{}{"button", props, elementToReactObj(child)}
 
 	underlying := react.Call("createElement", args...)
 

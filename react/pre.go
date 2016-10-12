@@ -23,8 +23,8 @@ func (d *PreDef) reactElement() {}
 func Pre(props *PrePropsDef, children ...Element) *PreDef {
 	args := []interface{}{"pre", props}
 
-	for _, c := range children {
-		args = append(args, c)
+	for _, v := range children {
+		args = append(args, elementToReactObj(v))
 	}
 
 	underlying := react.Call("createElement", args...)
