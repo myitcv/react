@@ -15,7 +15,7 @@ type BasicElement struct {
 
 func newBasicElement() *BasicElement {
 	return &BasicElement{
-		BasicNode: &BasicNode{js.Global.Get("Object").New()},
+		BasicNode: &BasicNode{object.New()},
 	}
 }
 

@@ -9,16 +9,32 @@ import (
 )
 
 const (
-	reactProps = "props"
-	reactState = "state"
+	reactCompProps                     = "props"
+	reactCompState                     = "state"
+	reactCompDisplayName               = "displayName"
+	reactCompSetState                  = "setState"
+	reactCompGetInitialState           = "getInitialState"
+	reactCompShouldComponentUpdate     = "shouldComponentUpdate"
+	reactCompComponentDidMount         = "componentDidMount"
+	reactCompComponentWillReceiveProps = "componentWillReceiveProps"
+	reactCompComponentWillMount        = "componentWillMount"
+	reactCompComponentWillUnmount      = "componentWillUnmount"
+	reactCompRender                    = "render"
 
-	nestedProps = "_props"
-	nestedState = "_state"
+	reactCreateElement = "createElement"
+	reactCreateClass   = "createClass"
+	reactDOMRender     = "render"
+
+	nestedProps            = "_props"
+	nestedState            = "_state"
+	nestedComponentWrapper = "__ComponentWrapper"
 )
 
 var react = js.Global.Get("React")
-var reactDom = js.Global.Get("ReactDOM")
+var reactDOM = js.Global.Get("ReactDOM")
+var object = js.Global.Get("Object")
 
+// ComponentDef is embedded in a type definition to indicate the type is a component
 type ComponentDef struct {
 	state interface{}
 	elem  *js.Object
@@ -83,17 +99,17 @@ func (c *ComponentDef) element() *js.Object {
 
 func (c *ComponentDef) Props() interface{} {
 	if c.this != nil {
-		return c.this.Get(reactProps).Get(nestedProps).Interface()
+		return c.this.Get(reactCompProps).Get(nestedProps).Interface()
 	}
 
-	return c.elem.Get(reactProps).Get(nestedProps).Interface()
+	return c.elem.Get(reactCompProps).Get(nestedProps).Interface()
 }
 
 func (c *ComponentDef) SetState(i interface{}) {
 	if c.state != i {
-		res := js.Global.Get("Object").New()
+		res := object.New()
 		res.Set(nestedState, js.MakeWrapper(i))
-		c.this.Call("setState", res)
+		c.this.Call(reactCompSetState, res)
 	}
 }
 
@@ -106,7 +122,7 @@ func (c *ComponentDef) setElem(elem *js.Object) {
 }
 
 func (c *ComponentDef) State() interface{} {
-	return c.this.Get(reactState).Get(nestedState).Interface()
+	return c.this.Get(reactCompState).Get(nestedState).Interface()
 }
 
 func BlessElement(cmp Component, newprops interface{}, children ...Element) {
@@ -118,11 +134,11 @@ func BlessElement(cmp Component, newprops interface{}, children ...Element) {
 		compMap[typ] = comp
 	}
 
-	propsWrap := js.Global.Get("Object").New()
+	propsWrap := object.New()
 	if newprops != nil {
 		propsWrap.Set(nestedProps, js.MakeWrapper(newprops))
 	}
-	propsWrap.Set("__ComponentWrapper", js.MakeWrapper(cmp))
+	propsWrap.Set(nestedComponentWrapper, js.MakeWrapper(cmp))
 
 	args := []interface{}{comp, propsWrap}
 
@@ -130,26 +146,26 @@ func BlessElement(cmp Component, newprops interface{}, children ...Element) {
 		args = append(args, elementToReactObj(v))
 	}
 
-	elem := react.Call("createElement", args...)
+	elem := react.Call(reactCreateElement, args...)
 
 	cmp.setElem(elem)
 }
 
 func buildReactComponent(typ reflect.Type) *js.Object {
-	compDef := js.Global.Get("Object").New()
-	compDef.Set("displayName", typ.String())
+	compDef := object.New()
+	compDef.Set(reactCompDisplayName, typ.String())
 
-	compDef.Set("getInitialState", js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
+	compDef.Set(reactCompGetInitialState, js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
 
-		props := this.Get("props")
-		cw := props.Get("__ComponentWrapper")
+		props := this.Get(reactCompProps)
+		cw := props.Get(nestedComponentWrapper)
 
 		if cmp, ok := cw.Interface().(ComponentWithGetInitialState); ok {
 			x := cmp.GetInitialStateIntf()
 			if x == nil {
 				return nil
 			}
-			res := js.Global.Get("Object").New()
+			res := object.New()
 			res.Set(nestedState, js.MakeWrapper(x))
 			return res
 		}
@@ -157,24 +173,24 @@ func buildReactComponent(typ reflect.Type) *js.Object {
 		return nil
 	}))
 
-	compDef.Set("shouldComponentUpdate", js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
-		// props := this.Get("props")
-		// cw := props.Get("__ComponentWrapper")
+	compDef.Set(reactCompShouldComponentUpdate, js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
+		// props := this.Get(reactCompProps)
+		// cw := props.Get(nestedComponentWrapper)
 
-		// nextProps := arguments[0].Get("_props").Interface()
-		// nextState := arguments[1].Get("state").Interface()
+		// nextProps := arguments[0].Get(nestedProps).Interface()
+		// nextState := arguments[1].Get(nestedState).Interface()
 
-		// currProps := this.Get("props").Get("_props").Interface()
-		// currState := this.Get("state").Get("state").Interface()
+		// currProps := this.Get(reactCompProps).Get(nestedProps).Interface()
+		// currState := this.Get(reactCompState).Get(nestedState).Interface()
 
 		// TODO support for custom shouldComponentUpdate will be placed here
 
 		return true
 	}))
 
-	compDef.Set("componentDidMount", js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
-		props := this.Get("props")
-		cw := props.Get("__ComponentWrapper")
+	compDef.Set(reactCompComponentDidMount, js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
+		props := this.Get(reactCompProps)
+		cw := props.Get(nestedComponentWrapper)
 
 		if cmp, ok := cw.Interface().(ComponentWithDidMount); ok {
 			cmp.ComponentDidMount()
@@ -183,9 +199,9 @@ func buildReactComponent(typ reflect.Type) *js.Object {
 		return nil
 	}))
 
-	compDef.Set("componentWillReceiveProps", js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
-		props := this.Get("props")
-		cw := props.Get("__ComponentWrapper")
+	compDef.Set(reactCompComponentWillReceiveProps, js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
+		props := this.Get(reactCompProps)
+		cw := props.Get(nestedComponentWrapper)
 
 		if cmp, ok := cw.Interface().(ComponentWithWillReceiveProps); ok {
 			ourProps := arguments[0].Get(nestedProps).Interface()
@@ -195,9 +211,9 @@ func buildReactComponent(typ reflect.Type) *js.Object {
 		return nil
 	}))
 
-	compDef.Set("componentWillUnmount", js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
-		props := this.Get("props")
-		cw := props.Get("__ComponentWrapper")
+	compDef.Set(reactCompComponentWillUnmount, js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
+		props := this.Get(reactCompProps)
+		cw := props.Get(nestedComponentWrapper)
 
 		if cmp, ok := cw.Interface().(ComponentWithWillUnmount); ok {
 			cmp.ComponentWillUnmount()
@@ -206,9 +222,9 @@ func buildReactComponent(typ reflect.Type) *js.Object {
 		return nil
 	}))
 
-	compDef.Set("componentWillMount", js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
-		props := this.Get("props")
-		cw := props.Get("__ComponentWrapper")
+	compDef.Set(reactCompComponentWillMount, js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
+		props := this.Get(reactCompProps)
+		cw := props.Get(nestedComponentWrapper)
 		cmp := cw.Interface().(Component)
 
 		cmp.setThis(this)
@@ -223,9 +239,9 @@ func buildReactComponent(typ reflect.Type) *js.Object {
 		return nil
 	}))
 
-	compDef.Set("render", js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
-		props := this.Get("props")
-		cw := props.Get("__ComponentWrapper")
+	compDef.Set(reactCompRender, js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
+		props := this.Get(reactCompProps)
+		cw := props.Get(nestedComponentWrapper)
 		cmp := cw.Interface().(Component)
 
 		renderRes := cmp.Render()
@@ -233,7 +249,7 @@ func buildReactComponent(typ reflect.Type) *js.Object {
 		return elementToReactObj(renderRes)
 	}))
 
-	return react.Call("createClass", compDef)
+	return react.Call(reactCreateClass, compDef)
 }
 
 func elementToReactObj(el Element) interface{} {
@@ -245,5 +261,5 @@ func elementToReactObj(el Element) interface{} {
 }
 
 func Render(el Element, container dom.Element) {
-	reactDom.Call("render", elementToReactObj(el), container)
+	reactDOM.Call(reactDOMRender, elementToReactObj(el), container)
 }

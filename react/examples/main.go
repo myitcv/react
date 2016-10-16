@@ -1,7 +1,7 @@
 package main
 
 import (
-	. "github.com/myitcv/gopherjs/react"
+	r "github.com/myitcv/gopherjs/react"
 
 	"honnef.co/go/js/dom"
 )
@@ -13,5 +13,5 @@ func main() {
 
 	examples := Examples()
 
-	Render(examples, examplesDom)
+	r.Render(examples, examplesDom)
 }

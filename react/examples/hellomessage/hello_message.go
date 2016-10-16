@@ -1,11 +1,11 @@
 package hellomessage
 
 import (
-	. "github.com/myitcv/gopherjs/react"
+	r "github.com/myitcv/gopherjs/react"
 )
 
 type HelloMessageDef struct {
-	ComponentDef
+	r.ComponentDef
 }
 
 type HelloMessageProps struct {
@@ -15,13 +15,13 @@ type HelloMessageProps struct {
 func HelloMessage(p HelloMessageProps) *HelloMessageDef {
 	res := &HelloMessageDef{}
 
-	BlessElement(res, p)
+	r.BlessElement(res, p)
 
 	return res
 }
 
-func (r *HelloMessageDef) Render() Element {
-	return Div(nil,
-		S("Hello "+r.Props().Name),
+func (h *HelloMessageDef) Render() r.Element {
+	return r.Div(nil,
+		r.S("Hello "+h.Props().Name),
 	)
 }
