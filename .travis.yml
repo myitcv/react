@@ -1,0 +1,13 @@
+language: go
+
+go:
+  - 1.7
+
+before_install:
+  - export GOPATH=$PWD/_vendor:$GOPATH
+
+install: true
+
+script:
+  - go vet ./...
+  - go test ./...
