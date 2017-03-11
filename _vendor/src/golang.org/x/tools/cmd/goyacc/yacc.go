@@ -60,9 +60,9 @@ import (
 // the following are adjustable
 // according to memory size
 const (
-	ACTSIZE  = 30000
-	NSTATES  = 2000
-	TEMPSIZE = 2000
+	ACTSIZE  = 120000
+	NSTATES  = 8000
+	TEMPSIZE = 8000
 
 	SYMINC   = 50  // increase for non-term or term
 	RULEINC  = 50  // increase for max rule length prodptr[i]
@@ -3232,10 +3232,6 @@ func ungetrune(f *bufio.Reader, c rune) {
 		panic("ungetc - 2nd unget")
 	}
 	peekrune = c
-}
-
-func write(f *bufio.Writer, b []byte, n int) int {
-	panic("write")
 }
 
 func open(s string) *bufio.Reader {

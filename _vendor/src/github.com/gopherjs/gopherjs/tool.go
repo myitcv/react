@@ -91,11 +91,15 @@ func main() {
 	cmdBuild.Flags().AddFlag(flagTags)
 	cmdBuild.Flags().AddFlag(flagLocalMap)
 	cmdBuild.Run = func(cmd *cobra.Command, args []string) {
+		if err := verifyGOARCH(); err != nil {
+			printError(err, options, nil)
+			os.Exit(2)
+		}
 		options.BuildTags = strings.Fields(*tags)
 		for {
 			s := gbuild.NewSession(options)
 
-			exitCode := handleError(func() error {
+			err := func() error {
 				if len(args) == 0 {
 					return s.BuildDir(currentDirectory, currentDirectory, pkgObj)
 				}
@@ -127,7 +131,11 @@ func main() {
 				for _, pkgPath := range args {
 					pkgPath = filepath.ToSlash(pkgPath)
 					if s.Watcher != nil {
-						s.Watcher.Add(pkgPath)
+						pkg, err := gbuild.NewBuildContext(s.InstallSuffix(), options.BuildTags).Import(pkgPath, "", build.FindOnly)
+						if err != nil {
+							return err
+						}
+						s.Watcher.Add(pkg.Dir)
 					}
 					pkg, err := gbuild.Import(pkgPath, 0, s.InstallSuffix(), options.BuildTags)
 					if err != nil {
@@ -147,7 +155,8 @@ func main() {
 					}
 				}
 				return nil
-			}, options, nil)
+			}()
+			exitCode := handleError(err, options, nil)
 
 			if s.Watcher == nil {
 				os.Exit(exitCode)
@@ -168,11 +177,15 @@ func main() {
 	cmdInstall.Flags().AddFlag(flagTags)
 	cmdInstall.Flags().AddFlag(flagLocalMap)
 	cmdInstall.Run = func(cmd *cobra.Command, args []string) {
+		if err := verifyGOARCH(); err != nil {
+			printError(err, options, nil)
+			os.Exit(2)
+		}
 		options.BuildTags = strings.Fields(*tags)
 		for {
 			s := gbuild.NewSession(options)
 
-			exitCode := handleError(func() error {
+			err := func() error {
 				pkgs := args
 				if len(pkgs) == 0 {
 					firstGopathWorkspace := filepath.SplitList(build.Default.GOPATH)[0] // TODO: The GOPATH workspace that contains the package source should be chosen.
@@ -220,13 +233,32 @@ func main() {
 					}
 				}
 				return nil
-			}, options, nil)
+			}()
+			exitCode := handleError(err, options, nil)
 
 			if s.Watcher == nil {
 				os.Exit(exitCode)
 			}
 			s.WaitForChange()
 		}
+	}
+
+	cmdDoc := &cobra.Command{
+		Use:   "doc [arguments]",
+		Short: "display documentation for the requested, package, method or symbol",
+	}
+	cmdDoc.Run = func(cmd *cobra.Command, args []string) {
+		if err := verifyGOARCH(); err != nil {
+			printError(err, options, nil)
+			os.Exit(2)
+		}
+		goDoc := exec.Command("go", append([]string{"doc"}, args...)...)
+		goDoc.Stdout = os.Stdout
+		goDoc.Stderr = os.Stderr
+		goDoc.Env = append(os.Environ(), "GOARCH=js")
+		err := goDoc.Run()
+		exitCode := handleError(err, options, nil)
+		os.Exit(exitCode)
 	}
 
 	cmdGet := &cobra.Command{
@@ -247,7 +279,11 @@ func main() {
 		Short: "compile and run Go program",
 	}
 	cmdRun.Run = func(cmd *cobra.Command, args []string) {
-		os.Exit(handleError(func() error {
+		if err := verifyGOARCH(); err != nil {
+			printError(err, options, nil)
+			os.Exit(2)
+		}
+		err := func() error {
 			lastSourceArg := 0
 			for {
 				if lastSourceArg == len(args) || !(strings.HasSuffix(args[lastSourceArg], ".go") || strings.HasSuffix(args[lastSourceArg], ".inc.js")) {
@@ -279,7 +315,10 @@ func main() {
 				return err
 			}
 			return nil
-		}, options, nil))
+		}()
+		exitCode := handleError(err, options, nil)
+
+		os.Exit(exitCode)
 	}
 
 	cmdTest := &cobra.Command{
@@ -287,6 +326,7 @@ func main() {
 		Short: "test packages",
 	}
 	bench := cmdTest.Flags().String("bench", "", "Run benchmarks matching the regular expression. By default, no benchmarks run. To run all benchmarks, use '--bench=.'.")
+	benchtime := cmdTest.Flags().String("benchtime", "", "Run enough iterations of each benchmark to take t, specified as a time.Duration (for example, -benchtime 1h30s). The default is 1 second (1s).")
 	run := cmdTest.Flags().String("run", "", "Run only those tests and examples matching the regular expression.")
 	short := cmdTest.Flags().Bool("short", false, "Tell long-running tests to shorten their run time.")
 	verbose := cmdTest.Flags().BoolP("verbose", "v", false, "Log all tests as they are run. Also print all text from Log and Logf calls even if the test succeeds.")
@@ -297,8 +337,12 @@ func main() {
 	cmdTest.Flags().AddFlag(flagTags)
 	cmdTest.Flags().AddFlag(flagLocalMap)
 	cmdTest.Run = func(cmd *cobra.Command, args []string) {
+		if err := verifyGOARCH(); err != nil {
+			printError(err, options, nil)
+			os.Exit(2)
+		}
 		options.BuildTags = strings.Fields(*tags)
-		os.Exit(handleError(func() error {
+		err := func() error {
 			pkgs := make([]*gbuild.PackageData, len(args))
 			for i, pkgPath := range args {
 				pkgPath = filepath.ToSlash(pkgPath)
@@ -388,7 +432,7 @@ func main() {
 					return err
 				}
 
-				buf := bytes.NewBuffer(nil)
+				buf := new(bytes.Buffer)
 				if err := testmainTmpl.Execute(buf, tests); err != nil {
 					return err
 				}
@@ -449,6 +493,9 @@ func main() {
 				if *bench != "" {
 					args = append(args, "-test.bench", *bench)
 				}
+				if *benchtime != "" {
+					args = append(args, "-test.benchtime", *benchtime)
+				}
 				if *run != "" {
 					args = append(args, "-test.run", *run)
 				}
@@ -467,10 +514,13 @@ func main() {
 					exitErr = err
 					status = "FAIL"
 				}
-				fmt.Printf("%s\t%s\t%.3fs\n", status, pkg.ImportPath, time.Now().Sub(start).Seconds())
+				fmt.Printf("%s\t%s\t%.3fs\n", status, pkg.ImportPath, time.Since(start).Seconds())
 			}
 			return exitErr
-		}, options, nil))
+		}()
+		exitCode := handleError(err, options, nil)
+
+		os.Exit(exitCode)
 	}
 
 	cmdServe := &cobra.Command{
@@ -486,6 +536,10 @@ func main() {
 	var addr string
 	cmdServe.Flags().StringVarP(&addr, "http", "", ":8080", "HTTP bind address to serve")
 	cmdServe.Run = func(cmd *cobra.Command, args []string) {
+		if err := verifyGOARCH(); err != nil {
+			printError(err, options, nil)
+			os.Exit(2)
+		}
 		options.BuildTags = strings.Fields(*tags)
 		dirs := append(filepath.SplitList(build.Default.GOPATH), build.Default.GOROOT)
 		var root string
@@ -536,7 +590,7 @@ func main() {
 		Use:  "gopherjs",
 		Long: "GopherJS is a tool for compiling Go source code to JavaScript.",
 	}
-	rootCmd.AddCommand(cmdBuild, cmdGet, cmdInstall, cmdRun, cmdTest, cmdServe, cmdVersion)
+	rootCmd.AddCommand(cmdBuild, cmdGet, cmdInstall, cmdRun, cmdTest, cmdServe, cmdVersion, cmdDoc)
 	err := rootCmd.Execute()
 	if err != nil {
 		os.Exit(2)
@@ -590,9 +644,9 @@ func (fs serveCommandFileSystem) Open(requestName string) (http.File, error) {
 
 		switch {
 		case isPkg:
-			buf := bytes.NewBuffer(nil)
-			browserErrors := bytes.NewBuffer(nil)
-			exitCode := handleError(func() error {
+			buf := new(bytes.Buffer)
+			browserErrors := new(bytes.Buffer)
+			err := func() error {
 				archive, err := s.BuildPackage(pkg)
 				if err != nil {
 					return err
@@ -610,14 +664,15 @@ func (fs serveCommandFileSystem) Open(requestName string) (http.File, error) {
 					return err
 				}
 
-				mapBuf := bytes.NewBuffer(nil)
+				mapBuf := new(bytes.Buffer)
 				m.WriteTo(mapBuf)
 				buf.WriteString("//# sourceMappingURL=" + base + ".js.map\n")
 				fs.sourceMaps[name+".map"] = mapBuf.Bytes()
 
 				return nil
-			}, fs.options, browserErrors)
-			if exitCode != 0 {
+			}()
+			handleError(err, fs.options, browserErrors)
+			if err != nil {
 				buf = browserErrors
 			}
 			return newFakeFile(base+".js", buf.Bytes()), nil
@@ -698,9 +753,10 @@ func (f *fakeFile) Sys() interface{} {
 	return nil
 }
 
+// handleError handles err and returns an appropriate exit code.
 // If browserErrors is non-nil, errors are written for presentation in browser.
-func handleError(f func() error, options *gbuild.Options, browserErrors *bytes.Buffer) int {
-	switch err := f().(type) {
+func handleError(err error, options *gbuild.Options, browserErrors *bytes.Buffer) int {
+	switch err := err.(type) {
 	case nil:
 		return 0
 	case compiler.ErrorList:
@@ -713,6 +769,15 @@ func handleError(f func() error, options *gbuild.Options, browserErrors *bytes.B
 	default:
 		printError(err, options, browserErrors)
 		return 1
+	}
+}
+
+// printError prints err to Stderr with options. If browserErrors is non-nil, errors are also written for presentation in browser.
+func printError(err error, options *gbuild.Options, browserErrors *bytes.Buffer) {
+	e := sprintError(err)
+	options.PrintError("%s\n", e)
+	if browserErrors != nil {
+		fmt.Fprintln(browserErrors, `console.error("`+template.JSEscapeString(e)+`");`)
 	}
 }
 
@@ -736,13 +801,17 @@ func sprintError(err error) string {
 	}
 }
 
-// printError prints err to Stderr with options. If browserErrors is non-nil, errors are also written for presentation in browser.
-func printError(err error, options *gbuild.Options, browserErrors *bytes.Buffer) {
-	e := sprintError(err)
-	options.PrintError("%s\n", e)
-	if browserErrors != nil {
-		fmt.Fprintln(browserErrors, `console.error("`+template.JSEscapeString(e)+`");`)
+// verifyGOARCH verifies that GOARCH environment value is not set to
+// an unsupported value.
+func verifyGOARCH() error {
+	goarch, ok := os.LookupEnv("GOARCH")
+	if !ok {
+		return nil
 	}
+	if goarch != "js" {
+		return fmt.Errorf("gopherjs: unsupported GOOS/GOARCH pair %s/%s", build.Default.GOOS, goarch)
+	}
+	return nil
 }
 
 func runNode(script string, args []string, dir string, quiet bool) error {
@@ -892,8 +961,8 @@ import (
 {{if not .TestMain}}
 	"os"
 {{end}}
-	"regexp"
 	"testing"
+	"testing/internal/testdeps"
 
 {{if .ImportTest}}
 	{{if .NeedTest}}_test{{else}}_{{end}} {{.Package.ImportPath | printf "%q"}}
@@ -921,22 +990,8 @@ var examples = []testing.InternalExample{
 {{end}}
 }
 
-var matchPat string
-var matchRe *regexp.Regexp
-
-func matchString(pat, str string) (result bool, err error) {
-	if matchRe == nil || matchPat != pat {
-		matchPat = pat
-		matchRe, err = regexp.Compile(matchPat)
-		if err != nil {
-			return
-		}
-	}
-	return matchRe.MatchString(str), nil
-}
-
 func main() {
-	m := testing.MainStart(matchString, tests, benchmarks, examples)
+	m := testing.MainStart(testdeps.TestDeps{}, tests, benchmarks, examples)
 {{with .TestMain}}
 	{{.Package}}.{{.Name}}(m)
 {{else}}

@@ -44,9 +44,7 @@ var godocTests = []struct {
 	{
 		args: []string{"nonexistingpkg"},
 		matches: []string{
-			// The last pattern (does not e) is for plan9:
-			// http://build.golang.org/log/2d8e5e14ed365bfa434b37ec0338cd9e6f8dd9bf
-			`no such file or directory|does not exist|cannot find the file|(?:' does not e)`,
+			`cannot find package`,
 		},
 	},
 	{
@@ -252,14 +250,14 @@ func testWeb(t *testing.T, withIndex bool) {
 			match: []string{
 				"Standard library",
 				"Package fmt implements formatted I/O",
-				"internal/syscall",
+				"internal/syscall/?m=all",
 			},
 			dontmatch: []string{
 				"cmd/gc",
 			},
 		},
 		{
-			path: "/search?q=notwithstanding",
+			path: "/search?q=ListenAndServe",
 			match: []string{
 				"/src",
 			},

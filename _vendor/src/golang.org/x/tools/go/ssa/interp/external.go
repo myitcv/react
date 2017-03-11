@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// +build go1.5
-
 package interp
 
 // Emulated functions that we cannot interpret because they are
@@ -16,7 +14,6 @@ import (
 	"runtime"
 	"strings"
 	"sync/atomic"
-	"syscall"
 	"time"
 	"unsafe"
 
@@ -30,11 +27,11 @@ type externalFn func(fr *frame, args []value) value
 // We have not captured that correctly here.
 
 // Key strings are from Function.String().
-var externals map[string]externalFn
+var externals = make(map[string]externalFn)
 
 func init() {
 	// That little dot ۰ is an Arabic zero numeral (U+06F0), categories [Nd].
-	externals = map[string]externalFn{
+	for k, v := range map[string]externalFn{
 		"(*sync.Pool).Get":                 ext۰sync۰Pool۰Get,
 		"(*sync.Pool).Put":                 ext۰nop,
 		"(reflect.Value).Bool":             ext۰reflect۰Value۰Bool,
@@ -86,9 +83,9 @@ func init() {
 		"math.Log":                         ext۰math۰Log,
 		"math.Min":                         ext۰math۰Min,
 		"math.hasSSE4":                     ext۰math۰hasSSE4,
-		"os.Pipe":                          ext۰os۰Pipe,
 		"os.runtime_args":                  ext۰os۰runtime_args,
 		"os.runtime_beforeExit":            ext۰nop,
+		"os/signal.init":                   ext۰nop,
 		"reflect.New":                      ext۰reflect۰New,
 		"reflect.SliceOf":                  ext۰reflect۰SliceOf,
 		"reflect.TypeOf":                   ext۰reflect۰TypeOf,
@@ -105,6 +102,7 @@ func init() {
 		"runtime.Goexit":                   ext۰runtime۰Goexit,
 		"runtime.Gosched":                  ext۰runtime۰Gosched,
 		"runtime.init":                     ext۰nop,
+		"runtime.KeepAlive":                ext۰nop,
 		"runtime.NumCPU":                   ext۰runtime۰NumCPU,
 		"runtime.NumGoroutine":             ext۰runtime۰NumGoroutine,
 		"runtime.ReadMemStats":             ext۰runtime۰ReadMemStats,
@@ -124,30 +122,25 @@ func init() {
 		"sync.runtime_registerPoolCleanup": ext۰nop,
 		"sync/atomic.AddInt32":             ext۰atomic۰AddInt32,
 		"sync/atomic.AddUint32":            ext۰atomic۰AddUint32,
-		"sync/atomic.AddUint64":            ext۰atomic۰AddUint64,
 		"sync/atomic.CompareAndSwapInt32":  ext۰atomic۰CompareAndSwapInt32,
+		"sync/atomic.CompareAndSwapUint32": ext۰atomic۰CompareAndSwapUint32,
 		"sync/atomic.LoadInt32":            ext۰atomic۰LoadInt32,
 		"sync/atomic.LoadUint32":           ext۰atomic۰LoadUint32,
 		"sync/atomic.StoreInt32":           ext۰atomic۰StoreInt32,
 		"sync/atomic.StoreUint32":          ext۰atomic۰StoreUint32,
-		"syscall.Close":                    ext۰syscall۰Close,
-		"syscall.Exit":                     ext۰syscall۰Exit,
-		"syscall.Fstat":                    ext۰syscall۰Fstat,
-		"syscall.Getpid":                   ext۰syscall۰Getpid,
-		"syscall.Getwd":                    ext۰syscall۰Getwd,
-		"syscall.Kill":                     ext۰syscall۰Kill,
-		"syscall.Lstat":                    ext۰syscall۰Lstat,
-		"syscall.Open":                     ext۰syscall۰Open,
-		"syscall.ParseDirent":              ext۰syscall۰ParseDirent,
-		"syscall.RawSyscall":               ext۰syscall۰RawSyscall,
-		"syscall.Read":                     ext۰syscall۰Read,
-		"syscall.ReadDirent":               ext۰syscall۰ReadDirent,
-		"syscall.Stat":                     ext۰syscall۰Stat,
-		"syscall.Write":                    ext۰syscall۰Write,
-		"syscall.runtime_envs":             ext۰runtime۰environ,
+		"sync/atomic.AddInt64":             ext۰atomic۰AddInt64,
+		"sync/atomic.AddUint64":            ext۰atomic۰AddUint64,
+		"sync/atomic.CompareAndSwapInt64":  ext۰atomic۰CompareAndSwapInt64,
+		"sync/atomic.CompareAndSwapUint64": ext۰atomic۰CompareAndSwapUint64,
+		"sync/atomic.LoadInt64":            ext۰atomic۰LoadInt64,
+		"sync/atomic.LoadUint64":           ext۰atomic۰LoadUint64,
+		"sync/atomic.StoreInt64":           ext۰atomic۰StoreInt64,
+		"sync/atomic.StoreUint64":          ext۰atomic۰StoreUint64,
 		"testing.runExample":               ext۰testing۰runExample,
 		"time.Sleep":                       ext۰time۰Sleep,
 		"time.now":                         ext۰time۰now,
+	} {
+		externals[k] = v
 	}
 }
 
@@ -392,6 +385,16 @@ func ext۰atomic۰CompareAndSwapInt32(fr *frame, args []value) value {
 	return false
 }
 
+func ext۰atomic۰CompareAndSwapUint32(fr *frame, args []value) value {
+	// TODO(adonovan): fix: not atomic!
+	p := args[0].(*value)
+	if (*p).(uint32) == args[1].(uint32) {
+		*p = args[2].(uint32)
+		return true
+	}
+	return false
+}
+
 func ext۰atomic۰AddInt32(fr *frame, args []value) value {
 	// TODO(adonovan): fix: not atomic!
 	p := args[0].(*value)
@@ -404,6 +407,56 @@ func ext۰atomic۰AddUint32(fr *frame, args []value) value {
 	// TODO(adonovan): fix: not atomic!
 	p := args[0].(*value)
 	newv := (*p).(uint32) + args[1].(uint32)
+	*p = newv
+	return newv
+}
+
+func ext۰atomic۰LoadUint64(fr *frame, args []value) value {
+	// TODO(adonovan): fix: not atomic!
+	return (*args[0].(*value)).(uint64)
+}
+
+func ext۰atomic۰StoreUint64(fr *frame, args []value) value {
+	// TODO(adonovan): fix: not atomic!
+	*args[0].(*value) = args[1].(uint64)
+	return nil
+}
+
+func ext۰atomic۰LoadInt64(fr *frame, args []value) value {
+	// TODO(adonovan): fix: not atomic!
+	return (*args[0].(*value)).(int64)
+}
+
+func ext۰atomic۰StoreInt64(fr *frame, args []value) value {
+	// TODO(adonovan): fix: not atomic!
+	*args[0].(*value) = args[1].(int64)
+	return nil
+}
+
+func ext۰atomic۰CompareAndSwapInt64(fr *frame, args []value) value {
+	// TODO(adonovan): fix: not atomic!
+	p := args[0].(*value)
+	if (*p).(int64) == args[1].(int64) {
+		*p = args[2].(int64)
+		return true
+	}
+	return false
+}
+
+func ext۰atomic۰CompareAndSwapUint64(fr *frame, args []value) value {
+	// TODO(adonovan): fix: not atomic!
+	p := args[0].(*value)
+	if (*p).(uint64) == args[1].(uint64) {
+		*p = args[2].(uint64)
+		return true
+	}
+	return false
+}
+
+func ext۰atomic۰AddInt64(fr *frame, args []value) value {
+	// TODO(adonovan): fix: not atomic!
+	p := args[0].(*value)
+	newv := (*p).(int64) + args[1].(int64)
 	*p = newv
 	return newv
 }
@@ -448,7 +501,7 @@ func ext۰runtime۰Func۰Entry(fr *frame, args []value) value {
 
 // This is a workaround for a bug in go/ssa/testmain.go: it creates
 // InternalExamples even for Example functions with no Output comment.
-// TODO(adonovan): fix (and redesign) testmain.go after Go 1.6.
+// TODO(adonovan): fix (and redesign) testmain.go..
 func ext۰testing۰runExample(fr *frame, args []value) value {
 	// This is a stripped down runExample that simply calls the function.
 	// It does not capture and compare output nor recover from panic.
@@ -464,25 +517,12 @@ func ext۰testing۰runExample(fr *frame, args []value) value {
 
 func ext۰time۰now(fr *frame, args []value) value {
 	nano := time.Now().UnixNano()
-	return tuple{int64(nano / 1e9), int32(nano % 1e9)}
+	return tuple{int64(nano / 1e9), int32(nano % 1e9), int64(0)}
 }
 
 func ext۰time۰Sleep(fr *frame, args []value) value {
 	time.Sleep(time.Duration(args[0].(int64)))
 	return nil
-}
-
-func ext۰syscall۰Exit(fr *frame, args []value) value {
-	panic(exitPanic(args[0].(int)))
-}
-
-func ext۰syscall۰Getwd(fr *frame, args []value) value {
-	s, err := syscall.Getwd()
-	return tuple{s, wrapError(err)}
-}
-
-func ext۰syscall۰Getpid(fr *frame, args []value) value {
-	return syscall.Getpid()
 }
 
 func valueToBytes(v value) []byte {
