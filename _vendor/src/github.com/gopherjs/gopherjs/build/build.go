@@ -14,6 +14,7 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -21,7 +22,6 @@ import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/gopherjs/gopherjs/compiler"
 	"github.com/gopherjs/gopherjs/compiler/natives"
-	"github.com/kardianos/osext"
 	"github.com/neelance/sourcemap"
 )
 
@@ -67,8 +67,8 @@ func Import(path string, mode build.ImportMode, installSuffix string, buildTags 
 
 func importWithSrcDir(path string, srcDir string, mode build.ImportMode, installSuffix string, buildTags []string) (*PackageData, error) {
 	buildContext := NewBuildContext(installSuffix, buildTags)
-	if path == "runtime" || path == "syscall" {
-		buildContext.GOARCH = build.Default.GOARCH
+	if path == "syscall" { // syscall needs to use a typical GOARCH like amd64 to pick up definitions for _Socklen, BpfInsn, IFNAMSIZ, Timeval, BpfStat, SYS_FCNTL, Flock_t, etc.
+		buildContext.GOARCH = runtime.GOARCH
 		buildContext.InstallSuffix = "js"
 		if installSuffix != "" {
 			buildContext.InstallSuffix += "_" + installSuffix
@@ -79,7 +79,14 @@ func importWithSrcDir(path string, srcDir string, mode build.ImportMode, install
 		return nil, err
 	}
 
+	// TODO: Resolve issue #415 and remove this temporary workaround.
+	if strings.HasSuffix(pkg.ImportPath, "/vendor/github.com/gopherjs/gopherjs/js") {
+		return nil, fmt.Errorf("vendoring github.com/gopherjs/gopherjs/js package is not supported, see https://github.com/gopherjs/gopherjs/issues/415")
+	}
+
 	switch path {
+	case "os":
+		pkg.GoFiles = stripExecutable(pkg.GoFiles) // Need to strip executable implementation files, because some of them contain package scope variables that perform (indirectly) syscalls on init.
 	case "runtime":
 		pkg.GoFiles = []string{"error.go"}
 	case "runtime/internal/sys":
@@ -90,8 +97,6 @@ func importWithSrcDir(path string, srcDir string, mode build.ImportMode, install
 		pkg.GoFiles = []string{"rand.go", "util.go"}
 	case "crypto/x509":
 		pkg.CgoFiles = nil
-	case "hash/crc32":
-		pkg.GoFiles = []string{"crc32.go", "crc32_generic.go"}
 	}
 
 	if len(pkg.CgoFiles) > 0 {
@@ -117,6 +122,19 @@ func importWithSrcDir(path string, srcDir string, mode build.ImportMode, install
 	}
 
 	return &PackageData{Package: pkg, JSFiles: jsFiles}, nil
+}
+
+// stripExecutable strips all executable implementation .go files.
+// They have "executable_" prefix.
+func stripExecutable(goFiles []string) []string {
+	var s []string
+	for _, f := range goFiles {
+		if strings.HasPrefix(f, "executable_") {
+			continue
+		}
+		s = append(s, f)
+	}
+	return s
 }
 
 // ImportDir is like Import but processes the Go package found in the named
@@ -485,7 +503,7 @@ func (s *Session) BuildPackage(pkg *PackageData) (*compiler.Archive, error) {
 
 	if pkg.PkgObj != "" {
 		var fileInfo os.FileInfo
-		gopherjsBinary, err := osext.Executable()
+		gopherjsBinary, err := os.Executable()
 		if err == nil {
 			fileInfo, err = os.Stat(gopherjsBinary)
 			if err == nil {

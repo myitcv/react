@@ -512,6 +512,42 @@ import "bufio"
 `,
 	},
 	{
+		name: `issue 17212 several single-import lines with shared prefix ending in a slash`,
+		pkg:  "net/http",
+		in: `package main
+
+import "bufio"
+import "net/url"
+`,
+		out: `package main
+
+import (
+	"bufio"
+	"net/http"
+	"net/url"
+)
+`,
+	},
+	{
+		name: `issue 17212 block imports lines with shared prefix ending in a slash`,
+		pkg:  "net/http",
+		in: `package main
+
+import (
+	"bufio"
+	"net/url"
+)
+`,
+		out: `package main
+
+import (
+	"bufio"
+	"net/http"
+	"net/url"
+)
+`,
+	},
+	{
 		name: `issue 17213 many single-import lines`,
 		pkg:  "fmt",
 		in: `package main
@@ -908,7 +944,9 @@ import (
 `,
 		out: `package main
 
-import "fmt"
+import (
+	"fmt"
+)
 `,
 	},
 	{
@@ -925,7 +963,7 @@ import y "fmt"
 import y "fmt"
 `,
 	},
-	// Issue #15432
+	// Issue #15432, #18051
 	{
 		name: "import.19",
 		pkg:  "fmt",
@@ -939,8 +977,10 @@ import (
 )`,
 		out: `package main
 
-// Some comment.
-import "io"
+import (
+	// Some comment.
+	"io"
+)
 `,
 	},
 	{
@@ -957,9 +997,11 @@ import (
 )`,
 		out: `package main
 
-// Some
-// comment.
-import "io"
+import (
+	// Some
+	// comment.
+	"io"
+)
 `,
 	},
 	{
@@ -978,11 +1020,13 @@ import (
 )`,
 		out: `package main
 
-/*
-	Some
-	comment.
-*/
-import "io"
+import (
+	/*
+		Some
+		comment.
+	*/
+	"io"
+)
 `,
 	},
 	{
@@ -998,9 +1042,11 @@ import (
 )`,
 		out: `package main
 
-/* Some */
-// comment.
-import "io"
+import (
+	/* Some */
+	// comment.
+	"io"
+)
 `,
 	},
 	{
@@ -1016,8 +1062,10 @@ import (
 )`,
 		out: `package main
 
-// comment 2
-import "io"
+import (
+	// comment 2
+	"io"
+)
 `,
 	},
 	{
@@ -1031,7 +1079,9 @@ import (
 )`,
 		out: `package main
 
-import "io" // comment 2
+import (
+	"io" // comment 2
+)
 `,
 	},
 	{
@@ -1045,7 +1095,9 @@ import (
 )`,
 		out: `package main
 
-import /* comment */ "io"
+import (
+	/* comment */ "io"
+)
 `,
 	},
 	{
@@ -1059,7 +1111,9 @@ import (
 )`,
 		out: `package main
 
-import "io" /* comment */
+import (
+	"io" /* comment */
+)
 `,
 	},
 	{
@@ -1073,7 +1127,9 @@ import (
 )`,
 		out: `package main
 
-import "io"
+import (
+	"io"
+)
 `,
 	},
 	{
@@ -1087,7 +1143,9 @@ import (
 )`,
 		out: `package main
 
-import "io"
+import (
+	"io"
+)
 `,
 	},
 	{
@@ -1103,7 +1161,9 @@ import (
 		out: `package main
 
 // comment 1
-import "io" // comment 2
+import (
+	"io" // comment 2
+)
 `,
 	},
 	{
@@ -1119,7 +1179,9 @@ import (
 		out: `package main
 
 // comment 1
-import "io"
+import (
+	"io"
+)
 `,
 	},
 	{
@@ -1135,7 +1197,9 @@ import (
 		out: `package main
 
 // comment 1
-import /* comment 2 */ "io"
+import (
+	/* comment 2 */ "io"
+)
 `,
 	},
 	{
@@ -1152,7 +1216,9 @@ import (
 		out: `package main
 
 // comment 1
-import /* comment 2 */ i "io"
+import (
+	/* comment 2 */ i "io"
+)
 `,
 	},
 	{
@@ -1169,7 +1235,9 @@ import (
 		out: `package main
 
 // comment 1
-import i "io"
+import (
+	i "io"
+)
 `,
 	},
 	{
@@ -1186,7 +1254,49 @@ import (
 		out: `package main
 
 // comment 1
-import i "io"
+import (
+	i "io"
+)
+`,
+	},
+	{
+		name: "import.35",
+		pkg:  "fmt",
+		in: `package main
+
+// comment 1
+import (
+	"fmt"
+	// comment 2
+	"io"
+)`,
+		out: `package main
+
+// comment 1
+import (
+	// comment 2
+	"io"
+)
+`,
+	},
+	{
+		name: "import.36",
+		pkg:  "fmt",
+		in: `package main
+
+/* comment 1 */
+import (
+	"fmt"
+	/* comment 2 */
+	"io"
+)`,
+		out: `package main
+
+/* comment 1 */
+import (
+	/* comment 2 */
+	"io"
+)
 `,
 	},
 }

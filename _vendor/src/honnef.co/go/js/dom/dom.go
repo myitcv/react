@@ -623,10 +623,7 @@ func (d *htmlDocument) DefaultView() Window {
 
 func (d *htmlDocument) DesignMode() bool {
 	s := d.Get("designMode").String()
-	if s == "off" {
-		return false
-	}
-	return true
+	return s != "off"
 }
 
 func (d *htmlDocument) SetDesignMode(b bool) {
@@ -1193,6 +1190,10 @@ func (w *window) RemoveEventListener(typ string, useCapture bool, listener func(
 	w.Call("removeEventListener", typ, listener, useCapture)
 }
 
+func (w *window) DispatchEvent(event Event) bool {
+	return w.Call("dispatchEvent", event).Bool()
+}
+
 func wrapDOMHighResTimeStamp(o *js.Object) time.Duration {
 	return time.Duration(o.Float() * float64(time.Millisecond))
 }
@@ -1370,6 +1371,10 @@ func (n *BasicNode) AddEventListener(typ string, useCapture bool, listener func(
 
 func (n *BasicNode) RemoveEventListener(typ string, useCapture bool, listener func(*js.Object)) {
 	n.Call("removeEventListener", typ, listener, useCapture)
+}
+
+func (n *BasicNode) DispatchEvent(event Event) bool {
+	return n.Call("dispatchEvent", event).Bool()
 }
 
 func (n *BasicNode) BaseURI() string {
