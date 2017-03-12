@@ -1,13 +1,10 @@
 language: go
 
 go:
-  - 1.7
-
-before_install:
-  - export GOPATH=$PWD/_vendor:$GOPATH
+  - 1.x
 
 install: true
 
 script:
-  - go vet ./...
-  - go test ./...
+  - ./_scripts/run_tests.sh
+  - ./_scripts/check_git_is_clean.sh
