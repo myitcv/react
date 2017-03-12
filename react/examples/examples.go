@@ -13,8 +13,8 @@ type ExamplesDef struct {
 type tab int
 
 const (
-	tabJsx tab = iota
-	tabGo
+	tabGo tab = iota
+	tabJsx
 )
 
 func Examples() *ExamplesDef {
@@ -34,7 +34,7 @@ type ExamplesState struct {
 func (p *ExamplesDef) ComponentDidMount() {
 	for i, e := range examples {
 		go func(i int, url string) {
-			req := xhr.NewRequest("GET", url)
+			req := xhr.NewRequest("GET", "https://raw.githubusercontent.com/myitcv/gopherjs/master/react/examples/"+url)
 			err := req.Send(nil)
 			if err != nil {
 				panic(err)
@@ -45,7 +45,7 @@ func (p *ExamplesDef) ComponentDidMount() {
 			copy(newSt.goSource, p.State().goSource)
 			newSt.goSource[i] = req.ResponseText
 
-			// p.SetState(newSt)
+			p.SetState(newSt)
 
 		}(i, e.goSource)
 	}
@@ -70,6 +70,10 @@ func (p *ExamplesDef) Render() r.Element {
 				}),
 				r.S("the Github repo"),
 			),
+			r.S("."),
+		),
+		r.P(nil,
+			r.S("Note the examples below show the GopherJS source code from "), r.Code(nil, r.S("master")),
 		),
 	}
 
@@ -96,20 +100,9 @@ func (p *ExamplesDef) renderExample(i int) r.Element {
 	var code r.Element
 	switch p.State().selectedTabs[i] {
 	case tabGo:
-		code = r.Code(
-			r.CodeProps(func(cp *r.CodePropsDef) {
-				cp.ClassName = "go"
-			}),
-			r.S("// Does not work for now"),
-			r.S(p.State().goSource[i]),
-		)
+		code = r.Pre(nil, r.S(p.State().goSource[i]))
 	case tabJsx:
-		code = r.Code(
-			r.CodeProps(func(cp *r.CodePropsDef) {
-				cp.ClassName = "nohighlight"
-			}),
-			r.S(e.jsxSource),
-		)
+		code = r.Pre(nil, r.S(e.jsxSource))
 	}
 
 	return r.Div(nil,
@@ -135,10 +128,8 @@ func (p *ExamplesDef) renderExample(i int) r.Element {
 								ulp.ClassName = "nav nav-tabs"
 							}),
 
+							p.buildExampleNavTab(i, tabGo, "GopherJS"),
 							p.buildExampleNavTab(i, tabJsx, "JSX"),
-
-							// TODO fix Timer interaction bug before uncommenting
-							p.buildExampleNavTab(i, tabGo, "GopherJS (to follow)"),
 						),
 					),
 					r.Div(
@@ -174,7 +165,7 @@ func (p *ExamplesDef) buildExampleNavTab(i int, t tab, title string) *r.LiDef {
 				ap.Href = "#"
 
 				// TODO fix Timer interaction bug before uncommenting
-				// ap.OnClick = p.handleTabChange(i, t)
+				ap.OnClick = p.handleTabChange(i, t)
 			}),
 			r.S(title),
 		),
@@ -191,6 +182,8 @@ func (p *ExamplesDef) handleTabChange(i int, t tab) func(*r.SyntheticMouseEvent)
 		newSt.selectedTabs[i] = t
 
 		p.SetState(newSt)
+
+		e.PreventDefault()
 	}
 }
 
