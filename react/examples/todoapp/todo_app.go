@@ -3,12 +3,12 @@ package todoapp
 import (
 	"fmt"
 
-	. "github.com/myitcv/gopherjs/react"
+	r "github.com/myitcv/gopherjs/react"
 	"honnef.co/go/js/dom"
 )
 
 type TodoAppDef struct {
-	ComponentDef
+	r.ComponentDef
 }
 
 type TodoAppState struct {
@@ -19,7 +19,7 @@ type TodoAppState struct {
 func TodoApp() *TodoAppDef {
 	res := &TodoAppDef{}
 
-	BlessElement(res, nil)
+	r.BlessElement(res, nil)
 
 	return res
 }
@@ -28,37 +28,37 @@ func (p *TodoAppDef) GetInitialState() TodoAppState {
 	return TodoAppState{}
 }
 
-func (p *TodoAppDef) Render() Element {
-	var entries []*LiDef
+func (p *TodoAppDef) Render() r.Element {
+	var entries []*r.LiDef
 
 	for _, v := range p.State().items {
-		entry := Li(nil, S(v))
+		entry := r.Li(nil, r.S(v))
 		entries = append(entries, entry)
 	}
 
 	// TODO why does this fail when inline below?
-	theDp := DivProps(func(dp *DivPropsDef) {
+	theDp := r.DivProps(func(dp *r.DivPropsDef) {
 		dp.ClassName = "form-group"
 	})
 
-	return Div(nil,
-		H3(nil, S("TODO")),
-		Ul(nil, entries...),
-		Form(
-			FormProps(func(fp *FormPropsDef) {
+	return r.Div(nil,
+		r.H3(nil, r.S("TODO")),
+		r.Ul(nil, entries...),
+		r.Form(
+			r.FormProps(func(fp *r.FormPropsDef) {
 				fp.ClassName = "form-inline"
 			}),
-			Div(
+			r.Div(
 				theDp,
-				Label(
-					LabelProps(func(lp *LabelPropsDef) {
+				r.Label(
+					r.LabelProps(func(lp *r.LabelPropsDef) {
 						lp.ClassName = "sr-only"
 						lp.For = "todoText"
 					}),
-					S("Todo Item"),
+					r.S("Todo Item"),
 				),
-				Input(
-					InputProps(func(ip *InputPropsDef) {
+				r.Input(
+					r.InputProps(func(ip *r.InputPropsDef) {
 						ip.Type = "text"
 						ip.ClassName = "form-control"
 						ip.Id = "todoText"
@@ -67,20 +67,20 @@ func (p *TodoAppDef) Render() Element {
 						ip.OnChange = p.onCurrItemChange
 					}),
 				),
-				Button(
-					ButtonProps(func(bp *ButtonPropsDef) {
+				r.Button(
+					r.ButtonProps(func(bp *r.ButtonPropsDef) {
 						bp.Type = "submit"
 						bp.ClassName = "btn btn-default"
 						bp.OnClick = p.onAddClicked
 					}),
-					S(fmt.Sprintf("Add #%v", len(p.State().items)+1)),
+					r.S(fmt.Sprintf("Add #%v", len(p.State().items)+1)),
 				),
 			),
 		),
 	)
 }
 
-func (p *TodoAppDef) onCurrItemChange(se *SyntheticEvent) {
+func (p *TodoAppDef) onCurrItemChange(se *r.SyntheticEvent) {
 	target := se.Target().(*dom.HTMLInputElement)
 
 	ns := p.State()
@@ -89,7 +89,7 @@ func (p *TodoAppDef) onCurrItemChange(se *SyntheticEvent) {
 	p.SetState(ns)
 }
 
-func (p *TodoAppDef) onAddClicked(se *SyntheticMouseEvent) {
+func (p *TodoAppDef) onAddClicked(se *r.SyntheticMouseEvent) {
 	se.PreventDefault()
 
 	ns := p.State()

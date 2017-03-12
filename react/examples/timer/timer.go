@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"time"
 
-	. "github.com/myitcv/gopherjs/react"
+	r "github.com/myitcv/gopherjs/react"
 )
 
 type TimerDef struct {
-	ComponentDef
+	r.ComponentDef
 
 	ticker *time.Ticker
 }
@@ -20,7 +20,7 @@ type TimerState struct {
 func Timer() *TimerDef {
 	res := &TimerDef{}
 
-	BlessElement(res, nil)
+	r.BlessElement(res, nil)
 
 	return res
 }
@@ -49,10 +49,10 @@ func (p *TimerDef) ComponentWillMount() {
 	}()
 }
 
-func (p *TimerDef) Render() Element {
-	return Div(nil,
-		Div(nil,
-			S(fmt.Sprintf("Seconds elapsed %.0f", p.State().secondsElapsed)),
+func (p *TimerDef) Render() r.Element {
+	return r.Div(nil,
+		r.Div(nil,
+			r.S(fmt.Sprintf("Seconds elapsed %.0f", p.State().secondsElapsed)),
 		),
 	)
 }

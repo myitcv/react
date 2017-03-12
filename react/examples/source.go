@@ -1,18 +1,18 @@
 package main
 
 import (
-	. "github.com/myitcv/gopherjs/react"
-	. "github.com/myitcv/gopherjs/react/examples/hellomessage"
-	. "github.com/myitcv/gopherjs/react/examples/markdowneditor"
-	. "github.com/myitcv/gopherjs/react/examples/timer"
-	. "github.com/myitcv/gopherjs/react/examples/todoapp"
+	r "github.com/myitcv/gopherjs/react"
+	"github.com/myitcv/gopherjs/react/examples/hellomessage"
+	"github.com/myitcv/gopherjs/react/examples/markdowneditor"
+	"github.com/myitcv/gopherjs/react/examples/timer"
+	"github.com/myitcv/gopherjs/react/examples/todoapp"
 )
 
 type example struct {
 	title     string
 	jsxSource string
 	goSource  string
-	elem      func() Element
+	elem      func() r.Element
 }
 
 var examples = [...]example{
@@ -20,9 +20,9 @@ var examples = [...]example{
 		"A Simple Example",
 		helloMessageJsx,
 		"hellomessage/hello_message.go",
-		func() Element {
-			return HelloMessage(
-				HelloMessageProps{Name: "Jane"},
+		func() r.Element {
+			return hellomessage.HelloMessage(
+				hellomessage.HelloMessageProps{Name: "Jane"},
 			)
 		},
 	},
@@ -30,24 +30,24 @@ var examples = [...]example{
 		"A Stateful Component",
 		timerJsx,
 		"timer/timer.go",
-		func() Element {
-			return Timer()
+		func() r.Element {
+			return timer.Timer()
 		},
 	},
 	example{
 		"An Application",
 		applicationJsx,
 		"todoapp/todo_app.go",
-		func() Element {
-			return TodoApp()
+		func() r.Element {
+			return todoapp.TodoApp()
 		},
 	},
 	example{
 		"A Component Using External Plugins",
 		markdownEditorJsx,
 		"markdowneditor/markdown_editor.go",
-		func() Element {
-			return MarkdownEditor()
+		func() r.Element {
+			return markdowneditor.MarkdownEditor()
 		},
 	},
 }

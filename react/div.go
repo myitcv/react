@@ -2,14 +2,18 @@ package react
 
 import "github.com/gopherjs/gopherjs/js"
 
+// DivDef is the React component definition corresponding to the HTML <div> element
 type DivDef struct {
 	underlying *js.Object
 }
 
+// DivPropsDef defines the properties for the <div> element
 type DivPropsDef struct {
 	*BasicHTMLElement
 }
 
+// DivProps creates a new instance of <div> properties, mutating the props
+// by the provided initiadivser
 func DivProps(f func(p *DivPropsDef)) *DivPropsDef {
 	res := &DivPropsDef{
 		BasicHTMLElement: newBasicHTMLElement(),
@@ -20,6 +24,7 @@ func DivProps(f func(p *DivPropsDef)) *DivPropsDef {
 
 func (d *DivDef) reactElement() {}
 
+// Div creates a new instance of a <div> element with the provided props and children
 func Div(props *DivPropsDef, children ...Element) *DivDef {
 	args := []interface{}{"div", props}
 
