@@ -42,7 +42,8 @@ func newBasicHTMLElement() *BasicHTMLElement {
 type SyntheticEvent struct {
 	o *js.Object
 
-	PreventDefault func() `js:"preventDefault"`
+	PreventDefault  func() `js:"preventDefault"`
+	StopPropagation func() `js:"stopPropagation"`
 }
 
 func (s *SyntheticEvent) Target() dom.HTMLElement {

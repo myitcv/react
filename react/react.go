@@ -191,6 +191,9 @@ func buildReactComponent(typ reflect.Type) *js.Object {
 	compDef.Set(reactCompComponentDidMount, js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
 		props := this.Get(reactCompProps)
 		cw := props.Get(nestedComponentWrapper)
+		cmp := cw.Interface().(Component)
+
+		cmp.setThis(this)
 
 		if cmp, ok := cw.Interface().(ComponentWithDidMount); ok {
 			cmp.ComponentDidMount()
@@ -202,6 +205,9 @@ func buildReactComponent(typ reflect.Type) *js.Object {
 	compDef.Set(reactCompComponentWillReceiveProps, js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
 		props := this.Get(reactCompProps)
 		cw := props.Get(nestedComponentWrapper)
+		cmp := cw.Interface().(Component)
+
+		cmp.setThis(this)
 
 		if cmp, ok := cw.Interface().(ComponentWithWillReceiveProps); ok {
 			ourProps := arguments[0].Get(nestedProps).Interface()
@@ -214,6 +220,9 @@ func buildReactComponent(typ reflect.Type) *js.Object {
 	compDef.Set(reactCompComponentWillUnmount, js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
 		props := this.Get(reactCompProps)
 		cw := props.Get(nestedComponentWrapper)
+		cmp := cw.Interface().(Component)
+
+		cmp.setThis(this)
 
 		if cmp, ok := cw.Interface().(ComponentWithWillUnmount); ok {
 			cmp.ComponentWillUnmount()
@@ -243,6 +252,8 @@ func buildReactComponent(typ reflect.Type) *js.Object {
 		props := this.Get(reactCompProps)
 		cw := props.Get(nestedComponentWrapper)
 		cmp := cw.Interface().(Component)
+
+		cmp.setThis(this)
 
 		renderRes := cmp.Render()
 

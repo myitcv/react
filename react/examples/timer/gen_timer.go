@@ -1,6 +1,8 @@
 package timer
 
-import "github.com/myitcv/gopherjs/react"
+import (
+	"github.com/myitcv/gopherjs/react"
+)
 
 // Generated code (or at least will be once I write the code generator)
 // for Timer

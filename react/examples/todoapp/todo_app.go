@@ -97,4 +97,6 @@ func (p *TodoAppDef) onAddClicked(se *r.SyntheticMouseEvent) {
 	ns.currItem = ""
 
 	p.SetState(ns)
+
+	se.PreventDefault()
 }
