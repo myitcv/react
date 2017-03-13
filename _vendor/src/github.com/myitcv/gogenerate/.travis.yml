@@ -1,0 +1,10 @@
+language: go
+
+go:
+  - 1.7
+
+install: true
+
+script:
+  - ./_scripts/run_tests.sh
+  - ./_scripts/check_git_is_clean.sh
