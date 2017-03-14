@@ -27,7 +27,7 @@ const (
 
 	getInitialState           = "GetInitialState"
 	componentWillReceiveProps = "ComponentWillReceiveProps"
-	shouldComponentUpdate     = "ShouldComponentUpdate"
+	equals                    = "Equals"
 )
 
 type gen struct {
@@ -35,9 +35,10 @@ type gen struct {
 
 	pkg string
 
-	components map[string]*ast.TypeSpec
-	types      map[string]*ast.TypeSpec
-	methods    map[string][]*ast.FuncDecl
+	components    map[string]*ast.TypeSpec
+	types         map[string]*ast.TypeSpec
+	pointMeths    map[string][]*ast.FuncDecl
+	nonPointMeths map[string][]*ast.FuncDecl
 }
 
 func dogen(dir, license string) {
@@ -55,9 +56,10 @@ func dogen(dir, license string) {
 			fset: fset,
 			pkg:  pn,
 
-			components: make(map[string]*ast.TypeSpec),
-			types:      make(map[string]*ast.TypeSpec),
-			methods:    make(map[string][]*ast.FuncDecl),
+			components:    make(map[string]*ast.TypeSpec),
+			types:         make(map[string]*ast.TypeSpec),
+			pointMeths:    make(map[string][]*ast.FuncDecl),
+			nonPointMeths: make(map[string][]*ast.FuncDecl),
 		}
 
 		for fn, file := range pkg.Files {
@@ -98,17 +100,16 @@ func dogen(dir, license string) {
 
 					f := d.Recv.List[0]
 
-					se, ok := f.Type.(*ast.StarExpr)
-					if !ok {
-						continue
+					switch v := f.Type.(type) {
+					case *ast.StarExpr:
+						id, ok := v.X.(*ast.Ident)
+						if !ok {
+							continue
+						}
+						g.pointMeths[id.Name] = append(g.pointMeths[id.Name], d)
+					case *ast.Ident:
+						g.nonPointMeths[v.Name] = append(g.pointMeths[v.Name], d)
 					}
-
-					id, ok := se.X.(*ast.Ident)
-					if !ok {
-						continue
-					}
-
-					g.methods[id.Name] = append(g.methods[id.Name], d)
 
 				case *ast.GenDecl:
 					if d.Tok != token.TYPE {
@@ -179,7 +180,9 @@ type compGen struct {
 	HasProps                     bool
 	HasGetInitState              bool
 	HasComponentWillReceiveProps bool
-	HasShouldComponentUpdate     bool
+
+	PropsHasEquals bool
+	StateHasEquals bool
 
 	buf *bytes.Buffer
 }
@@ -204,7 +207,7 @@ func (g *gen) genComp(defName string) {
 	cg.HasProps = hasProps
 
 	if hasState {
-		for _, m := range g.methods[defName] {
+		for _, m := range g.pointMeths[defName] {
 			if m.Name.Name != getInitialState {
 				continue
 			}
@@ -229,10 +232,52 @@ func (g *gen) genComp(defName string) {
 				break
 			}
 		}
+
+		for _, m := range g.nonPointMeths[name+stateTypeSuffix] {
+			if m.Name.Name != equals {
+				continue
+			}
+
+			if m.Type.Params != nil && len(m.Type.Params.List) != 1 {
+				continue
+			}
+
+			if m.Type.Results != nil && len(m.Type.Results.List) != 1 {
+				continue
+			}
+
+			{
+				v := m.Type.Params.List[0]
+
+				id, ok := v.Type.(*ast.Ident)
+				if !ok {
+					continue
+				}
+
+				if id.Name != name+stateTypeSuffix {
+					continue
+				}
+			}
+
+			{
+				v := m.Type.Results.List[0]
+
+				id, ok := v.Type.(*ast.Ident)
+				if !ok {
+					continue
+				}
+
+				if id.Name != "bool" {
+					continue
+				}
+			}
+
+			cg.StateHasEquals = true
+		}
 	}
 
 	if hasProps {
-		for _, m := range g.methods[defName] {
+		for _, m := range g.pointMeths[defName] {
 			if m.Name.Name != componentWillReceiveProps {
 				continue
 			}
@@ -257,28 +302,13 @@ func (g *gen) genComp(defName string) {
 				break
 			}
 		}
-	}
 
-	if hasState || hasProps {
-		po := 0
-		so := 0
-		pc := 0
-
-		if hasProps {
-			pc++
-			so = 1
-		}
-
-		if hasState {
-			pc++
-		}
-
-		for _, m := range g.methods[defName] {
-			if m.Name.Name != shouldComponentUpdate {
+		for _, m := range g.nonPointMeths[name+propsTypeSuffix] {
+			if m.Name.Name != equals {
 				continue
 			}
 
-			if m.Type.Params != nil && len(m.Type.Params.List) != pc {
+			if m.Type.Params != nil && len(m.Type.Params.List) != 1 {
 				continue
 			}
 
@@ -287,22 +317,9 @@ func (g *gen) genComp(defName string) {
 			}
 
 			{
-				r := m.Type.Results.List[0]
+				v := m.Type.Params.List[0]
 
-				id, ok := r.Type.(*ast.Ident)
-				if !ok {
-					continue
-				}
-
-				if id.Name != "bool" {
-					continue
-				}
-			}
-
-			if hasProps {
-				f := m.Type.Params.List[po]
-
-				id, ok := f.Type.(*ast.Ident)
+				id, ok := v.Type.(*ast.Ident)
 				if !ok {
 					continue
 				}
@@ -312,20 +329,20 @@ func (g *gen) genComp(defName string) {
 				}
 			}
 
-			if hasState {
-				f := m.Type.Params.List[so]
+			{
+				v := m.Type.Results.List[0]
 
-				id, ok := f.Type.(*ast.Ident)
+				id, ok := v.Type.(*ast.Ident)
 				if !ok {
 					continue
 				}
 
-				if id.Name != name+stateTypeSuffix {
+				if id.Name != "bool" {
 					continue
 				}
 			}
 
-			cg.HasShouldComponentUpdate = true
+			cg.PropsHasEquals = true
 		}
 	}
 
@@ -336,31 +353,19 @@ func (g *gen) genComp(defName string) {
 	cg.pln()
 
 	cg.pt(`
-func ({{.Recv}} *{{.Name}}Def) ShouldComponentUpdateIntf(nextProps, nextState interface{}) bool {
-{{if .HasShouldComponentUpdate -}}
-	{{if and .HasState .HasProps -}}
-	return {{.Recv}}.ShouldComponentUpdate(nextProps.({{.Name}}Props), nextState.({{.Name}}Props))
-	{{else if .HasState -}}
-	return {{.Recv}}.ShouldComponentUpdate(nextState.({{.Name}}State))
+func ({{.Recv}} *{{.Name}}Def) ShouldComponentUpdateIntf(nextProps interface{}) bool {
+	{{if and .HasProps -}}
+	{{if .PropsHasEquals -}}
+	return {{.Recv}}.Props().Equals(nextProps.({{.Name}}Props))
 	{{else -}}
-	return {{.Recv}}.ShouldComponentUpdate(nextProps.({{.Name}}Props))
+	return {{.Recv}}.Props() == nextProps.({{.Name}}Props)
 	{{end -}}
-{{else -}}
-	should := false
-{{if .HasProps -}}
-	{
-		v := nextProps.({{.Name}}Props)
-		should = should || {{.Recv}}.Props() != v
-	}
-{{end -}}
-{{if .HasState -}}
-	{
-		v := nextState.({{.Name}}State)
-		should = should || {{.Recv}}.State() != v
-	}
-{{end -}}
-	return should
-{{end -}}
+	{{else if .HasState -}}
+	return true
+	{{else -}}
+	// no props or state... so nothing would cause this to require re-rendering
+	return false
+	{{end -}}
 }
 
 {{if .HasState}}
@@ -391,6 +396,14 @@ func ({{.Recv}} *{{.Name}}Def) GetInitialStateIntf() react.State {
 	return {{.Name}}State{}
 {{end -}}
 }
+
+func ({{.Recv}} {{.Name}}State) EqualsIntf(v interface{}) bool {
+	{{if .StateHasEquals -}}
+	return {{.Recv}}.Equals(v.({{.Name}}State))
+	{{else -}}
+	return {{.Recv}} == v.({{.Name}}State)
+	{{end -}}
+}
 {{end}}
 
 
@@ -409,6 +422,16 @@ func ({{.Recv}} *{{.Name}}Def) ComponentWillReceivePropsIntf(i interface{}) {
 	{{.Recv}}.ComponentWillReceiveProps(ourProps)
 }
 {{end}}
+
+func ({{.Recv}} {{.Name}}Props) EqualsIntf(v interface{}) bool {
+	{{if .PropsHasEquals -}}
+	return {{.Recv}}.Equals(v.({{.Name}}Props))
+	{{else -}}
+	return {{.Recv}} == v.({{.Name}}Props)
+	{{end -}}
+}
+
+var _ react.Equals = {{.Name}}Props{}
 {{end}}
 	`, cg)
 

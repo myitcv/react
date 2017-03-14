@@ -27,23 +27,22 @@ func TodoApp() *TodoAppDef {
 	return res
 }
 
-func (t *TodoAppDef) ShouldComponentUpdate(nextState TodoAppState) bool {
-	should := false
-
-	v := nextState
-	c := t.State()
-
-	if len(v.items) == len(c.items) {
-		for i := range v.items {
-			if v.items[i] != c.items[i] {
-				should = true
-			}
-		}
-	} else {
-		should = true
+func (c TodoAppState) Equals(v TodoAppState) bool {
+	if c.currItem != v.currItem {
+		return false
 	}
 
-	return should
+	if len(v.items) != len(c.items) {
+		return false
+	}
+
+	for i := range v.items {
+		if v.items[i] != c.items[i] {
+			return false
+		}
+	}
+
+	return true
 }
 
 // Render renders the TodoApp component

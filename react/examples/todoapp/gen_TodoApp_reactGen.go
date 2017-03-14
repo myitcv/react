@@ -4,8 +4,8 @@ package todoapp
 
 import "github.com/myitcv/gopherjs/react"
 
-func (t *TodoAppDef) ShouldComponentUpdateIntf(nextProps, nextState interface{}) bool {
-	return t.ShouldComponentUpdate(nextState.(TodoAppState))
+func (t *TodoAppDef) ShouldComponentUpdateIntf(nextProps interface{}) bool {
+	return true
 }
 
 // SetState is an auto-generated proxy proxy to update the state for the
@@ -30,4 +30,8 @@ var _ react.State = TodoAppState{}
 // GetInitialStateIntf is an auto-generated proxy to GetInitialState
 func (t *TodoAppDef) GetInitialStateIntf() react.State {
 	return TodoAppState{}
+}
+
+func (t TodoAppState) EqualsIntf(v interface{}) bool {
+	return t.Equals(v.(TodoAppState))
 }

@@ -2,13 +2,10 @@
 
 package hellomessage
 
-func (h *HelloMessageDef) ShouldComponentUpdateIntf(nextProps, nextState interface{}) bool {
-	should := false
-	{
-		v := nextProps.(HelloMessageProps)
-		should = should || h.Props() != v
-	}
-	return should
+import "github.com/myitcv/gopherjs/react"
+
+func (h *HelloMessageDef) ShouldComponentUpdateIntf(nextProps interface{}) bool {
+	return h.Props() == nextProps.(HelloMessageProps)
 }
 
 // Props is an auto-generated proxy to the current props of HelloMessage
@@ -16,3 +13,9 @@ func (h *HelloMessageDef) Props() HelloMessageProps {
 	uprops := h.ComponentDef.Props()
 	return uprops.(HelloMessageProps)
 }
+
+func (h HelloMessageProps) EqualsIntf(v interface{}) bool {
+	return h == v.(HelloMessageProps)
+}
+
+var _ react.Equals = HelloMessageProps{}

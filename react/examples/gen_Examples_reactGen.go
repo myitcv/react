@@ -4,8 +4,8 @@ package main
 
 import "github.com/myitcv/gopherjs/react"
 
-func (e *ExamplesDef) ShouldComponentUpdateIntf(nextProps, nextState interface{}) bool {
-	return e.ShouldComponentUpdate(nextState.(ExamplesState))
+func (e *ExamplesDef) ShouldComponentUpdateIntf(nextProps interface{}) bool {
+	return true
 }
 
 // SetState is an auto-generated proxy proxy to update the state for the
@@ -30,4 +30,8 @@ var _ react.State = ExamplesState{}
 // GetInitialStateIntf is an auto-generated proxy to GetInitialState
 func (e *ExamplesDef) GetInitialStateIntf() react.State {
 	return e.GetInitialState()
+}
+
+func (e ExamplesState) EqualsIntf(v interface{}) bool {
+	return e.Equals(v.(ExamplesState))
 }
