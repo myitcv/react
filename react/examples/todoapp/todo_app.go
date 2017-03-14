@@ -9,27 +9,29 @@ import (
 
 //go:generate reactGen
 
+// TodoAppDef is the definition fo the TodoApp component
 type TodoAppDef struct {
 	r.ComponentDef
 }
 
+// TodoAppState is the state type for the TodoApp component
 type TodoAppState struct {
 	items    []string
 	currItem string
 }
 
+// TodoApp creates instances of the TodoApp component
 func TodoApp() *TodoAppDef {
 	res := &TodoAppDef{}
-
 	r.BlessElement(res, nil)
-
 	return res
 }
 
-func (p *TodoAppDef) Render() r.Element {
+// Render renders the TodoApp component
+func (t *TodoAppDef) Render() r.Element {
 	var entries []*r.LiDef
 
-	for _, v := range p.State().items {
+	for _, v := range t.State().items {
 		entry := r.Li(nil, r.S(v))
 		entries = append(entries, entry)
 	}
@@ -59,42 +61,42 @@ func (p *TodoAppDef) Render() r.Element {
 					r.InputProps(func(ip *r.InputPropsDef) {
 						ip.Type = "text"
 						ip.ClassName = "form-control"
-						ip.Id = "todoText"
+						ip.ID = "todoText"
 						ip.Placeholder = "Todo Item"
-						ip.Value = p.State().currItem
-						ip.OnChange = p.onCurrItemChange
+						ip.Value = t.State().currItem
+						ip.OnChange = t.onCurrItemChange
 					}),
 				),
 				r.Button(
 					r.ButtonProps(func(bp *r.ButtonPropsDef) {
 						bp.Type = "submit"
 						bp.ClassName = "btn btn-default"
-						bp.OnClick = p.onAddClicked
+						bp.OnClick = t.onAddClicked
 					}),
-					r.S(fmt.Sprintf("Add #%v", len(p.State().items)+1)),
+					r.S(fmt.Sprintf("Add #%v", len(t.State().items)+1)),
 				),
 			),
 		),
 	)
 }
 
-func (p *TodoAppDef) onCurrItemChange(se *r.SyntheticEvent) {
+func (t *TodoAppDef) onCurrItemChange(se *r.SyntheticEvent) {
 	target := se.Target().(*dom.HTMLInputElement)
 
-	ns := p.State()
+	ns := t.State()
 	ns.currItem = target.Value
 
-	p.SetState(ns)
+	t.SetState(ns)
 }
 
-func (p *TodoAppDef) onAddClicked(se *r.SyntheticMouseEvent) {
+func (t *TodoAppDef) onAddClicked(se *r.SyntheticMouseEvent) {
 	se.PreventDefault()
 
-	ns := p.State()
+	ns := t.State()
 	ns.items = append(ns.items, ns.currItem)
 	ns.currItem = ""
 
-	p.SetState(ns)
+	t.SetState(ns)
 
 	se.PreventDefault()
 }

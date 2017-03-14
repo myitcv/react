@@ -9,46 +9,45 @@ import (
 
 //go:generate reactGen
 
+// TimerDef is the definition of the Timer component
 type TimerDef struct {
 	r.ComponentDef
 
 	ticker *time.Ticker
 }
 
+// TimerState is the state type for the Timer component
 type TimerState struct {
 	secondsElapsed float32
 }
 
+// Timer creates instances of the Timer component
 func Timer() *TimerDef {
 	res := &TimerDef{}
-
 	r.BlessElement(res, nil)
-
 	return res
 }
 
-func (p *TimerDef) ComponentWillUnmount() {
-	p.ticker.Stop()
-}
-
-func (p *TimerDef) ComponentWillMount() {
-	p.ticker = time.NewTicker(time.Second * 1)
+// ComponentWillMount is a React lifecycle method for the Timer component
+func (t *TimerDef) ComponentWillMount() {
+	t.ticker = time.NewTicker(time.Second * 1)
 	go func() {
 		for {
 			select {
-			case <-p.ticker.C:
-				c := p.State()
+			case <-t.ticker.C:
+				c := t.State()
 				c.secondsElapsed++
-				p.SetState(c)
+				t.SetState(c)
 			}
 		}
 	}()
 }
 
-func (p *TimerDef) Render() r.Element {
+// Render renders the Timer component
+func (t *TimerDef) Render() r.Element {
 	return r.Div(nil,
 		r.Div(nil,
-			r.S(fmt.Sprintf("Seconds elapsed %.0f", p.State().secondsElapsed)),
+			r.S(fmt.Sprintf("Seconds elapsed %.0f", t.State().secondsElapsed)),
 		),
 	)
 }

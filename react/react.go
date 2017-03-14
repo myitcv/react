@@ -43,6 +43,7 @@ type ComponentDef struct {
 
 var compMap = make(map[reflect.Type]*js.Object)
 
+// S is the React representation of a string
 type S string
 
 func (s S) reactElement() {}

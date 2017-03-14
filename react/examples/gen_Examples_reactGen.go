@@ -4,16 +4,26 @@ package main
 
 import "github.com/myitcv/gopherjs/react"
 
-func (p *ExamplesDef) SetState(s ExamplesState) {
-	p.ComponentDef.SetState(s)
+// SetState is an auto-generated proxy proxy to update the state for the
+// Examples component.  SetState does not immediately mutate e.State()
+// but creates a pending state transition.
+func (e *ExamplesDef) SetState(s ExamplesState) {
+	e.ComponentDef.SetState(s)
 }
 
-func (p *ExamplesDef) State() ExamplesState {
-	return p.ComponentDef.State().(ExamplesState)
+// State is an auto-generated proxy to return the current state in use for the
+// render of the Examples component
+func (e *ExamplesDef) State() ExamplesState {
+	return e.ComponentDef.State().(ExamplesState)
 }
 
-func (p ExamplesState) IsState() {}
+// IsState is an auto-generated definition so that ExamplesState implements
+// the github.com/myitcv/gopherjs/react.State interface.
+func (e ExamplesState) IsState() {}
 
-func (p *ExamplesDef) GetInitialStateIntf() react.State {
-	return p.GetInitialState()
+var _ react.State = ExamplesState{}
+
+// GetInitialStateIntf is an auto-generated proxy to GetInitialState
+func (e *ExamplesDef) GetInitialStateIntf() react.State {
+	return e.GetInitialState()
 }

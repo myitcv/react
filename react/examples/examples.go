@@ -8,6 +8,7 @@ import (
 
 //go:generate reactGen
 
+// ExamplesDef is the definition of the Examples component
 type ExamplesDef struct {
 	r.ComponentDef
 }
@@ -19,6 +20,7 @@ const (
 	tabJsx
 )
 
+// Examples creates instances of the Examples component
 func Examples() *ExamplesDef {
 	res := &ExamplesDef{}
 
@@ -27,12 +29,13 @@ func Examples() *ExamplesDef {
 	return res
 }
 
+// ExamplesState is the state type for the Examples component
 type ExamplesState struct {
 	goSource     []string
 	selectedTabs []tab
 }
 
-// // TODO fix Timer interaction bug before uncommenting
+// ComponentDidMount is a React lifecycle method for the Examples component
 func (p *ExamplesDef) ComponentDidMount() {
 	for i, e := range examples {
 		go func(i int, url string) {
@@ -53,6 +56,7 @@ func (p *ExamplesDef) ComponentDidMount() {
 	}
 }
 
+// GetInitialState returns in the initial state for the Examples component
 func (p *ExamplesDef) GetInitialState() ExamplesState {
 	return ExamplesState{
 		goSource:     make([]string, len(examples)),
@@ -60,6 +64,7 @@ func (p *ExamplesDef) GetInitialState() ExamplesState {
 	}
 }
 
+// Render renders the Examples component
 func (p *ExamplesDef) Render() r.Element {
 	toRender := []r.Element{
 		r.H3(nil, r.S("Reference")),

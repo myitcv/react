@@ -22,7 +22,7 @@ func newBasicElement() *BasicElement {
 type BasicHTMLElement struct {
 	*BasicElement
 
-	Id        string `js:"id"`
+	ID        string `js:"id"`
 	Key       string `js:"key"`
 	ClassName string `js:"className"`
 
