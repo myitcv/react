@@ -23,7 +23,10 @@ set -v
 export PATH=$PWD/_vendor/bin:$GOPATH/bin:$PATH
 export GOPATH=$PWD/_vendor:$GOPATH
 
-go install github.com/myitcv/gopherjs/cmd/reactGen
+for i in $(cat .vendored_bin_deps .bin_deps)
+do
+	go install $i
+done
 
 go generate ./...
 

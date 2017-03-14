@@ -1,12 +1,12 @@
 package main
 
 import (
-	"honnef.co/go/js/xhr"
-
 	r "github.com/myitcv/gopherjs/react"
+	"honnef.co/go/js/xhr"
 )
 
 //go:generate reactGen
+//go:generate immutableGen
 
 // ExamplesDef is the definition of the Examples component
 type ExamplesDef struct {
@@ -27,62 +27,45 @@ func Examples() *ExamplesDef {
 	return res
 }
 
+type (
+	_Imm_exampleS []*example
+	_Imm_tabS     []tab
+)
+
 // ExamplesState is the state type for the Examples component
 type ExamplesState struct {
-	goSource     []string
-	selectedTabs []tab
+	examples     *exampleS
+	selectedTabs *tabS
 }
 
-func (c ExamplesState) Equals(n ExamplesState) bool {
-	if len(c.goSource) != len(n.goSource) {
-		return false
-	}
+// ComponentWillMount is a React lifecycle method for the Examples component
+func (p *ExamplesDef) ComponentWillMount() {
+	if !fetchStarted {
+		for i, e := range examples.Range() {
+			go func(i int, e *example) {
+				req := xhr.NewRequest("GET", "https://raw.githubusercontent.com/myitcv/gopherjs/master/react/examples/"+e.goSourceFile())
+				err := req.Send(nil)
+				if err != nil {
+					panic(err)
+				}
 
-	for i := range c.goSource {
-		if c.goSource[i] != n.goSource[i] {
-			return false
+				examples = examples.Set(i, e.setGoSourceStr(req.ResponseText))
+
+				newSt := p.State()
+				newSt.examples = examples
+				p.SetState(newSt)
+			}(i, e)
 		}
-	}
 
-	if len(c.selectedTabs) != len(n.selectedTabs) {
-		return false
-	}
-
-	for i := range c.selectedTabs {
-		if c.selectedTabs[i] != n.selectedTabs[i] {
-			return false
-		}
-	}
-
-	return true
-}
-
-// ComponentDidMount is a React lifecycle method for the Examples component
-func (p *ExamplesDef) ComponentDidMount() {
-	for i, e := range examples {
-		go func(i int, url string) {
-			req := xhr.NewRequest("GET", "https://raw.githubusercontent.com/myitcv/gopherjs/master/react/examples/"+url)
-			err := req.Send(nil)
-			if err != nil {
-				panic(err)
-			}
-
-			newSt := p.State()
-			newSt.goSource = make([]string, len(examples))
-			copy(newSt.goSource, p.State().goSource)
-			newSt.goSource[i] = req.ResponseText
-
-			p.SetState(newSt)
-
-		}(i, e.goSource)
+		fetchStarted = true
 	}
 }
 
 // GetInitialState returns in the initial state for the Examples component
 func (p *ExamplesDef) GetInitialState() ExamplesState {
 	return ExamplesState{
-		goSource:     make([]string, len(examples)),
-		selectedTabs: make([]tab, len(examples)),
+		examples:     examples,
+		selectedTabs: newTabSLen(examples.Len()),
 	}
 }
 
@@ -107,7 +90,7 @@ func (p *ExamplesDef) Render() r.Element {
 		),
 	}
 
-	for i := range examples {
+	for i := range p.State().examples.Range() {
 		if i > 0 {
 			toRender = append(toRender, r.HR(nil))
 		}
@@ -125,18 +108,19 @@ func (p *ExamplesDef) Render() r.Element {
 }
 
 func (p *ExamplesDef) renderExample(i int) r.Element {
-	e := examples[i]
+	e := p.State().examples.Get(i)
 
 	var code r.Element
-	switch p.State().selectedTabs[i] {
+	switch p.State().selectedTabs.Get(i) {
 	case tabGo:
-		code = r.Pre(nil, r.S(p.State().goSource[i]))
+		code = r.Pre(nil, r.S(p.State().examples.Get(i).goSourceStr()))
 	case tabJsx:
-		code = r.Pre(nil, r.S(e.jsxSource))
+		code = r.Pre(nil, r.S(e.jsxSourceStr()))
 	}
 
 	return r.Div(nil,
-		r.H3(nil, r.S(e.title)),
+		r.H3(nil, r.S(e.title())),
+		r.P(nil, r.S(e.message())),
 		r.Div(
 			r.DivProps(func(dp *r.DivPropsDef) {
 				dp.ClassName = "row"
@@ -175,7 +159,7 @@ func (p *ExamplesDef) renderExample(i int) r.Element {
 					dp.ClassName = "col-md-4"
 				}),
 				plainPanel(
-					e.elem(),
+					e.elem()(),
 				),
 			),
 		),
@@ -185,7 +169,7 @@ func (p *ExamplesDef) renderExample(i int) r.Element {
 func (p *ExamplesDef) buildExampleNavTab(i int, t tab, title string) *r.LiDef {
 	return r.Li(
 		r.LiProps(func(lip *r.LiPropsDef) {
-			if p.State().selectedTabs[i] == t {
+			if p.State().selectedTabs.Get(i) == t {
 				lip.ClassName = "active"
 			}
 			lip.Role = "presentation"
@@ -206,10 +190,7 @@ func (p *ExamplesDef) handleTabChange(i int, t tab) func(*r.SyntheticMouseEvent)
 		cts := p.State().selectedTabs
 		newSt := p.State()
 
-		newSt.selectedTabs = make([]tab, len(cts))
-		copy(newSt.selectedTabs, cts)
-		newSt.selectedTabs[i] = t
-
+		newSt.selectedTabs = cts.Set(i, t)
 		p.SetState(newSt)
 
 		e.PreventDefault()

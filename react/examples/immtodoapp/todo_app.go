@@ -1,4 +1,4 @@
-package todoapp
+package immtodoapp
 
 import (
 	"fmt"
@@ -8,15 +8,22 @@ import (
 )
 
 //go:generate reactGen
+//go:generate immutableGen
 
 // TodoAppDef is the definition fo the TodoApp component
 type TodoAppDef struct {
 	r.ComponentDef
 }
 
+type _Imm_item struct {
+	name string
+}
+
+type _Imm_itemS []*item
+
 // TodoAppState is the state type for the TodoApp component
 type TodoAppState struct {
-	items    []string
+	items    *itemS
 	currItem string
 }
 
@@ -27,34 +34,18 @@ func TodoApp() *TodoAppDef {
 	return res
 }
 
-// Equals must be defined because struct val instances of TodoAppState cannot
-// be compared. It is generally bad practice to have mutable values in state in
-// this way; github.com/myitcv/immutable seeks to help address this problem.
-// See github.com/myitcv/gopherjs/react/examples/immtodoapp for an example
-func (c TodoAppState) Equals(v TodoAppState) bool {
-	if c.currItem != v.currItem {
-		return false
+func (t *TodoAppDef) GetInitialState() TodoAppState {
+	return TodoAppState{
+		items: new(itemS),
 	}
-
-	if len(v.items) != len(c.items) {
-		return false
-	}
-
-	for i := range v.items {
-		if v.items[i] != c.items[i] {
-			return false
-		}
-	}
-
-	return true
 }
 
 // Render renders the TodoApp component
 func (t *TodoAppDef) Render() r.Element {
 	var entries []*r.LiDef
 
-	for _, v := range t.State().items {
-		entry := r.Li(nil, r.S(v))
+	for _, v := range t.State().items.Range() {
+		entry := r.Li(nil, r.S(v.name()))
 		entries = append(entries, entry)
 	}
 
@@ -95,7 +86,7 @@ func (t *TodoAppDef) Render() r.Element {
 						bp.ClassName = "btn btn-default"
 						bp.OnClick = t.onAddClicked
 					}),
-					r.S(fmt.Sprintf("Add #%v", len(t.State().items)+1)),
+					r.S(fmt.Sprintf("Add #%v", t.State().items.Len()+1)),
 				),
 			),
 		),
@@ -113,7 +104,8 @@ func (t *TodoAppDef) onCurrItemChange(se *r.SyntheticEvent) {
 
 func (t *TodoAppDef) onAddClicked(se *r.SyntheticMouseEvent) {
 	ns := t.State()
-	ns.items = append(ns.items, ns.currItem)
+
+	ns.items = ns.items.Append(new(item).setName(ns.currItem))
 	ns.currItem = ""
 
 	t.SetState(ns)

@@ -33,5 +33,5 @@ func (e *ExamplesDef) GetInitialStateIntf() react.State {
 }
 
 func (e ExamplesState) EqualsIntf(v interface{}) bool {
-	return e.Equals(v.(ExamplesState))
+	return e == v.(ExamplesState)
 }
