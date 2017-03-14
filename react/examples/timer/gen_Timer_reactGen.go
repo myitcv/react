@@ -4,13 +4,8 @@ package timer
 
 import "github.com/myitcv/gopherjs/react"
 
-func (t *TimerDef) ShouldComponentUpdateIntf(nextProps, nextState interface{}) bool {
-	should := false
-	{
-		v := nextState.(TimerState)
-		should = should || t.State() != v
-	}
-	return should
+func (t *TimerDef) ShouldComponentUpdateIntf(nextProps interface{}) bool {
+	return true
 }
 
 // SetState is an auto-generated proxy proxy to update the state for the
@@ -35,4 +30,8 @@ var _ react.State = TimerState{}
 // GetInitialStateIntf is an auto-generated proxy to GetInitialState
 func (t *TimerDef) GetInitialStateIntf() react.State {
 	return TimerState{}
+}
+
+func (t TimerState) EqualsIntf(v interface{}) bool {
+	return t == v.(TimerState)
 }

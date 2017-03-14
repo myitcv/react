@@ -33,32 +33,28 @@ type ExamplesState struct {
 	selectedTabs []tab
 }
 
-func (e *ExamplesDef) ShouldComponentUpdate(n ExamplesState) bool {
-	should := false
-
-	c := e.State()
-
-	if len(c.goSource) == len(n.goSource) {
-		for i := range c.goSource {
-			if c.goSource[i] != n.goSource[i] {
-				should = true
-			}
-		}
-	} else {
-		should = true
+func (c ExamplesState) Equals(n ExamplesState) bool {
+	if len(c.goSource) != len(n.goSource) {
+		return false
 	}
 
-	if len(c.selectedTabs) == len(n.selectedTabs) {
-		for i := range c.selectedTabs {
-			if c.selectedTabs[i] != n.selectedTabs[i] {
-				should = true
-			}
+	for i := range c.goSource {
+		if c.goSource[i] != n.goSource[i] {
+			return false
 		}
-	} else {
-		should = true
 	}
 
-	return should
+	if len(c.selectedTabs) != len(n.selectedTabs) {
+		return false
+	}
+
+	for i := range c.selectedTabs {
+		if c.selectedTabs[i] != n.selectedTabs[i] {
+			return false
+		}
+	}
+
+	return true
 }
 
 // ComponentDidMount is a React lifecycle method for the Examples component
@@ -94,6 +90,7 @@ func (p *ExamplesDef) GetInitialState() ExamplesState {
 func (p *ExamplesDef) Render() r.Element {
 	toRender := []r.Element{
 		r.H3(nil, r.S("Reference")),
+		r.P(nil, r.S("This entire page is a React application. An outer "), r.Code(nil, r.S("Examples")), r.S(" component contains a number of inner components.")),
 		r.P(nil,
 			r.S("For the source code, raising issues, questions etc, please see "),
 			r.A(
