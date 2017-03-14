@@ -23,7 +23,7 @@ type TimerState struct {
 
 // Timer creates instances of the Timer component
 func Timer() *TimerDef {
-	res := &TimerDef{}
+	res := new(TimerDef)
 	r.BlessElement(res, nil)
 	return res
 }

@@ -4,6 +4,10 @@ package main
 
 import "github.com/myitcv/gopherjs/react"
 
+func (e *ExamplesDef) ShouldComponentUpdateIntf(nextProps, nextState interface{}) bool {
+	return e.ShouldComponentUpdate(nextState.(ExamplesState))
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // Examples component.  SetState does not immediately mutate e.State()
 // but creates a pending state transition.

@@ -4,6 +4,15 @@ package markdowneditor
 
 import "github.com/myitcv/gopherjs/react"
 
+func (m *MarkdownEditorDef) ShouldComponentUpdateIntf(nextProps, nextState interface{}) bool {
+	should := false
+	{
+		v := nextState.(MarkdownEditorState)
+		should = should || m.State() != v
+	}
+	return should
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // MarkdownEditor component.  SetState does not immediately mutate m.State()
 // but creates a pending state transition.

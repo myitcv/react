@@ -2,6 +2,15 @@
 
 package hellomessage
 
+func (h *HelloMessageDef) ShouldComponentUpdateIntf(nextProps, nextState interface{}) bool {
+	should := false
+	{
+		v := nextProps.(HelloMessageProps)
+		should = should || h.Props() != v
+	}
+	return should
+}
+
 // Props is an auto-generated proxy to the current props of HelloMessage
 func (h *HelloMessageDef) Props() HelloMessageProps {
 	uprops := h.ComponentDef.Props()
