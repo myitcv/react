@@ -1,7 +1,7 @@
     ./_vendor/src/golang.org/x/sys                99f16d856c9836c42d24e7ab64ea72916925fa97  https://go.googlesource.com/sys
     ./_vendor/src/golang.org/x/crypto             728b753d0135da6801d45a38e6f43ff55779c5c2  https://go.googlesource.com/crypto
     ./_vendor/src/golang.org/x/tools              f60b69ed8cd7a29e91f87050ae23a29581a0f367  https://go.googlesource.com/tools
-    ./_vendor/src/github.com/gopherjs/gopherjs    7d94d732be268c4904141f8b8604eb2d6d6544a1  git@github.com:gopherjs/gopherjs
+    ./_vendor/src/github.com/gopherjs/gopherjs    d911b80ba9989b4f4703d546b827dbedfd8ea47f  git@github.com:gopherjs/gopherjs
     ./_vendor/src/github.com/kisielk/gotool       0de1eaf82fa3f583ce21fde859f1e7e0c5e9b220  git@github.com:kisielk/gotool
     ./_vendor/src/github.com/myitcv/gogenerate    abeb27ad4b6bc95fac0312a17dd03a82643476ab  git@github.com:myitcv/gogenerate
     ./_vendor/src/github.com/fsnotify/fsnotify    7d7316ed6e1ed2de075aab8dfc76de5d158d66e1  git@github.com:fsnotify/fsnotify

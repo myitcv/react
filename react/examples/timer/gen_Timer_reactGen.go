@@ -4,6 +4,15 @@ package timer
 
 import "github.com/myitcv/gopherjs/react"
 
+func (t *TimerDef) ShouldComponentUpdateIntf(nextProps, nextState interface{}) bool {
+	should := false
+	{
+		v := nextState.(TimerState)
+		should = should || t.State() != v
+	}
+	return should
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // Timer component.  SetState does not immediately mutate t.State()
 // but creates a pending state transition.

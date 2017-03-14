@@ -22,10 +22,8 @@ const (
 
 // Examples creates instances of the Examples component
 func Examples() *ExamplesDef {
-	res := &ExamplesDef{}
-
+	res := new(ExamplesDef)
 	r.BlessElement(res, nil)
-
 	return res
 }
 
@@ -33,6 +31,34 @@ func Examples() *ExamplesDef {
 type ExamplesState struct {
 	goSource     []string
 	selectedTabs []tab
+}
+
+func (e *ExamplesDef) ShouldComponentUpdate(n ExamplesState) bool {
+	should := false
+
+	c := e.State()
+
+	if len(c.goSource) == len(n.goSource) {
+		for i := range c.goSource {
+			if c.goSource[i] != n.goSource[i] {
+				should = true
+			}
+		}
+	} else {
+		should = true
+	}
+
+	if len(c.selectedTabs) == len(n.selectedTabs) {
+		for i := range c.selectedTabs {
+			if c.selectedTabs[i] != n.selectedTabs[i] {
+				should = true
+			}
+		}
+	} else {
+		should = true
+	}
+
+	return should
 }
 
 // ComponentDidMount is a React lifecycle method for the Examples component
@@ -170,8 +196,6 @@ func (p *ExamplesDef) buildExampleNavTab(i int, t tab, title string) *r.LiDef {
 		r.A(
 			r.AProps(func(ap *r.APropsDef) {
 				ap.Href = "#"
-
-				// TODO fix Timer interaction bug before uncommenting
 				ap.OnClick = p.handleTabChange(i, t)
 			}),
 			r.S(title),
@@ -182,10 +206,11 @@ func (p *ExamplesDef) buildExampleNavTab(i int, t tab, title string) *r.LiDef {
 
 func (p *ExamplesDef) handleTabChange(i int, t tab) func(*r.SyntheticMouseEvent) {
 	return func(e *r.SyntheticMouseEvent) {
+		cts := p.State().selectedTabs
 		newSt := p.State()
 
-		// TODO this is a hack for now... should have to copy slice
-		// when using PureRender
+		newSt.selectedTabs = make([]tab, len(cts))
+		copy(newSt.selectedTabs, cts)
 		newSt.selectedTabs[i] = t
 
 		p.SetState(newSt)

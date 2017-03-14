@@ -57,6 +57,7 @@ type generatesElement interface {
 }
 
 type Component interface {
+	ShouldComponentUpdateIntf(nextProps, nextState interface{}) bool
 	Render() Element
 
 	setThis(this *js.Object)
@@ -175,18 +176,28 @@ func buildReactComponent(typ reflect.Type) *js.Object {
 	}))
 
 	compDef.Set(reactCompShouldComponentUpdate, js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
-		// props := this.Get(reactCompProps)
-		// cw := props.Get(nestedComponentWrapper)
+		props := this.Get(reactCompProps)
+		cw := props.Get(nestedComponentWrapper)
+		cmp := cw.Interface().(Component)
 
-		// nextProps := arguments[0].Get(nestedProps).Interface()
-		// nextState := arguments[1].Get(nestedState).Interface()
+		cmp.setThis(this)
 
-		// currProps := this.Get(reactCompProps).Get(nestedProps).Interface()
-		// currState := this.Get(reactCompState).Get(nestedState).Interface()
+		var nextProps interface{} = nil
+		var nextState interface{} = nil
 
-		// TODO support for custom shouldComponentUpdate will be placed here
+		if arguments[0] != nil {
+			if i := arguments[0].Get(nestedProps); i != nil {
+				nextProps = i.Interface()
+			}
+		}
 
-		return true
+		if arguments[1] != nil {
+			if i := arguments[1].Get(nestedState); i != nil {
+				nextState = i.Interface()
+			}
+		}
+
+		return cmp.ShouldComponentUpdateIntf(nextProps, nextState)
 	}))
 
 	compDef.Set(reactCompComponentDidMount, js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {

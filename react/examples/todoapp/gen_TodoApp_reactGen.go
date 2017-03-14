@@ -4,6 +4,10 @@ package todoapp
 
 import "github.com/myitcv/gopherjs/react"
 
+func (t *TodoAppDef) ShouldComponentUpdateIntf(nextProps, nextState interface{}) bool {
+	return t.ShouldComponentUpdate(nextState.(TodoAppState))
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // TodoApp component.  SetState does not immediately mutate t.State()
 // but creates a pending state transition.
