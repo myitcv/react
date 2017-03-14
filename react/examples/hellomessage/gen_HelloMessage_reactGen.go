@@ -2,7 +2,8 @@
 
 package hellomessage
 
-func (p *HelloMessageDef) Props() HelloMessageProps {
-	uprops := p.ComponentDef.Props()
+// Props is an auto-generated proxy to the current props of HelloMessage
+func (h *HelloMessageDef) Props() HelloMessageProps {
+	uprops := h.ComponentDef.Props()
 	return uprops.(HelloMessageProps)
 }

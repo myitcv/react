@@ -8,16 +8,19 @@ import (
 
 //go:generate reactGen
 
+// MarkdownEditorDef is the definition of the MarkdownEditor component
 type MarkdownEditorDef struct {
 	r.ComponentDef
 
 	remark *remarkable.Remarkable
 }
 
+// MarkdownEditorState is the state type for the MarkdownEditor component
 type MarkdownEditorState struct {
 	value string
 }
 
+// MarkdownEditor creates instances of the MarkdownEditor component
 func MarkdownEditor() *MarkdownEditorDef {
 	res := &MarkdownEditorDef{}
 	res.remark = remarkable.NewRemarkable()
@@ -27,40 +30,42 @@ func MarkdownEditor() *MarkdownEditorDef {
 	return res
 }
 
-func (p *MarkdownEditorDef) GetInitialState() MarkdownEditorState {
+// GetInitialState returns the initial state for a MarkdownEditor component
+func (m *MarkdownEditorDef) GetInitialState() MarkdownEditorState {
 	return MarkdownEditorState{
 		value: "Type some *markdown* here!",
 	}
 }
 
-func (p *MarkdownEditorDef) Render() r.Element {
+// Render renders the MarkdownEditor component
+func (m *MarkdownEditorDef) Render() r.Element {
 	return r.Div(nil,
 		r.H3(nil, r.S("Input")),
 		r.TextArea(
 			r.TextAreaProps(func(tap *r.TextAreaPropsDef) {
 				tap.ClassName = "form-control"
-				tap.Value = p.State().value
-				tap.OnChange = p.handleChange
+				tap.Value = m.State().value
+				tap.OnChange = m.handleChange
 			}),
 		),
 		r.H3(nil, r.S("Output")),
 		r.Div(
 			r.DivProps(func(dp *r.DivPropsDef) {
 				dp.ClassName = "well"
-				dp.DangerouslySetInnerHTML = p.getRawMarkup()
+				dp.DangerouslySetInnerHTML = m.getRawMarkup()
 			}),
 		),
 	)
 }
 
-func (p *MarkdownEditorDef) handleChange(se *r.SyntheticEvent) {
+func (m *MarkdownEditorDef) handleChange(se *r.SyntheticEvent) {
 	target := se.Target().(*dom.HTMLTextAreaElement)
 
-	p.SetState(MarkdownEditorState{value: target.Value})
+	m.SetState(MarkdownEditorState{value: target.Value})
 }
 
-func (p *MarkdownEditorDef) getRawMarkup() *r.DangerousInnerHTMLDef {
-	rem := p.remark.Render(p.State().value)
+func (m *MarkdownEditorDef) getRawMarkup() *r.DangerousInnerHTMLDef {
+	rem := m.remark.Render(m.State().value)
 
 	return r.DangerousInnerHTML(rem)
 }

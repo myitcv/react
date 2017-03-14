@@ -4,16 +4,26 @@ package timer
 
 import "github.com/myitcv/gopherjs/react"
 
-func (p *TimerDef) SetState(s TimerState) {
-	p.ComponentDef.SetState(s)
+// SetState is an auto-generated proxy proxy to update the state for the
+// Timer component.  SetState does not immediately mutate t.State()
+// but creates a pending state transition.
+func (t *TimerDef) SetState(s TimerState) {
+	t.ComponentDef.SetState(s)
 }
 
-func (p *TimerDef) State() TimerState {
-	return p.ComponentDef.State().(TimerState)
+// State is an auto-generated proxy to return the current state in use for the
+// render of the Timer component
+func (t *TimerDef) State() TimerState {
+	return t.ComponentDef.State().(TimerState)
 }
 
-func (p TimerState) IsState() {}
+// IsState is an auto-generated definition so that TimerState implements
+// the github.com/myitcv/gopherjs/react.State interface.
+func (t TimerState) IsState() {}
 
-func (p *TimerDef) GetInitialStateIntf() react.State {
+var _ react.State = TimerState{}
+
+// GetInitialStateIntf is an auto-generated proxy to GetInitialState
+func (t *TimerDef) GetInitialStateIntf() react.State {
 	return TimerState{}
 }

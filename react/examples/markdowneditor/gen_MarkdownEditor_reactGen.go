@@ -4,16 +4,26 @@ package markdowneditor
 
 import "github.com/myitcv/gopherjs/react"
 
-func (p *MarkdownEditorDef) SetState(s MarkdownEditorState) {
-	p.ComponentDef.SetState(s)
+// SetState is an auto-generated proxy proxy to update the state for the
+// MarkdownEditor component.  SetState does not immediately mutate m.State()
+// but creates a pending state transition.
+func (m *MarkdownEditorDef) SetState(s MarkdownEditorState) {
+	m.ComponentDef.SetState(s)
 }
 
-func (p *MarkdownEditorDef) State() MarkdownEditorState {
-	return p.ComponentDef.State().(MarkdownEditorState)
+// State is an auto-generated proxy to return the current state in use for the
+// render of the MarkdownEditor component
+func (m *MarkdownEditorDef) State() MarkdownEditorState {
+	return m.ComponentDef.State().(MarkdownEditorState)
 }
 
-func (p MarkdownEditorState) IsState() {}
+// IsState is an auto-generated definition so that MarkdownEditorState implements
+// the github.com/myitcv/gopherjs/react.State interface.
+func (m MarkdownEditorState) IsState() {}
 
-func (p *MarkdownEditorDef) GetInitialStateIntf() react.State {
-	return p.GetInitialState()
+var _ react.State = MarkdownEditorState{}
+
+// GetInitialStateIntf is an auto-generated proxy to GetInitialState
+func (m *MarkdownEditorDef) GetInitialStateIntf() react.State {
+	return m.GetInitialState()
 }
