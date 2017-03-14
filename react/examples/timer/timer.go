@@ -7,6 +7,8 @@ import (
 	r "github.com/myitcv/gopherjs/react"
 )
 
+//go:generate reactGen
+
 type TimerDef struct {
 	r.ComponentDef
 
@@ -23,12 +25,6 @@ func Timer() *TimerDef {
 	r.BlessElement(res, nil)
 
 	return res
-}
-
-func (p *TimerDef) GetInitialState() TimerState {
-	return TimerState{
-		secondsElapsed: 0,
-	}
 }
 
 func (p *TimerDef) ComponentWillUnmount() {

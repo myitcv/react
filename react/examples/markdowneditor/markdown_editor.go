@@ -6,6 +6,8 @@ import (
 	"honnef.co/go/js/dom"
 )
 
+//go:generate reactGen
+
 type MarkdownEditorDef struct {
 	r.ComponentDef
 

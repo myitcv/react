@@ -6,6 +6,8 @@ import (
 	r "github.com/myitcv/gopherjs/react"
 )
 
+//go:generate reactGen
+
 type ExamplesDef struct {
 	r.ComponentDef
 }

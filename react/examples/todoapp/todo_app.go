@@ -7,6 +7,8 @@ import (
 	"honnef.co/go/js/dom"
 )
 
+//go:generate reactGen
+
 type TodoAppDef struct {
 	r.ComponentDef
 }
@@ -22,10 +24,6 @@ func TodoApp() *TodoAppDef {
 	r.BlessElement(res, nil)
 
 	return res
-}
-
-func (p *TodoAppDef) GetInitialState() TodoAppState {
-	return TodoAppState{}
 }
 
 func (p *TodoAppDef) Render() r.Element {
