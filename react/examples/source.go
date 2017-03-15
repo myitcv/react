@@ -1,4 +1,4 @@
-package main
+package examples
 
 import (
 	r "github.com/myitcv/gopherjs/react"
