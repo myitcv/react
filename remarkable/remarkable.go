@@ -1,3 +1,6 @@
+// Copyright (c) 2016 Paul Jolly <paul@myitcv.org.uk>, all rights reserved.
+// Use of this document is governed by a license found in the LICENSE document.
+
 // Package remarkable provides an incomplete wrapper for remarkable (https://github.com/jonschlinkert/remarkable),
 // a pure Javascript markdown parser
 package remarkable
