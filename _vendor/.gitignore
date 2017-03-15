@@ -1,2 +1,4 @@
 /bin
 /pkg
+vendor/
+_vendor/
