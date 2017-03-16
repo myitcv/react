@@ -4,7 +4,7 @@ To run this web app locally:
 
 ```bash
 npm install
-gopherjs serve -w
+gopherjs serve
 ```
 
 Now navigate to [http://localhost:8080/github.com/myitcv/gopherjs/sites/todoapp/](http://localhost:8080/github.com/myitcv/gopherjs/sites/todoapp/).
