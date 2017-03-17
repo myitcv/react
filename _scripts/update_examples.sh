@@ -5,16 +5,40 @@
 
 source "${BASH_SOURCE%/*}/common.bash"
 
+r=$(mktemp -d)
 t=$(mktemp -d)
+
+echo "Cloning git@github.com:myitcv/gopherjs_examples_sites.git into $r"
+
+git clone -q git@github.com:myitcv/gopherjs_examples_sites.git $r/gopherjs_examples_sites
+rm -rf $r/gopherjs_examples_sites/*
+
+echo ""
+
+echo "Copying..."
 
 for i in $(command ls "${BASH_SOURCE%/*}/../sites")
 do
 	echo $i
-	aws s3 rm --quiet s3://github.com.myitcv.gopherjs.react.examples/$i --recursive
 	(
 		cd $t
 		wget --quiet -p -k http://localhost:8080/github.com/myitcv/gopherjs/sites/$i/
 	)
-	aws s3 cp --quiet $t/localhost:8080/github.com/myitcv/gopherjs/sites/$i/ s3://github.com.myitcv.gopherjs.react.examples/$i --recursive
+	cp -rp $t/localhost:8080/github.com/myitcv/gopherjs/sites/$i/ $r/gopherjs_examples_sites/
 done
+
+echo ""
+
+cd $r/gopherjs_examples_sites
+git config hooks.stopbinaries false
+
+if [ -z "$(git status --porcelain)" ]
+then
+	echo "No changes to commit"
+	exit 0
+fi
+
+git add -A
+git commit -am "Examples update at $(date)"
+git push
 
