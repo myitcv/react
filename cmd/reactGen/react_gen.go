@@ -1,6 +1,9 @@
 // Copyright (c) 2016 Paul Jolly <paul@myitcv.org.uk>, all rights reserved.
 // Use of this document is governed by a license found in the LICENSE document.
 
+// reactGen is a go generate generator that helps to automate the process of
+// writing GopherJS React web applications.
+//
 package main
 
 import (
