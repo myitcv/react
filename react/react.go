@@ -1,6 +1,9 @@
 // Copyright (c) 2016 Paul Jolly <paul@myitcv.org.uk>, all rights reserved.
 // Use of this document is governed by a license found in the LICENSE document.
 
+// Package react is a set of GopherJS bindings for Facebook's React, a
+// Javascript library for building user interfaces.
+//
 package react
 
 import (
