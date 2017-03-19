@@ -84,7 +84,8 @@ func (o *output) genImmStructs(structs []immStruct) {
 
 		o.pln()
 
-		o.pfln("var _ immutable.Immutable = &%v{}", s.name)
+		o.pfln("var _ immutable.Immutable = new(%v)", s.name)
+		o.pfln("var _ = new(%v).__tmpl", s.name)
 		o.pln()
 
 		exp := exporter(s.name)

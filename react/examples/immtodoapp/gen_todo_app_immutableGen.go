@@ -2,6 +2,8 @@
 
 package immtodoapp
 
+//immutableVet:skipFile
+
 import (
 	"github.com/myitcv/immutable"
 )
@@ -17,7 +19,8 @@ type itemS struct {
 	__tmpl   _Imm_itemS
 }
 
-var _ immutable.Immutable = &itemS{}
+var _ immutable.Immutable = new(itemS)
+var _ = new(itemS).__tmpl
 
 func newItemS(s ...*item) *itemS {
 	c := make([]*item, len(s))
@@ -172,7 +175,8 @@ type item struct {
 	__tmpl  _Imm_item
 }
 
-var _ immutable.Immutable = &item{}
+var _ immutable.Immutable = new(item)
+var _ = new(item).__tmpl
 
 func (s *item) AsMutable() *item {
 	if s.Mutable() {

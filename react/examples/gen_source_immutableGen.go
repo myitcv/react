@@ -2,39 +2,187 @@
 
 package examples
 
+//immutableVet:skipFile
+
 import (
 	"github.com/myitcv/immutable"
-
-	r "github.com/myitcv/gopherjs/react"
 )
 
 //
-// example is an immutable type and has the following template:
+// exampleSource is an immutable type and has the following template:
 //
-// 	struct {
-// 		title		string
-// 		message		string
-// 		jsxSourceStr	string
-// 		goSourceFile	string
-// 		goSourceStr	string
-// 		elem		func() r.Element
-// 	}
+// 	map[exampleKey]*source
 //
-type example struct {
-	_title        string
-	_message      string
-	_jsxSourceStr string
-	_goSourceFile string
-	_goSourceStr  string
-	_elem         func() r.Element
-
+type exampleSource struct {
+	theMap  map[exampleKey]*source
 	mutable bool
-	__tmpl  _Imm_example
+	__tmpl  _Imm_exampleSource
 }
 
-var _ immutable.Immutable = &example{}
+var _ immutable.Immutable = new(exampleSource)
+var _ = new(exampleSource).__tmpl
 
-func (s *example) AsMutable() *example {
+func newExampleSource(inits ...func(m *exampleSource)) *exampleSource {
+	res := newExampleSourceCap(0)
+	if len(inits) == 0 {
+		return res
+	}
+
+	return res.WithMutable(func(m *exampleSource) {
+		for _, i := range inits {
+			i(m)
+		}
+	})
+}
+
+func newExampleSourceCap(l int) *exampleSource {
+	return &exampleSource{
+		theMap: make(map[exampleKey]*source, l),
+	}
+}
+
+func (m *exampleSource) Mutable() bool {
+	return m.mutable
+}
+
+func (m *exampleSource) Len() int {
+	if m == nil {
+		return 0
+	}
+
+	return len(m.theMap)
+}
+
+func (m *exampleSource) Get(k exampleKey) (*source, bool) {
+	v, ok := m.theMap[k]
+	return v, ok
+}
+
+func (m *exampleSource) AsMutable() *exampleSource {
+	if m == nil {
+		return nil
+	}
+
+	if m.Mutable() {
+		return m
+	}
+
+	res := m.dup()
+	res.mutable = true
+
+	return res
+}
+
+func (m *exampleSource) dup() *exampleSource {
+	resMap := make(map[exampleKey]*source, len(m.theMap))
+
+	for k := range m.theMap {
+		resMap[k] = m.theMap[k]
+	}
+
+	res := &exampleSource{
+		theMap: resMap,
+	}
+
+	return res
+}
+
+func (m *exampleSource) AsImmutable(v *exampleSource) *exampleSource {
+	if m == nil {
+		return nil
+	}
+
+	if v == m {
+		return m
+	}
+
+	m.mutable = false
+	return m
+}
+
+func (m *exampleSource) Range() map[exampleKey]*source {
+	if m == nil {
+		return nil
+	}
+
+	return m.theMap
+}
+
+func (m *exampleSource) WithMutable(f func(mi *exampleSource)) *exampleSource {
+	res := m.AsMutable()
+	f(res)
+	res = res.AsImmutable(m)
+
+	return res
+}
+
+func (m *exampleSource) WithImmutable(f func(mi *exampleSource)) *exampleSource {
+	prev := m.mutable
+	m.mutable = false
+	f(m)
+	m.mutable = prev
+
+	return m
+}
+
+func (m *exampleSource) Set(k exampleKey, v *source) *exampleSource {
+	if m.mutable {
+		m.theMap[k] = v
+		return m
+	}
+
+	res := m.dup()
+	res.theMap[k] = v
+
+	return res
+}
+
+func (m *exampleSource) Del(k exampleKey) *exampleSource {
+	if _, ok := m.theMap[k]; !ok {
+		return m
+	}
+
+	if m.mutable {
+		delete(m.theMap, k)
+		return m
+	}
+
+	res := m.dup()
+	delete(res.theMap, k)
+
+	return res
+}
+
+func (m *exampleSource) ToMap() map[exampleKey]*source {
+	res := make(map[exampleKey]*source)
+
+	for k, v := range m.theMap {
+		res[k] = v
+	}
+
+	return res
+}
+
+//
+// source is an immutable type and has the following template:
+//
+// 	struct {
+// 		file	string
+// 		src	string
+// 	}
+//
+type source struct {
+	_file string
+	_src  string
+
+	mutable bool
+	__tmpl  _Imm_source
+}
+
+var _ immutable.Immutable = new(source)
+var _ = new(source).__tmpl
+
+func (s *source) AsMutable() *source {
 	if s.Mutable() {
 		return s
 	}
@@ -44,7 +192,7 @@ func (s *example) AsMutable() *example {
 	return &res
 }
 
-func (s *example) AsImmutable(v *example) *example {
+func (s *source) AsImmutable(v *source) *source {
 	if s == nil {
 		return nil
 	}
@@ -57,11 +205,11 @@ func (s *example) AsImmutable(v *example) *example {
 	return s
 }
 
-func (s *example) Mutable() bool {
+func (s *source) Mutable() bool {
 	return s.mutable
 }
 
-func (s *example) WithMutable(f func(si *example)) *example {
+func (s *source) WithMutable(f func(si *source)) *source {
 	res := s.AsMutable()
 	f(res)
 	res = res.AsImmutable(s)
@@ -69,7 +217,7 @@ func (s *example) WithMutable(f func(si *example)) *example {
 	return res
 }
 
-func (s *example) WithImmutable(f func(si *example)) *example {
+func (s *source) WithImmutable(f func(si *source)) *source {
 	prev := s.mutable
 	s.mutable = false
 	f(s)
@@ -77,93 +225,33 @@ func (s *example) WithImmutable(f func(si *example)) *example {
 
 	return s
 }
-func (s *example) title() string {
-	return s._title
+func (s *source) file() string {
+	return s._file
 }
 
-// setTitle is the setter for Title()
-func (s *example) setTitle(n string) *example {
+// setFile is the setter for File()
+func (s *source) setFile(n string) *source {
 	if s.mutable {
-		s._title = n
+		s._file = n
 		return s
 	}
 
 	res := *s
-	res._title = n
+	res._file = n
 	return &res
 }
-func (s *example) message() string {
-	return s._message
+func (s *source) src() string {
+	return s._src
 }
 
-// setMessage is the setter for Message()
-func (s *example) setMessage(n string) *example {
+// setSrc is the setter for Src()
+func (s *source) setSrc(n string) *source {
 	if s.mutable {
-		s._message = n
+		s._src = n
 		return s
 	}
 
 	res := *s
-	res._message = n
-	return &res
-}
-func (s *example) jsxSourceStr() string {
-	return s._jsxSourceStr
-}
-
-// setJsxSourceStr is the setter for JsxSourceStr()
-func (s *example) setJsxSourceStr(n string) *example {
-	if s.mutable {
-		s._jsxSourceStr = n
-		return s
-	}
-
-	res := *s
-	res._jsxSourceStr = n
-	return &res
-}
-func (s *example) goSourceFile() string {
-	return s._goSourceFile
-}
-
-// setGoSourceFile is the setter for GoSourceFile()
-func (s *example) setGoSourceFile(n string) *example {
-	if s.mutable {
-		s._goSourceFile = n
-		return s
-	}
-
-	res := *s
-	res._goSourceFile = n
-	return &res
-}
-func (s *example) goSourceStr() string {
-	return s._goSourceStr
-}
-
-// setGoSourceStr is the setter for GoSourceStr()
-func (s *example) setGoSourceStr(n string) *example {
-	if s.mutable {
-		s._goSourceStr = n
-		return s
-	}
-
-	res := *s
-	res._goSourceStr = n
-	return &res
-}
-func (s *example) elem() func() r.Element {
-	return s._elem
-}
-
-// setElem is the setter for Elem()
-func (s *example) setElem(n func() r.Element) *example {
-	if s.mutable {
-		s._elem = n
-		return s
-	}
-
-	res := *s
-	res._elem = n
+	res._src = n
 	return &res
 }

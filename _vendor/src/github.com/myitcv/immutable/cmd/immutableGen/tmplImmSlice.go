@@ -4,7 +4,8 @@
 package main
 
 const immSliceTmpl = `
-var _ immutable.Immutable = &{{.Name}}{}
+var _ immutable.Immutable = new({{.Name}})
+var _ = new({{.Name}}).__tmpl
 
 func {{Export "New"}}{{Capitalise .Name}}(s ...{{.Type}}) *{{.Name}} {
 	c := make([]{{.Type}}, len(s))
