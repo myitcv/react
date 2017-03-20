@@ -5,6 +5,11 @@ package examples
 
 import (
 	r "github.com/myitcv/gopherjs/react"
+	"github.com/myitcv/gopherjs/react/examples/hellomessage"
+	"github.com/myitcv/gopherjs/react/examples/immtodoapp"
+	"github.com/myitcv/gopherjs/react/examples/markdowneditor"
+	"github.com/myitcv/gopherjs/react/examples/timer"
+	"github.com/myitcv/gopherjs/react/examples/todoapp"
 	"honnef.co/go/js/xhr"
 )
 
@@ -31,31 +36,30 @@ func Examples() *ExamplesDef {
 }
 
 type (
-	_Imm_exampleS []*example
-	_Imm_tabS     []tab
+	_Imm_tabS map[exampleKey]tab
 )
 
 // ExamplesState is the state type for the Examples component
 type ExamplesState struct {
-	examples     *exampleS
+	examples     *exampleSource
 	selectedTabs *tabS
 }
 
 // ComponentWillMount is a React lifecycle method for the Examples component
 func (p *ExamplesDef) ComponentWillMount() {
 	if !fetchStarted {
-		for i, e := range examples.Range() {
-			go func(i int, e *example) {
-				req := xhr.NewRequest("GET", "https://raw.githubusercontent.com/myitcv/gopherjs/master/react/examples/"+e.goSourceFile())
+		for i, e := range sources.Range() {
+			go func(i exampleKey, e *source) {
+				req := xhr.NewRequest("GET", "https://raw.githubusercontent.com/myitcv/gopherjs/master/react/examples/"+e.file())
 				err := req.Send(nil)
 				if err != nil {
 					panic(err)
 				}
 
-				examples = examples.Set(i, e.setGoSourceStr(req.ResponseText))
+				sources = sources.Set(i, e.setSrc(req.ResponseText))
 
 				newSt := p.State()
-				newSt.examples = examples
+				newSt.examples = sources
 				p.SetState(newSt)
 			}(i, e)
 		}
@@ -67,8 +71,8 @@ func (p *ExamplesDef) ComponentWillMount() {
 // GetInitialState returns in the initial state for the Examples component
 func (p *ExamplesDef) GetInitialState() ExamplesState {
 	return ExamplesState{
-		examples:     examples,
-		selectedTabs: newTabSLen(examples.Len()),
+		examples:     sources,
+		selectedTabs: newTabS(),
 	}
 }
 
@@ -91,14 +95,55 @@ func (p *ExamplesDef) Render() r.Element {
 		r.P(nil,
 			r.S("Note the examples below show the GopherJS source code from "), r.Code(nil, r.S("master")),
 		),
-	}
 
-	for i := range p.State().examples.Range() {
-		if i > 0 {
-			toRender = append(toRender, r.HR(nil))
-		}
+		p.renderExample(
+			exampleHello,
+			r.S("A Simple Example"),
+			r.P(nil, r.S("The hellomessage.HelloMessage component demonstrates the simple use of a Props type.")),
+			helloMessageJsx,
+			hellomessage.HelloMessage(hellomessage.HelloMessageProps{Name: "Jane"}),
+		),
 
-		toRender = append(toRender, p.renderExample(i))
+		r.HR(nil),
+
+		p.renderExample(
+			exampleTimer,
+			r.S("A Stateful Component"),
+			r.P(nil, r.S("The timer.Timer component demonstrates the use of a State type.")),
+			timerJsx,
+			timer.Timer(),
+		),
+
+		r.HR(nil),
+
+		p.renderExample(
+			exampleTodo,
+			r.S("An Application"),
+			r.P(nil, r.S("The todoapp.TodoApp component demonstrates the use of state and event handling, but also the "+
+				"problems of having a non-comparable state struct type.")),
+			applicationJsx,
+			todoapp.TodoApp(),
+		),
+
+		r.HR(nil),
+
+		p.renderExample(
+			exampleImmTodo,
+			r.Span(nil, r.S("An Application using "), r.Code(nil, r.S("github.com/myitcv/immutable"))),
+			r.P(nil, r.S("The immtodoapp.TodoApp component is a reimplementation of todoapp.TodoApp using immutable data structures.")),
+			"n/a",
+			immtodoapp.TodoApp(),
+		),
+
+		r.HR(nil),
+
+		p.renderExample(
+			exampleMarkdown,
+			r.S("A Component Using External Plugins"),
+			r.P(nil, r.S("The markdowneditor.MarkdownEditor component demonstrates the use of an external Javascript library.")),
+			markdownEditorJsx,
+			markdowneditor.MarkdownEditor(),
+		),
 	}
 
 	return r.Div(
@@ -110,20 +155,25 @@ func (p *ExamplesDef) Render() r.Element {
 	)
 }
 
-func (p *ExamplesDef) renderExample(i int) r.Element {
-	e := p.State().examples.Get(i)
+func (p *ExamplesDef) renderExample(key exampleKey, title, msg r.Element, jsxSrc string, elem r.Element) r.Element {
+
+	var goSrc string
+	src, _ := p.State().examples.Get(key)
+	if src != nil {
+		goSrc = src.src()
+	}
 
 	var code r.Element
-	switch p.State().selectedTabs.Get(i) {
+	switch v, _ := p.State().selectedTabs.Get(key); v {
 	case tabGo:
-		code = r.Pre(nil, r.S(p.State().examples.Get(i).goSourceStr()))
+		code = r.Pre(nil, r.S(goSrc))
 	case tabJsx:
-		code = r.Pre(nil, r.S(e.jsxSourceStr()))
+		code = r.Pre(nil, r.S(jsxSrc))
 	}
 
 	return r.Div(nil,
-		r.H3(nil, r.S(e.title())),
-		r.P(nil, r.S(e.message())),
+		r.H3(nil, title),
+		r.P(nil, msg),
 		r.Div(
 			r.DivProps(func(dp *r.DivPropsDef) {
 				dp.ClassName = "row"
@@ -145,8 +195,8 @@ func (p *ExamplesDef) renderExample(i int) r.Element {
 								ulp.ClassName = "nav nav-tabs"
 							}),
 
-							p.buildExampleNavTab(i, tabGo, "GopherJS"),
-							p.buildExampleNavTab(i, tabJsx, "JSX"),
+							p.buildExampleNavTab(key, tabGo, "GopherJS"),
+							p.buildExampleNavTab(key, tabJsx, "JSX"),
 						),
 					),
 					r.Div(
@@ -161,18 +211,16 @@ func (p *ExamplesDef) renderExample(i int) r.Element {
 				r.DivProps(func(dp *r.DivPropsDef) {
 					dp.ClassName = "col-md-4"
 				}),
-				plainPanel(
-					e.elem()(),
-				),
+				plainPanel(elem),
 			),
 		),
 	)
 }
 
-func (p *ExamplesDef) buildExampleNavTab(i int, t tab, title string) *r.LiDef {
+func (p *ExamplesDef) buildExampleNavTab(key exampleKey, t tab, title string) *r.LiDef {
 	return r.Li(
 		r.LiProps(func(lip *r.LiPropsDef) {
-			if p.State().selectedTabs.Get(i) == t {
+			if v, _ := p.State().selectedTabs.Get(key); v == t {
 				lip.ClassName = "active"
 			}
 			lip.Role = "presentation"
@@ -180,7 +228,7 @@ func (p *ExamplesDef) buildExampleNavTab(i int, t tab, title string) *r.LiDef {
 		r.A(
 			r.AProps(func(ap *r.APropsDef) {
 				ap.Href = "#"
-				ap.OnClick = p.handleTabChange(i, t)
+				ap.OnClick = p.handleTabChange(key, t)
 			}),
 			r.S(title),
 		),
@@ -188,12 +236,12 @@ func (p *ExamplesDef) buildExampleNavTab(i int, t tab, title string) *r.LiDef {
 
 }
 
-func (p *ExamplesDef) handleTabChange(i int, t tab) func(*r.SyntheticMouseEvent) {
+func (p *ExamplesDef) handleTabChange(key exampleKey, t tab) func(*r.SyntheticMouseEvent) {
 	return func(e *r.SyntheticMouseEvent) {
 		cts := p.State().selectedTabs
 		newSt := p.State()
 
-		newSt.selectedTabs = cts.Set(i, t)
+		newSt.selectedTabs = cts.Set(key, t)
 		p.SetState(newSt)
 
 		e.PreventDefault()

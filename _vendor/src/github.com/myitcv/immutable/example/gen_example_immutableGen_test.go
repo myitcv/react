@@ -6,6 +6,7 @@
 package example
 
 //go:generate echo "hello world"
+//immutableVet:skipFile
 
 import (
 	"github.com/myitcv/immutable"
@@ -22,7 +23,8 @@ type myTestMap struct {
 	__tmpl  _Imm_myTestMap
 }
 
-var _ immutable.Immutable = &myTestMap{}
+var _ immutable.Immutable = new(myTestMap)
+var _ = new(myTestMap).__tmpl
 
 func newMyTestMap(inits ...func(m *myTestMap)) *myTestMap {
 	res := newMyTestMapCap(0)

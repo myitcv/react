@@ -222,6 +222,7 @@ func (o *output) genImmTypes() {
 			o.pf("//go:generate %v\n", v)
 		}
 
+		o.pln("//immutableVet:skipFile")
 		o.pln("")
 
 		o.pln("import (")

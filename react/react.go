@@ -21,7 +21,6 @@ import (
 
 const (
 	reactCompProps                     = "props"
-	reactCompState                     = "state"
 	reactCompLastState                 = "_lastState"
 	reactCompDisplayName               = "displayName"
 	reactCompSetState                  = "setState"
@@ -48,9 +47,8 @@ var object = js.Global.Get("Object")
 
 // ComponentDef is embedded in a type definition to indicate the type is a component
 type ComponentDef struct {
-	state interface{}
-	elem  *js.Object
-	this  *js.Object
+	elem *js.Object
+	this *js.Object
 }
 
 var compMap = make(map[reflect.Type]*js.Object)

@@ -2,189 +2,42 @@
 
 package examples
 
+//immutableVet:skipFile
+
 import (
 	"github.com/myitcv/immutable"
 )
 
 //
-// exampleS is an immutable type and has the following template:
-//
-// 	[]*example
-//
-type exampleS struct {
-	theSlice []*example
-	mutable  bool
-	__tmpl   _Imm_exampleS
-}
-
-var _ immutable.Immutable = &exampleS{}
-
-func newExampleS(s ...*example) *exampleS {
-	c := make([]*example, len(s))
-	copy(c, s)
-
-	return &exampleS{
-		theSlice: c,
-	}
-}
-
-func newExampleSLen(l int) *exampleS {
-	c := make([]*example, l)
-
-	return &exampleS{
-		theSlice: c,
-	}
-}
-
-func (m *exampleS) Mutable() bool {
-	return m.mutable
-}
-
-func (m *exampleS) Len() int {
-	if m == nil {
-		return 0
-	}
-
-	return len(m.theSlice)
-}
-
-func (m *exampleS) Get(i int) *example {
-	return m.theSlice[i]
-}
-
-func (m *exampleS) AsMutable() *exampleS {
-	if m == nil {
-		return nil
-	}
-
-	if m.Mutable() {
-		return m
-	}
-
-	res := m.dup()
-	res.mutable = true
-
-	return res
-}
-
-func (m *exampleS) dup() *exampleS {
-	resSlice := make([]*example, len(m.theSlice))
-
-	for i := range m.theSlice {
-		resSlice[i] = m.theSlice[i]
-	}
-
-	res := &exampleS{
-		theSlice: resSlice,
-	}
-
-	return res
-}
-
-func (m *exampleS) AsImmutable(v *exampleS) *exampleS {
-	if m == nil {
-		return nil
-	}
-
-	if v == m {
-		return m
-	}
-
-	m.mutable = false
-	return m
-}
-
-func (m *exampleS) Range() []*example {
-	if m == nil {
-		return nil
-	}
-
-	return m.theSlice
-}
-
-func (m *exampleS) WithMutable(f func(mi *exampleS)) *exampleS {
-	res := m.AsMutable()
-	f(res)
-	res = res.AsImmutable(m)
-
-	return res
-}
-
-func (m *exampleS) WithImmutable(f func(mi *exampleS)) *exampleS {
-	prev := m.mutable
-	m.mutable = false
-	f(m)
-	m.mutable = prev
-
-	return m
-}
-
-func (m *exampleS) Set(i int, v *example) *exampleS {
-	if m.mutable {
-		m.theSlice[i] = v
-		return m
-	}
-
-	res := m.dup()
-	res.theSlice[i] = v
-
-	return res
-}
-
-func (m *exampleS) Append(v ...*example) *exampleS {
-	if m.mutable {
-		m.theSlice = append(m.theSlice, v...)
-		return m
-	}
-
-	res := m.dup()
-	res.theSlice = append(res.theSlice, v...)
-
-	return res
-}
-
-func (m *exampleS) AppendSlice(v *exampleS) *exampleS {
-	return m.Append(v.Range()...)
-}
-
-func (m *exampleS) ToSlice() []*example {
-	if m == nil || m.theSlice == nil {
-		return nil
-	}
-
-	res := make([]*example, len(m.theSlice))
-	copy(res, m.theSlice)
-
-	return res
-}
-
-//
 // tabS is an immutable type and has the following template:
 //
-// 	[]tab
+// 	map[exampleKey]tab
 //
 type tabS struct {
-	theSlice []tab
-	mutable  bool
-	__tmpl   _Imm_tabS
+	theMap  map[exampleKey]tab
+	mutable bool
+	__tmpl  _Imm_tabS
 }
 
-var _ immutable.Immutable = &tabS{}
+var _ immutable.Immutable = new(tabS)
+var _ = new(tabS).__tmpl
 
-func newTabS(s ...tab) *tabS {
-	c := make([]tab, len(s))
-	copy(c, s)
-
-	return &tabS{
-		theSlice: c,
+func newTabS(inits ...func(m *tabS)) *tabS {
+	res := newTabSCap(0)
+	if len(inits) == 0 {
+		return res
 	}
+
+	return res.WithMutable(func(m *tabS) {
+		for _, i := range inits {
+			i(m)
+		}
+	})
 }
 
-func newTabSLen(l int) *tabS {
-	c := make([]tab, l)
-
+func newTabSCap(l int) *tabS {
 	return &tabS{
-		theSlice: c,
+		theMap: make(map[exampleKey]tab, l),
 	}
 }
 
@@ -197,11 +50,12 @@ func (m *tabS) Len() int {
 		return 0
 	}
 
-	return len(m.theSlice)
+	return len(m.theMap)
 }
 
-func (m *tabS) Get(i int) tab {
-	return m.theSlice[i]
+func (m *tabS) Get(k exampleKey) (tab, bool) {
+	v, ok := m.theMap[k]
+	return v, ok
 }
 
 func (m *tabS) AsMutable() *tabS {
@@ -220,14 +74,14 @@ func (m *tabS) AsMutable() *tabS {
 }
 
 func (m *tabS) dup() *tabS {
-	resSlice := make([]tab, len(m.theSlice))
+	resMap := make(map[exampleKey]tab, len(m.theMap))
 
-	for i := range m.theSlice {
-		resSlice[i] = m.theSlice[i]
+	for k := range m.theMap {
+		resMap[k] = m.theMap[k]
 	}
 
 	res := &tabS{
-		theSlice: resSlice,
+		theMap: resMap,
 	}
 
 	return res
@@ -246,12 +100,12 @@ func (m *tabS) AsImmutable(v *tabS) *tabS {
 	return m
 }
 
-func (m *tabS) Range() []tab {
+func (m *tabS) Range() map[exampleKey]tab {
 	if m == nil {
 		return nil
 	}
 
-	return m.theSlice
+	return m.theMap
 }
 
 func (m *tabS) WithMutable(f func(mi *tabS)) *tabS {
@@ -271,41 +125,40 @@ func (m *tabS) WithImmutable(f func(mi *tabS)) *tabS {
 	return m
 }
 
-func (m *tabS) Set(i int, v tab) *tabS {
+func (m *tabS) Set(k exampleKey, v tab) *tabS {
 	if m.mutable {
-		m.theSlice[i] = v
+		m.theMap[k] = v
 		return m
 	}
 
 	res := m.dup()
-	res.theSlice[i] = v
+	res.theMap[k] = v
 
 	return res
 }
 
-func (m *tabS) Append(v ...tab) *tabS {
+func (m *tabS) Del(k exampleKey) *tabS {
+	if _, ok := m.theMap[k]; !ok {
+		return m
+	}
+
 	if m.mutable {
-		m.theSlice = append(m.theSlice, v...)
+		delete(m.theMap, k)
 		return m
 	}
 
 	res := m.dup()
-	res.theSlice = append(res.theSlice, v...)
+	delete(res.theMap, k)
 
 	return res
 }
 
-func (m *tabS) AppendSlice(v *tabS) *tabS {
-	return m.Append(v.Range()...)
-}
+func (m *tabS) ToMap() map[exampleKey]tab {
+	res := make(map[exampleKey]tab)
 
-func (m *tabS) ToSlice() []tab {
-	if m == nil || m.theSlice == nil {
-		return nil
+	for k, v := range m.theMap {
+		res[k] = v
 	}
-
-	res := make([]tab, len(m.theSlice))
-	copy(res, m.theSlice)
 
 	return res
 }

@@ -5,6 +5,7 @@
 package coretest
 
 //go:generate echo "hello world"
+//immutableVet:skipFile
 
 import (
 	"github.com/myitcv/immutable"
@@ -22,7 +23,8 @@ type MyTestMap struct {
 	__tmpl  _Imm_MyTestMap
 }
 
-var _ immutable.Immutable = &MyTestMap{}
+var _ immutable.Immutable = new(MyTestMap)
+var _ = new(MyTestMap).__tmpl
 
 func NewMyTestMap(inits ...func(m *MyTestMap)) *MyTestMap {
 	res := NewMyTestMapCap(0)
@@ -177,7 +179,8 @@ type MyTestSlice struct {
 	__tmpl   _Imm_MyTestSlice
 }
 
-var _ immutable.Immutable = &MyTestSlice{}
+var _ immutable.Immutable = new(MyTestSlice)
+var _ = new(MyTestSlice).__tmpl
 
 func NewMyTestSlice(s ...*string) *MyTestSlice {
 	c := make([]*string, len(s))
@@ -340,7 +343,8 @@ type MyTestStruct struct {
 	__tmpl  _Imm_MyTestStruct
 }
 
-var _ immutable.Immutable = &MyTestStruct{}
+var _ immutable.Immutable = new(MyTestStruct)
+var _ = new(MyTestStruct).__tmpl
 
 func (s *MyTestStruct) AsMutable() *MyTestStruct {
 	if s.Mutable() {

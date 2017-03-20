@@ -4,7 +4,8 @@
 package main
 
 const immMapTmpl = `
-var _ immutable.Immutable = &{{.Name}}{}
+var _ immutable.Immutable = new({{.Name}})
+var _ = new({{.Name}}).__tmpl
 
 func {{Export "New"}}{{Capitalise .Name}}(inits ...func(m *{{.Name}})) *{{.Name}} {
 	res := {{Export "New"}}{{Capitalise .Name}}Cap(0)
