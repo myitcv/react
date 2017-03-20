@@ -3,7 +3,6 @@ A simple web app that showcases various examples of GopherJS React copmonents.
 To run this web app locally:
 
 ```bash
-npm install
 gopherjs serve
 ```
 

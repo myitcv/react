@@ -173,7 +173,7 @@ func (p *ExamplesDef) renderExample(key exampleKey, title, msg r.Element, jsxSrc
 
 	return r.Div(nil,
 		r.H3(nil, title),
-		r.P(nil, msg),
+		msg,
 		r.Div(
 			r.DivProps(func(dp *r.DivPropsDef) {
 				dp.ClassName = "row"

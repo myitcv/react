@@ -17,6 +17,8 @@ import (
 	"honnef.co/go/js/dom"
 
 	"github.com/gopherjs/gopherjs/js"
+
+	_ "github.com/myitcv/gopherjs/react/internal/bundle"
 )
 
 const (

@@ -3,7 +3,6 @@ A simple web app that showcases the HelloMessage example component.
 To run this web app locally:
 
 ```bash
-npm install
 gopherjs serve
 ```
 
