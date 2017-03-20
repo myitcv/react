@@ -3,7 +3,6 @@ A simple web app that showcases the immutable-type-based TodoApp example compone
 To run this web app locally:
 
 ```bash
-npm install
 gopherjs serve
 ```
 
