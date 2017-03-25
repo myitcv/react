@@ -5,17 +5,16 @@ package main
 
 import (
 	r "github.com/myitcv/gopherjs/react"
-	"github.com/myitcv/gopherjs/react/examples"
 
 	"honnef.co/go/js/dom"
 )
 
+//go:generate reactGen
+
 var document = dom.GetWindow().Document()
 
 func main() {
-	domTarget := document.GetElementByID("examples")
+	domTarget := document.GetElementByID("app")
 
-	examples := examples.Examples()
-
-	r.Render(examples, domTarget)
+	r.Render(App(), domTarget)
 }

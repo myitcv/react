@@ -28,6 +28,7 @@ type BasicHTMLElement struct {
 	ID        string `js:"id"`
 	Key       string `js:"key"`
 	ClassName string `js:"className"`
+	Role      string `js:"role"`
 
 	OnChange func(e *SyntheticEvent)      `js:"onChange"`
 	OnClick  func(e *SyntheticMouseEvent) `js:"onClick"`
