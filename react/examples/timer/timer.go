@@ -15,12 +15,12 @@ import (
 // TimerDef is the definition of the Timer component
 type TimerDef struct {
 	r.ComponentDef
-
-	ticker *time.Ticker
 }
 
 // TimerState is the state type for the Timer component
 type TimerState struct {
+	ticker *time.Ticker
+
 	secondsElapsed float32
 }
 
@@ -33,17 +33,26 @@ func Timer() *TimerDef {
 
 // ComponentWillMount is a React lifecycle method for the Timer component
 func (t *TimerDef) ComponentWillMount() {
-	t.ticker = time.NewTicker(time.Second * 1)
+	tick := time.NewTicker(time.Second * 1)
+
+	s := t.State()
+	s.ticker = tick
+	t.SetState(s)
+
 	go func() {
 		for {
 			select {
-			case <-t.ticker.C:
+			case <-tick.C:
 				c := t.State()
 				c.secondsElapsed++
 				t.SetState(c)
 			}
 		}
 	}()
+}
+
+func (t *TimerDef) ComponentWillUnmount() {
+	t.State().ticker.Stop()
 }
 
 // Render renders the Timer component

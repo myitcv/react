@@ -1,51 +1,31 @@
-// Copyright (c) 2016 Paul Jolly <paul@myitcv.org.uk>, all rights reserved.
-// Use of this document is governed by a license found in the LICENSE document.
-
 package examples
 
 import (
 	r "github.com/myitcv/gopherjs/react"
-	"github.com/myitcv/gopherjs/react/examples/hellomessage"
-	"github.com/myitcv/gopherjs/react/examples/markdowneditor"
-	"github.com/myitcv/gopherjs/react/examples/timer"
-	"github.com/myitcv/gopherjs/react/examples/todoapp"
+	"github.com/myitcv/gopherjs/react/examples/immtodoapp"
 	"honnef.co/go/js/xhr"
 )
 
-//go:generate reactGen
-//go:generate immutableGen
-
-// ExamplesDef is the definition of the Examples component
-type ExamplesDef struct {
+// ImmExamplesDef is the definition of the ImmExamples component
+type ImmExamplesDef struct {
 	r.ComponentDef
 }
 
-type tab int
-
-const (
-	tabGo tab = iota
-	tabJsx
-)
-
-// Examples creates instances of the Examples component
-func Examples() *ExamplesDef {
-	res := new(ExamplesDef)
+// ImmExamples creates instances of the ImmExamples component
+func ImmExamples() *ImmExamplesDef {
+	res := new(ImmExamplesDef)
 	r.BlessElement(res, nil)
 	return res
 }
 
-type (
-	_Imm_tabS map[exampleKey]tab
-)
-
-// ExamplesState is the state type for the Examples component
-type ExamplesState struct {
+// ImmExamplesState is the state type for the ImmExamples component
+type ImmExamplesState struct {
 	examples     *exampleSource
 	selectedTabs *tabS
 }
 
-// ComponentWillMount is a React lifecycle method for the Examples component
-func (p *ExamplesDef) ComponentWillMount() {
+// ComponentWillMount is a React lifecycle method for the ImmExamples component
+func (p *ImmExamplesDef) ComponentWillMount() {
 	if !fetchStarted {
 		for i, e := range sources.Range() {
 			go func(i exampleKey, e *source) {
@@ -67,19 +47,19 @@ func (p *ExamplesDef) ComponentWillMount() {
 	}
 }
 
-// GetInitialState returns in the initial state for the Examples component
-func (p *ExamplesDef) GetInitialState() ExamplesState {
-	return ExamplesState{
+// GetInitialState returns in the initial state for the ImmExamples component
+func (p *ImmExamplesDef) GetInitialState() ImmExamplesState {
+	return ImmExamplesState{
 		examples:     sources,
 		selectedTabs: newTabS(),
 	}
 }
 
-// Render renders the Examples component
-func (p *ExamplesDef) Render() r.Element {
+// Render renders the ImmExamples component
+func (p *ImmExamplesDef) Render() r.Element {
 	toRender := []r.Element{
 		r.H3(nil, r.S("Reference")),
-		r.P(nil, r.S("This entire page is a React application. An outer "), r.Code(nil, r.S("Examples")), r.S(" component contains a number of inner components.")),
+		r.P(nil, r.S("This entire page is a React application. An outer "), r.Code(nil, r.S("ImmExamples")), r.S(" component contains a number of inner components.")),
 		r.P(nil,
 			r.S("For the source code, raising issues, questions etc, please see "),
 			r.A(
@@ -96,42 +76,11 @@ func (p *ExamplesDef) Render() r.Element {
 		),
 
 		p.renderExample(
-			exampleHello,
-			r.S("A Simple Example"),
-			r.P(nil, r.S("The hellomessage.HelloMessage component demonstrates the simple use of a Props type.")),
-			helloMessageJsx,
-			hellomessage.HelloMessage(hellomessage.HelloMessageProps{Name: "Jane"}),
-		),
-
-		r.HR(nil),
-
-		p.renderExample(
-			exampleTimer,
-			r.S("A Stateful Component"),
-			r.P(nil, r.S("The timer.Timer component demonstrates the use of a State type.")),
-			timerJsx,
-			timer.Timer(),
-		),
-
-		r.HR(nil),
-
-		p.renderExample(
-			exampleTodo,
-			r.S("An Application"),
-			r.P(nil, r.S("The todoapp.TodoApp component demonstrates the use of state and event handling, but also the "+
-				"problems of having a non-comparable state struct type.")),
-			applicationJsx,
-			todoapp.TodoApp(),
-		),
-
-		r.HR(nil),
-
-		p.renderExample(
-			exampleMarkdown,
-			r.S("A Component Using External Plugins"),
-			r.P(nil, r.S("The markdowneditor.MarkdownEditor component demonstrates the use of an external Javascript library.")),
-			markdownEditorJsx,
-			markdowneditor.MarkdownEditor(),
+			exampleImmTodo,
+			r.Span(nil, r.S("An Application using "), r.Code(nil, r.S("github.com/myitcv/immutable"))),
+			r.P(nil, r.S("The immtodoapp.TodoApp component is a reimplementation of todoapp.TodoApp using immutable data structures.")),
+			"n/a",
+			immtodoapp.TodoApp(),
 		),
 	}
 
@@ -144,7 +93,7 @@ func (p *ExamplesDef) Render() r.Element {
 	)
 }
 
-func (p *ExamplesDef) renderExample(key exampleKey, title, msg r.Element, jsxSrc string, elem r.Element) r.Element {
+func (p *ImmExamplesDef) renderExample(key exampleKey, title, msg r.Element, jsxSrc string, elem r.Element) r.Element {
 
 	var goSrc string
 	src, _ := p.State().examples.Get(key)
@@ -206,7 +155,7 @@ func (p *ExamplesDef) renderExample(key exampleKey, title, msg r.Element, jsxSrc
 	)
 }
 
-func (p *ExamplesDef) buildExampleNavTab(key exampleKey, t tab, title string) *r.LiDef {
+func (p *ImmExamplesDef) buildExampleNavTab(key exampleKey, t tab, title string) *r.LiDef {
 	return r.Li(
 		r.LiProps(func(lip *r.LiPropsDef) {
 			if v, _ := p.State().selectedTabs.Get(key); v == t {
@@ -225,7 +174,7 @@ func (p *ExamplesDef) buildExampleNavTab(key exampleKey, t tab, title string) *r
 
 }
 
-func (p *ExamplesDef) handleTabChange(key exampleKey, t tab) func(*r.SyntheticMouseEvent) {
+func (p *ImmExamplesDef) handleTabChange(key exampleKey, t tab) func(*r.SyntheticMouseEvent) {
 	return func(e *r.SyntheticMouseEvent) {
 		cts := p.State().selectedTabs
 		newSt := p.State()
@@ -235,13 +184,4 @@ func (p *ExamplesDef) handleTabChange(key exampleKey, t tab) func(*r.SyntheticMo
 
 		e.PreventDefault()
 	}
-}
-
-func plainPanel(children ...r.Element) r.Element {
-	return r.Div(
-		r.DivProps(func(dp *r.DivPropsDef) {
-			dp.ClassName = "panel panel-default panel-body"
-		}),
-		children...,
-	)
 }
