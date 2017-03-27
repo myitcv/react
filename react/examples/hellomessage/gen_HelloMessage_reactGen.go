@@ -4,8 +4,13 @@ package hellomessage
 
 import "github.com/myitcv/gopherjs/react"
 
-func (h *HelloMessageDef) ShouldComponentUpdateIntf(nextProps interface{}) bool {
-	return h.Props() == nextProps.(HelloMessageProps)
+func (h *HelloMessageDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+	res := false
+
+	{
+		res = h.Props() != nextProps.(HelloMessageProps) || res
+	}
+	return res
 }
 
 // Props is an auto-generated proxy to the current props of HelloMessage

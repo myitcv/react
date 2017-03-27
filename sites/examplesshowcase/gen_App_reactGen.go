@@ -4,8 +4,12 @@ package main
 
 import "github.com/myitcv/gopherjs/react"
 
-func (a *AppDef) ShouldComponentUpdateIntf(nextProps interface{}) bool {
-	return true
+func (a *AppDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+	res := false
+
+	v := prevState.(AppState)
+	res = !v.EqualsIntf(nextState) || res
+	return res
 }
 
 // SetState is an auto-generated proxy proxy to update the state for the

@@ -4,8 +4,12 @@ package immtodoapp
 
 import "github.com/myitcv/gopherjs/react"
 
-func (t *TodoAppDef) ShouldComponentUpdateIntf(nextProps interface{}) bool {
-	return true
+func (t *TodoAppDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+	res := false
+
+	v := prevState.(TodoAppState)
+	res = !v.EqualsIntf(nextState) || res
+	return res
 }
 
 // SetState is an auto-generated proxy proxy to update the state for the
