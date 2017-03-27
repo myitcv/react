@@ -69,7 +69,7 @@ type generatesElement interface {
 }
 
 type Component interface {
-	ShouldComponentUpdateIntf(nextProps interface{}) bool
+	ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool
 	Render() Element
 
 	setThis(this *js.Object)
@@ -207,7 +207,9 @@ func buildReactComponent(typ reflect.Type) *js.Object {
 
 		cmp.setThis(this)
 
-		var nextProps interface{} = nil
+		var nextProps interface{}
+		var prevState interface{}
+		var nextState interface{}
 
 		if arguments[0] != nil {
 			if i := arguments[0].Get(nestedProps); i != nil {
@@ -215,7 +217,21 @@ func buildReactComponent(typ reflect.Type) *js.Object {
 			}
 		}
 
-		return cmp.ShouldComponentUpdateIntf(nextProps)
+		if arguments[1] != nil {
+			if i := arguments[1].Get(nestedState); i != nil {
+				nextState = i.Interface()
+			}
+		}
+
+		if this != nil {
+			if s := this.Get("state"); s != nil {
+				if v := s.Get(nestedState); v != nil {
+					prevState = v.Interface()
+				}
+			}
+		}
+
+		return cmp.ShouldComponentUpdateIntf(nextProps, prevState, nextState)
 	}))
 
 	compDef.Set(reactCompComponentDidMount, js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {

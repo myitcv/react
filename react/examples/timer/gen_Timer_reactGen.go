@@ -4,8 +4,12 @@ package timer
 
 import "github.com/myitcv/gopherjs/react"
 
-func (t *TimerDef) ShouldComponentUpdateIntf(nextProps interface{}) bool {
-	return true
+func (t *TimerDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+	res := false
+
+	v := prevState.(TimerState)
+	res = !v.EqualsIntf(nextState) || res
+	return res
 }
 
 // SetState is an auto-generated proxy proxy to update the state for the

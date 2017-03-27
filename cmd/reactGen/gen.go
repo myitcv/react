@@ -356,19 +356,24 @@ func (g *gen) genComp(defName string) {
 	cg.pln()
 
 	cg.pt(`
-func ({{.Recv}} *{{.Name}}Def) ShouldComponentUpdateIntf(nextProps interface{}) bool {
-	{{if and .HasProps -}}
+func ({{.Recv}} *{{.Name}}Def) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+	res := false
+
+	{{if .HasProps -}}
+	{
 	{{if .PropsHasEquals -}}
-	return {{.Recv}}.Props().Equals(nextProps.({{.Name}}Props))
+	res = !{{.Recv}}.Props().Equals(nextProps.({{.Name}}Props)) || res
 	{{else -}}
-	return {{.Recv}}.Props() == nextProps.({{.Name}}Props)
+	res = {{.Recv}}.Props() != nextProps.({{.Name}}Props) || res
 	{{end -}}
-	{{else if .HasState -}}
-	return true
-	{{else -}}
-	// no props or state... so nothing would cause this to require re-rendering
-	return false
+	}
 	{{end -}}
+	{{if .HasState -}}
+	v := prevState.({{.Name}}State)
+	res = !v.EqualsIntf(nextState) || res
+	{{end -}}
+
+	return res
 }
 
 {{if .HasState}}

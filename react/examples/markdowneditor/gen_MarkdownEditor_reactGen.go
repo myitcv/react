@@ -4,8 +4,12 @@ package markdowneditor
 
 import "github.com/myitcv/gopherjs/react"
 
-func (m *MarkdownEditorDef) ShouldComponentUpdateIntf(nextProps interface{}) bool {
-	return true
+func (m *MarkdownEditorDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+	res := false
+
+	v := prevState.(MarkdownEditorState)
+	res = !v.EqualsIntf(nextState) || res
+	return res
 }
 
 // SetState is an auto-generated proxy proxy to update the state for the

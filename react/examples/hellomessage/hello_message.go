@@ -22,9 +22,7 @@ type HelloMessageProps struct {
 // HelloMessage creates instances of the HelloMessage component
 func HelloMessage(p HelloMessageProps) *HelloMessageDef {
 	res := &HelloMessageDef{}
-
 	r.BlessElement(res, p)
-
 	return res
 }
 
