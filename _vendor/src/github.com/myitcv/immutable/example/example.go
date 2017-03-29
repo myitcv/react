@@ -9,10 +9,10 @@ package example
 //go:generate immutableGen -licenseFile license_header.txt -G "echo \"hello world\""
 
 // MyMap will be exported
-type _Imm_MyMap map[string]MySlice
+type _Imm_MyMap map[string]*MySlice
 
 // MySlice will be exported
-type _Imm_MySlice []MyMap
+type _Imm_MySlice []*MyMap
 
 // Where is this
 
@@ -27,6 +27,8 @@ type _Imm_MyStruct struct {
 
 	// surname will not be exported
 	surname string
+
+	self *MyStruct
 
 	// age will not be exported
 	age int `tag:"age"`

@@ -152,15 +152,34 @@ func (m *exampleSource) Del(k exampleKey) *exampleSource {
 
 	return res
 }
-
-func (m *exampleSource) ToMap() map[exampleKey]*source {
-	res := make(map[exampleKey]*source)
-
-	for k, v := range m.theMap {
-		res[k] = v
+func (s *exampleSource) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
+	if s == nil {
+		return true
 	}
 
-	return res
+	if s.Mutable() {
+		return false
+	}
+	if s.Len() == 0 {
+		return true
+	}
+
+	if seen == nil {
+		return s.IsDeeplyNonMutable(make(map[interface{}]bool))
+	}
+
+	if seen[s] {
+		return true
+	}
+
+	seen[s] = true
+
+	for _, v := range s.theMap {
+		if v != nil && !v.IsDeeplyNonMutable(seen) {
+			return false
+		}
+	}
+	return true
 }
 
 //
@@ -224,6 +243,26 @@ func (s *source) WithImmutable(f func(si *source)) *source {
 	s.mutable = prev
 
 	return s
+}
+func (s *source) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
+	if s == nil {
+		return true
+	}
+
+	if s.Mutable() {
+		return false
+	}
+
+	if seen == nil {
+		return s.IsDeeplyNonMutable(make(map[interface{}]bool))
+	}
+
+	if seen[s] {
+		return true
+	}
+
+	seen[s] = true
+	return true
 }
 func (s *source) file() string {
 	return s._file

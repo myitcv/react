@@ -145,20 +145,34 @@ func (m *itemS) Append(v ...*item) *itemS {
 
 	return res
 }
-
-func (m *itemS) AppendSlice(v *itemS) *itemS {
-	return m.Append(v.Range()...)
-}
-
-func (m *itemS) ToSlice() []*item {
-	if m == nil || m.theSlice == nil {
-		return nil
+func (s *itemS) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
+	if s == nil {
+		return true
 	}
 
-	res := make([]*item, len(m.theSlice))
-	copy(res, m.theSlice)
+	if s.Mutable() {
+		return false
+	}
+	if s.Len() == 0 {
+		return true
+	}
 
-	return res
+	if seen == nil {
+		return s.IsDeeplyNonMutable(make(map[interface{}]bool))
+	}
+
+	if seen[s] {
+		return true
+	}
+
+	seen[s] = true
+
+	for _, v := range s.theSlice {
+		if v != nil && !v.IsDeeplyNonMutable(seen) {
+			return false
+		}
+	}
+	return true
 }
 
 //
@@ -220,6 +234,26 @@ func (s *item) WithImmutable(f func(si *item)) *item {
 	s.mutable = prev
 
 	return s
+}
+func (s *item) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
+	if s == nil {
+		return true
+	}
+
+	if s.Mutable() {
+		return false
+	}
+
+	if seen == nil {
+		return s.IsDeeplyNonMutable(make(map[interface{}]bool))
+	}
+
+	if seen[s] {
+		return true
+	}
+
+	seen[s] = true
+	return true
 }
 func (s *item) name() string {
 	return s._name

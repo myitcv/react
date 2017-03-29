@@ -71,7 +71,7 @@ func TestBasic(t *testing.T) {
 		for _, s := range gd.Specs {
 			ts := s.(*ast.TypeSpec)
 
-			name, ok := immutable.IsImmTmpl(ts)
+			name, ok := immutable.IsImmTmplAst(ts)
 
 			if !ok {
 				continue

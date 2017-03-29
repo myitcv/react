@@ -47,8 +47,12 @@ func TestMySliceZeroValue(t *testing.T) {
 		t.Fatalf("should panic when getting on zero value")
 	}
 
-	if r := s1.Range(); r != nil {
-		t.Fatalf("range on zero value should be nil; got %v", r)
+	var vals []string
+	for _, v := range s1.Range() {
+		vals = append(vals, v)
+	}
+	if vals != nil {
+		t.Fatalf("range on zero value should be nil; got %v", vals)
 	}
 
 	appendFailed := false

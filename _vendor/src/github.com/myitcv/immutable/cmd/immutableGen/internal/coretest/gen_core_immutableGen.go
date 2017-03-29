@@ -156,15 +156,192 @@ func (m *MyMap) Del(k string) *MyMap {
 
 	return res
 }
+func (s *MyMap) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
+	if s == nil {
+		return true
+	}
 
-func (m *MyMap) ToMap() map[string]int {
-	res := make(map[string]int)
+	if s.Mutable() {
+		return false
+	}
+	return true
+}
 
-	for k, v := range m.theMap {
-		res[k] = v
+//
+// AM is an immutable type and has the following template:
+//
+// 	map[*A]*A
+//
+type AM struct {
+	theMap  map[*A]*A
+	mutable bool
+	__tmpl  _Imm_AM
+}
+
+var _ immutable.Immutable = new(AM)
+var _ = new(AM).__tmpl
+
+func NewAM(inits ...func(m *AM)) *AM {
+	res := NewAMCap(0)
+	if len(inits) == 0 {
+		return res
+	}
+
+	return res.WithMutable(func(m *AM) {
+		for _, i := range inits {
+			i(m)
+		}
+	})
+}
+
+func NewAMCap(l int) *AM {
+	return &AM{
+		theMap: make(map[*A]*A, l),
+	}
+}
+
+func (m *AM) Mutable() bool {
+	return m.mutable
+}
+
+func (m *AM) Len() int {
+	if m == nil {
+		return 0
+	}
+
+	return len(m.theMap)
+}
+
+func (m *AM) Get(k *A) (*A, bool) {
+	v, ok := m.theMap[k]
+	return v, ok
+}
+
+func (m *AM) AsMutable() *AM {
+	if m == nil {
+		return nil
+	}
+
+	if m.Mutable() {
+		return m
+	}
+
+	res := m.dup()
+	res.mutable = true
+
+	return res
+}
+
+func (m *AM) dup() *AM {
+	resMap := make(map[*A]*A, len(m.theMap))
+
+	for k := range m.theMap {
+		resMap[k] = m.theMap[k]
+	}
+
+	res := &AM{
+		theMap: resMap,
 	}
 
 	return res
+}
+
+func (m *AM) AsImmutable(v *AM) *AM {
+	if m == nil {
+		return nil
+	}
+
+	if v == m {
+		return m
+	}
+
+	m.mutable = false
+	return m
+}
+
+func (m *AM) Range() map[*A]*A {
+	if m == nil {
+		return nil
+	}
+
+	return m.theMap
+}
+
+func (m *AM) WithMutable(f func(mi *AM)) *AM {
+	res := m.AsMutable()
+	f(res)
+	res = res.AsImmutable(m)
+
+	return res
+}
+
+func (m *AM) WithImmutable(f func(mi *AM)) *AM {
+	prev := m.mutable
+	m.mutable = false
+	f(m)
+	m.mutable = prev
+
+	return m
+}
+
+func (m *AM) Set(k *A, v *A) *AM {
+	if m.mutable {
+		m.theMap[k] = v
+		return m
+	}
+
+	res := m.dup()
+	res.theMap[k] = v
+
+	return res
+}
+
+func (m *AM) Del(k *A) *AM {
+	if _, ok := m.theMap[k]; !ok {
+		return m
+	}
+
+	if m.mutable {
+		delete(m.theMap, k)
+		return m
+	}
+
+	res := m.dup()
+	delete(res.theMap, k)
+
+	return res
+}
+func (s *AM) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
+	if s == nil {
+		return true
+	}
+
+	if s.Mutable() {
+		return false
+	}
+	if s.Len() == 0 {
+		return true
+	}
+
+	if seen == nil {
+		return s.IsDeeplyNonMutable(make(map[interface{}]bool))
+	}
+
+	if seen[s] {
+		return true
+	}
+
+	seen[s] = true
+
+	for k, v := range s.theMap {
+		if k != nil && !k.IsDeeplyNonMutable(seen) {
+			return false
+		}
+		if v != nil && !v.IsDeeplyNonMutable(seen) {
+			return false
+		}
+	}
+	return true
 }
 
 // a comment about Slice
@@ -305,20 +482,182 @@ func (m *MySlice) Append(v ...string) *MySlice {
 
 	return res
 }
+func (s *MySlice) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
+	if s == nil {
+		return true
+	}
 
-func (m *MySlice) AppendSlice(v *MySlice) *MySlice {
-	return m.Append(v.Range()...)
+	if s.Mutable() {
+		return false
+	}
+	return true
 }
 
-func (m *MySlice) ToSlice() []string {
-	if m == nil || m.theSlice == nil {
+//
+// AS is an immutable type and has the following template:
+//
+// 	[]*A
+//
+type AS struct {
+	theSlice []*A
+	mutable  bool
+	__tmpl   _Imm_AS
+}
+
+var _ immutable.Immutable = new(AS)
+var _ = new(AS).__tmpl
+
+func NewAS(s ...*A) *AS {
+	c := make([]*A, len(s))
+	copy(c, s)
+
+	return &AS{
+		theSlice: c,
+	}
+}
+
+func NewASLen(l int) *AS {
+	c := make([]*A, l)
+
+	return &AS{
+		theSlice: c,
+	}
+}
+
+func (m *AS) Mutable() bool {
+	return m.mutable
+}
+
+func (m *AS) Len() int {
+	if m == nil {
+		return 0
+	}
+
+	return len(m.theSlice)
+}
+
+func (m *AS) Get(i int) *A {
+	return m.theSlice[i]
+}
+
+func (m *AS) AsMutable() *AS {
+	if m == nil {
 		return nil
 	}
 
-	res := make([]string, len(m.theSlice))
-	copy(res, m.theSlice)
+	if m.Mutable() {
+		return m
+	}
+
+	res := m.dup()
+	res.mutable = true
 
 	return res
+}
+
+func (m *AS) dup() *AS {
+	resSlice := make([]*A, len(m.theSlice))
+
+	for i := range m.theSlice {
+		resSlice[i] = m.theSlice[i]
+	}
+
+	res := &AS{
+		theSlice: resSlice,
+	}
+
+	return res
+}
+
+func (m *AS) AsImmutable(v *AS) *AS {
+	if m == nil {
+		return nil
+	}
+
+	if v == m {
+		return m
+	}
+
+	m.mutable = false
+	return m
+}
+
+func (m *AS) Range() []*A {
+	if m == nil {
+		return nil
+	}
+
+	return m.theSlice
+}
+
+func (m *AS) WithMutable(f func(mi *AS)) *AS {
+	res := m.AsMutable()
+	f(res)
+	res = res.AsImmutable(m)
+
+	return res
+}
+
+func (m *AS) WithImmutable(f func(mi *AS)) *AS {
+	prev := m.mutable
+	m.mutable = false
+	f(m)
+	m.mutable = prev
+
+	return m
+}
+
+func (m *AS) Set(i int, v *A) *AS {
+	if m.mutable {
+		m.theSlice[i] = v
+		return m
+	}
+
+	res := m.dup()
+	res.theSlice[i] = v
+
+	return res
+}
+
+func (m *AS) Append(v ...*A) *AS {
+	if m.mutable {
+		m.theSlice = append(m.theSlice, v...)
+		return m
+	}
+
+	res := m.dup()
+	res.theSlice = append(res.theSlice, v...)
+
+	return res
+}
+func (s *AS) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
+	if s == nil {
+		return true
+	}
+
+	if s.Mutable() {
+		return false
+	}
+	if s.Len() == 0 {
+		return true
+	}
+
+	if seen == nil {
+		return s.IsDeeplyNonMutable(make(map[interface{}]bool))
+	}
+
+	if seen[s] {
+		return true
+	}
+
+	seen[s] = true
+
+	for _, v := range s.theSlice {
+		if v != nil && !v.IsDeeplyNonMutable(seen) {
+			return false
+		}
+	}
+	return true
 }
 
 // a comment about myStruct
@@ -331,7 +670,7 @@ func (m *MySlice) ToSlice() []string {
 // 		Name, surname	string
 // 		age		int
 //
-// 		*string
+// 		string
 //
 // 		fieldWithoutTag	bool
 // 	}
@@ -340,7 +679,7 @@ type MyStruct struct {
 	_Key             MyStructKey
 	_Name, _surname  string `tag:"value"`
 	_age             int    `tag:"age"`
-	_string          *string
+	_string          string
 	_fieldWithoutTag bool
 
 	mutable bool
@@ -393,6 +732,26 @@ func (s *MyStruct) WithImmutable(f func(si *MyStruct)) *MyStruct {
 	s.mutable = prev
 
 	return s
+}
+func (s *MyStruct) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
+	if s == nil {
+		return true
+	}
+
+	if s.Mutable() {
+		return false
+	}
+
+	if seen == nil {
+		return s.IsDeeplyNonMutable(make(map[interface{}]bool))
+	}
+
+	if seen[s] {
+		return true
+	}
+
+	seen[s] = true
+	return true
 }
 func (s *MyStruct) Key() MyStructKey {
 	return s._Key
@@ -474,12 +833,12 @@ func (s *MyStruct) setAge(n int) *MyStruct {
 	res._age = n
 	return &res
 }
-func (s *MyStruct) string() *string {
+func (s *MyStruct) string() string {
 	return s._string
 }
 
 // setString is the setter for String()
-func (s *MyStruct) setString(n *string) *MyStruct {
+func (s *MyStruct) setString(n string) *MyStruct {
 	if s.mutable {
 		s._string = n
 		return s
@@ -504,5 +863,126 @@ func (s *MyStruct) setFieldWithoutTag(n bool) *MyStruct {
 	res := *s
 	res._Key.Version++
 	res._fieldWithoutTag = n
+	return &res
+}
+
+//
+// A is an immutable type and has the following template:
+//
+// 	struct {
+// 		Name	string
+// 		A	*A
+// 	}
+//
+type A struct {
+	_Name string
+	// isImm
+	_A *A
+
+	mutable bool
+	__tmpl  _Imm_A
+}
+
+var _ immutable.Immutable = new(A)
+var _ = new(A).__tmpl
+
+func (s *A) AsMutable() *A {
+	if s.Mutable() {
+		return s
+	}
+
+	res := *s
+	res.mutable = true
+	return &res
+}
+
+func (s *A) AsImmutable(v *A) *A {
+	if s == nil {
+		return nil
+	}
+
+	if s == v {
+		return s
+	}
+
+	s.mutable = false
+	return s
+}
+
+func (s *A) Mutable() bool {
+	return s.mutable
+}
+
+func (s *A) WithMutable(f func(si *A)) *A {
+	res := s.AsMutable()
+	f(res)
+	res = res.AsImmutable(s)
+
+	return res
+}
+
+func (s *A) WithImmutable(f func(si *A)) *A {
+	prev := s.mutable
+	s.mutable = false
+	f(s)
+	s.mutable = prev
+
+	return s
+}
+func (s *A) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
+	if s == nil {
+		return true
+	}
+
+	if s.Mutable() {
+		return false
+	}
+
+	if seen == nil {
+		return s.IsDeeplyNonMutable(make(map[interface{}]bool))
+	}
+
+	if seen[s] {
+		return true
+	}
+
+	seen[s] = true
+	{
+		v := s._A
+
+		if v != nil && !v.IsDeeplyNonMutable(seen) {
+			return false
+		}
+	}
+	return true
+}
+func (s *A) Name() string {
+	return s._Name
+}
+
+// SetName is the setter for Name()
+func (s *A) SetName(n string) *A {
+	if s.mutable {
+		s._Name = n
+		return s
+	}
+
+	res := *s
+	res._Name = n
+	return &res
+}
+func (s *A) A() *A {
+	return s._A
+}
+
+// SetA is the setter for A()
+func (s *A) SetA(n *A) *A {
+	if s.mutable {
+		s._A = n
+		return s
+	}
+
+	res := *s
+	res._A = n
 	return &res
 }

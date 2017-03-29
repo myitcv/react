@@ -8,8 +8,19 @@ import (
 	"github.com/myitcv/immutable"
 )
 
-type immStruct struct {
+type commonImm struct {
 	fset *token.FileSet
+
+	// the full package import path (not just the name)
+	// declaring the type
+	pkg string
+
+	// the declaring file
+	file *ast.File
+}
+
+type immStruct struct {
+	commonImm
 
 	name string
 	dec  *ast.GenDecl
@@ -20,9 +31,10 @@ type immStruct struct {
 
 func (o *output) genImmStructs(structs []immStruct) {
 	type genField struct {
-		Name string
-		Type string
-		f    *ast.Field
+		Name  string
+		Type  string
+		f     *ast.Field
+		IsImm immutable.ImmTypeAst
 	}
 
 	for _, s := range structs {
@@ -43,7 +55,18 @@ func (o *output) genImmStructs(structs []immStruct) {
 			names := ""
 			sep := ""
 
+			var isImm immutable.ImmTypeAst
 			typ := o.exprString(f.Type)
+
+			isImm = o.immTypes[strings.TrimPrefix(typ, "*")]
+
+			if isImm == nil {
+				i, err := immutable.IsImmTypeAst(f.Type, s.file.Imports, s.pkg)
+				if err != nil {
+					panic(err)
+				}
+				isImm = i
+			}
 
 			tag := ""
 
@@ -53,12 +76,15 @@ func (o *output) genImmStructs(structs []immStruct) {
 
 			if len(f.Names) == 0 {
 				n := strings.TrimPrefix(typ, "*")
+				ps := strings.Split(n, ".")
+				n = ps[len(ps)-1]
 				names = fieldHidingPrefix + n
 
 				fields = append(fields, genField{
-					Name: n,
-					Type: typ,
-					f:    f,
+					Name:  n,
+					Type:  typ,
+					f:     f,
+					IsImm: isImm,
 				})
 			} else {
 				for _, n := range f.Names {
@@ -66,11 +92,16 @@ func (o *output) genImmStructs(structs []immStruct) {
 					sep = ", "
 
 					fields = append(fields, genField{
-						Name: n.Name,
-						Type: typ,
-						f:    f,
+						Name:  n.Name,
+						Type:  typ,
+						f:     f,
+						IsImm: isImm,
 					})
 				}
+			}
+			switch isImm.(type) {
+			case immutable.ImmTypeAstMap, immutable.ImmTypeAstSlice, immutable.ImmTypeAstStruct:
+				o.pln("// isImm")
 			}
 			o.pfln("%v %v %v", names, typ, tag)
 		}
@@ -140,6 +171,78 @@ func (o *output) genImmStructs(structs []immStruct) {
 			s.mutable = prev
 
 			return s
+		}
+		`, exp, s.name)
+
+		o.pt(`
+		func (s *{{.}}) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
+			if s == nil {
+				return true
+			}
+
+			if s.Mutable() {
+				return false
+			}
+
+			if seen == nil {
+				return s.IsDeeplyNonMutable(make(map[interface{}]bool))
+			}
+
+			if seen[s] {
+				return true
+			}
+
+			seen[s] = true
+		`, exp, s.name)
+
+		for _, f := range fields {
+			switch f.IsImm.(type) {
+			case immutable.ImmTypeAstSlice, immutable.ImmTypeAstStruct, immutable.ImmTypeAstMap, immutable.ImmTypeAstImplsIntf:
+
+				tmpl := struct {
+					TypeName string
+					Field    genField
+				}{
+					TypeName: s.name,
+					Field:    f,
+				}
+
+				o.pt(`
+				{
+					v := s.`+fieldHidingPrefix+`{{.Field.Name}}
+
+					if v != nil && !v.IsDeeplyNonMutable(seen) {
+						return false
+					}
+				}
+				`, exp, tmpl)
+			case immutable.ImmTypeAstExtIntf:
+
+				tmpl := struct {
+					TypeName string
+					Field    genField
+				}{
+					TypeName: s.name,
+					Field:    f,
+				}
+
+				o.pt(`
+				{
+					v := s.`+fieldHidingPrefix+`{{.Field.Name}}
+
+					switch v := v.(type) {
+					case immutable.Immutable:
+						if !v.IsDeeplyNonMutable(seen) {
+							return false
+						}
+					}
+				}
+				`, exp, tmpl)
+			}
+		}
+
+		o.pt(`
+			return true
 		}
 		`, exp, s.name)
 

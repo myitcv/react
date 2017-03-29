@@ -137,14 +137,4 @@ func (m *{{.Name}}) Del(k {{.KeyType}}) *{{.Name}} {
 
 	return res
 }
-
-func (m *{{.Name}}) ToMap() map[{{.KeyType}}]{{.ValType}} {
-	res := make(map[{{.KeyType}}]{{.ValType}})
-
-	for k, v := range m.theMap {
-		res[k] = v
-	}
-
-	return res
-}
 `

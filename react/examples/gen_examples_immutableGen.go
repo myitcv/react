@@ -152,13 +152,13 @@ func (m *tabS) Del(k exampleKey) *tabS {
 
 	return res
 }
-
-func (m *tabS) ToMap() map[exampleKey]tab {
-	res := make(map[exampleKey]tab)
-
-	for k, v := range m.theMap {
-		res[k] = v
+func (s *tabS) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
+	if s == nil {
+		return true
 	}
 
-	return res
+	if s.Mutable() {
+		return false
+	}
+	return true
 }

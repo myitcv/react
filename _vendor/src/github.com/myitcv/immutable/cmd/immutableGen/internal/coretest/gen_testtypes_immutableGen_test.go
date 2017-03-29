@@ -156,15 +156,15 @@ func (m *MyTestMap) Del(k string) *MyTestMap {
 
 	return res
 }
-
-func (m *MyTestMap) ToMap() map[string]int {
-	res := make(map[string]int)
-
-	for k, v := range m.theMap {
-		res[k] = v
+func (s *MyTestMap) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
+	if s == nil {
+		return true
 	}
 
-	return res
+	if s.Mutable() {
+		return false
+	}
+	return true
 }
 
 // a comment about Slice
@@ -305,20 +305,15 @@ func (m *MyTestSlice) Append(v ...*string) *MyTestSlice {
 
 	return res
 }
-
-func (m *MyTestSlice) AppendSlice(v *MyTestSlice) *MyTestSlice {
-	return m.Append(v.Range()...)
-}
-
-func (m *MyTestSlice) ToSlice() []*string {
-	if m == nil || m.theSlice == nil {
-		return nil
+func (s *MyTestSlice) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
+	if s == nil {
+		return true
 	}
 
-	res := make([]*string, len(m.theSlice))
-	copy(res, m.theSlice)
-
-	return res
+	if s.Mutable() {
+		return false
+	}
+	return true
 }
 
 // a comment about myStruct
@@ -388,6 +383,26 @@ func (s *MyTestStruct) WithImmutable(f func(si *MyTestStruct)) *MyTestStruct {
 	s.mutable = prev
 
 	return s
+}
+func (s *MyTestStruct) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
+	if s == nil {
+		return true
+	}
+
+	if s.Mutable() {
+		return false
+	}
+
+	if seen == nil {
+		return s.IsDeeplyNonMutable(make(map[interface{}]bool))
+	}
+
+	if seen[s] {
+		return true
+	}
+
+	seen[s] = true
+	return true
 }
 
 // my field comment
