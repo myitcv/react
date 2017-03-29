@@ -2,14 +2,14 @@ package main
 
 import (
 	"go/ast"
-	"go/token"
+	"strings"
 	"text/template"
 
 	"github.com/myitcv/immutable"
 )
 
 type immMap struct {
-	fset *token.FileSet
+	commonImm
 
 	name   string
 	dec    *ast.GenDecl
@@ -30,7 +30,7 @@ func (o *output) genImmMaps(maps []immMap) {
 			ValType: o.exprString(m.valTyp),
 		}
 
-		fm := exporter(m.name)
+		exp := exporter(m.name)
 
 		o.printCommentGroup(m.dec.Doc)
 		o.printImmPreamble(m.name, m.typ)
@@ -47,7 +47,7 @@ func (o *output) genImmMaps(maps []immMap) {
 		o.pfln("}")
 
 		tmpl := template.New("immmap")
-		tmpl.Funcs(fm)
+		tmpl.Funcs(exp)
 		_, err := tmpl.Parse(immMapTmpl)
 		if err != nil {
 			fatalf("failed to parse immutable map template: %v", err)
@@ -57,5 +57,133 @@ func (o *output) genImmMaps(maps []immMap) {
 		if err != nil {
 			fatalf("failed to execute immutable map template: %v", err)
 		}
+
+		o.pt(`
+		func (s *{{.}}) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
+			if s == nil {
+				return true
+			}
+
+			if s.Mutable() {
+				return false
+			}
+		`, exp, m.name)
+
+		ktyp := o.exprString(m.keyTyp)
+		vtyp := o.exprString(m.valTyp)
+
+		keyIsImm := o.immTypes[strings.TrimPrefix(ktyp, "*")]
+		valIsImm := o.immTypes[strings.TrimPrefix(vtyp, "*")]
+
+		if keyIsImm == nil {
+			i, err := immutable.IsImmTypeAst(m.keyTyp, m.file.Imports, m.pkg)
+			if err != nil {
+				fatalf("failed to check IsImmTypeAst: %v", err)
+			}
+			keyIsImm = i
+		}
+
+		if valIsImm == nil {
+			i, err := immutable.IsImmTypeAst(m.valTyp, m.file.Imports, m.pkg)
+			if err != nil {
+				fatalf("failed to check IsImmTypeAst: %v", err)
+			}
+			valIsImm = i
+		}
+
+		keyIsImmOk := false
+		switch keyIsImm.(type) {
+		case immutable.ImmTypeAstSlice, immutable.ImmTypeAstStruct, immutable.ImmTypeAstMap,
+			immutable.ImmTypeAstImplsIntf, immutable.ImmTypeAstExtIntf:
+			keyIsImmOk = true
+		}
+
+		valIsImmOk := false
+		switch valIsImm.(type) {
+		case immutable.ImmTypeAstSlice, immutable.ImmTypeAstStruct, immutable.ImmTypeAstMap,
+			immutable.ImmTypeAstImplsIntf, immutable.ImmTypeAstExtIntf:
+			valIsImmOk = true
+		}
+
+		if keyIsImmOk || valIsImmOk {
+			o.pt(`
+			if s.Len() == 0 {
+				return true
+			}
+
+			if seen == nil {
+				return s.IsDeeplyNonMutable(make(map[interface{}]bool))
+			}
+
+			if seen[s] {
+				return true
+			}
+
+			seen[s] = true
+
+			`, exp, m.name)
+
+			switch {
+			case keyIsImmOk && valIsImmOk:
+				o.pt(`
+				for k, v := range s.theMap {
+				`, exp, m.name)
+			case keyIsImmOk:
+				o.pt(`
+				for k := range s.theMap {
+				`, exp, m.name)
+			case valIsImmOk:
+				o.pt(`
+				for _, v := range s.theMap {
+				`, exp, m.name)
+			}
+
+			if keyIsImmOk {
+				if _, ok := keyIsImm.(immutable.ImmTypeAstExtIntf); ok {
+					o.pt(`
+					switch k.(type) {
+					case immutable.Immutable:
+						if !k.IsDeeplyNonMutable(seen) {
+							return false
+						}
+					}
+					`, exp, m.name)
+				} else {
+					o.pt(`
+					if k != nil && !k.IsDeeplyNonMutable(seen) {
+						return false
+					}
+					`, exp, m.name)
+				}
+			}
+
+			if valIsImmOk {
+				if _, ok := valIsImm.(immutable.ImmTypeAstExtIntf); ok {
+					o.pt(`
+					switch v.(type) {
+					case immutable.Immutable:
+						if !v.IsDeeplyNonMutable(seen) {
+							return false
+						}
+					}
+					`, exp, m.name)
+				} else {
+					o.pt(`
+					if v != nil && !v.IsDeeplyNonMutable(seen) {
+						return false
+					}
+					`, exp, m.name)
+				}
+			}
+
+			o.pt(`
+			}
+			`, exp, m.name)
+		}
+
+		o.pt(`
+			return true
+		}
+		`, exp, m.name)
 	}
 }

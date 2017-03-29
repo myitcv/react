@@ -130,19 +130,4 @@ func (m *{{.Name}}) Append(v ...{{.Type}}) *{{.Name}} {
 
 	return res
 }
-
-func (m *{{.Name}}) AppendSlice(v *{{.Name}}) *{{.Name}} {
-	return m.Append(v.Range()...)
-}
-
-func (m *{{.Name}}) ToSlice() []{{.Type}} {
-	if m == nil || m.theSlice == nil {
-		return nil
-	}
-
-	res := make([]{{.Type}}, len(m.theSlice))
-	copy(res, m.theSlice)
-
-	return res
-}
 `

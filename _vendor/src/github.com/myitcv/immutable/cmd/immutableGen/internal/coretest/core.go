@@ -29,10 +29,19 @@ type _Imm_MyStruct struct {
 	Name, surname string `tag:"value"`
 	age           int    `tag:"age"`
 
-	*string
+	string
 
 	fieldWithoutTag bool
 }
+
+type _Imm_A struct {
+	Name string
+	A    *A
+}
+
+type _Imm_AS []*A
+
+type _Imm_AM map[*A]*A
 
 func main() {
 }

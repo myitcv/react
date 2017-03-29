@@ -15,6 +15,7 @@ import (
 func TestImmutableVetter(t *testing.T) {
 
 	var expected = `_testFiles/test.go:10:2: immutable struct field must be immutable type; []byte is not
+_testFiles/test.go:12:2: immutable struct field must be immutable type; github.com/myitcv/immutable/cmd/immutableVet/_testFiles.MyIntf is not
 _testFiles/test.go:13:2: immutable struct field must be immutable type; github.com/myitcv/immutable/cmd/immutableVet/_testFiles.MyType is not
 _testFiles/test.go:20:6: type should be *github.com/myitcv/immutable/cmd/immutableVet/_testFiles.Dummy
 _testFiles/test.go:24:7: template type github.com/myitcv/immutable/cmd/immutableVet/_testFiles._Imm_Dummy should never get used
@@ -24,15 +25,20 @@ _testFiles/test.go:28:7: type should be *github.com/myitcv/immutable/cmd/immutab
 _testFiles/test.go:29:7: type should be *github.com/myitcv/immutable/cmd/immutableVet/_testFiles.Dummy
 _testFiles/test.go:31:14: type should be *github.com/myitcv/immutable/cmd/immutableVet/_testFiles.Dummy
 _testFiles/test.go:31:23: type should be *github.com/myitcv/immutable/cmd/immutableVet/_testFiles.Dummy
+_testFiles/test.go:32:9: non-pointer value of immutable type *github.com/myitcv/immutable/cmd/immutableVet/_testFiles.Dummy found
 _testFiles/test.go:32:9: type should be *github.com/myitcv/immutable/cmd/immutableVet/_testFiles.Dummy
 _testFiles/test.go:35:9: type should be *github.com/myitcv/immutable/cmd/immutableVet/_testFiles.Dummy
 _testFiles/test.go:35:18: type should be *github.com/myitcv/immutable/cmd/immutableVet/_testFiles.Dummy
+_testFiles/test.go:36:9: non-pointer value of immutable type *github.com/myitcv/immutable/cmd/immutableVet/_testFiles.Dummy found
 _testFiles/test.go:36:9: type should be *github.com/myitcv/immutable/cmd/immutableVet/_testFiles.Dummy
 _testFiles/test.go:39:9: construct using new() or generated constructors
+_testFiles/test.go:39:10: non-pointer value of immutable type *github.com/myitcv/immutable/cmd/immutableVet/_testFiles.Dummy found
 _testFiles/test.go:46:8: should not be using _Name of *github.com/myitcv/immutable/cmd/immutableVet/_testFiles.Dummy immutable type
 _testFiles/test.go:50:8: Range() of immutable type must appear in a range statement or used with an ellipsis as the second argument to append
-_testFiles/test.go:64:6: type github.com/myitcv/immutable/cmd/immutableVet/_testFiles.MyType which implements interface{IsMyIntf()} is not immutable
-_testFiles/test.go:70:9: type should be *github.com/myitcv/immutable/cmd/immutableVet/_testFiles.Dummy
+_testFiles/test.go:55:7: non-pointer value of immutable type *github.com/myitcv/immutable/cmd/immutableVet/_testFiles.intS found
+_testFiles/test.go:56:8: non-pointer value of immutable type *github.com/myitcv/immutable/cmd/immutableVet/_testFiles.intS found
+_testFiles/test.go:73:9: non-pointer value of immutable type *github.com/myitcv/immutable/cmd/immutableVet/_testFiles.Dummy found
+_testFiles/test.go:73:9: type should be *github.com/myitcv/immutable/cmd/immutableVet/_testFiles.Dummy
 `
 
 	wd, err := os.Getwd()

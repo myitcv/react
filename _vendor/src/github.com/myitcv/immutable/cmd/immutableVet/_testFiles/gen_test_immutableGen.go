@@ -145,20 +145,15 @@ func (m *intS) Append(v ...int) *intS {
 
 	return res
 }
-
-func (m *intS) AppendSlice(v *intS) *intS {
-	return m.Append(v.Range()...)
-}
-
-func (m *intS) ToSlice() []int {
-	if m == nil || m.theSlice == nil {
-		return nil
+func (s *intS) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
+	if s == nil {
+		return true
 	}
 
-	res := make([]int, len(m.theSlice))
-	copy(res, m.theSlice)
-
-	return res
+	if s.Mutable() {
+		return false
+	}
+	return true
 }
 
 //
@@ -221,6 +216,26 @@ func (s *Dummy) WithImmutable(f func(si *Dummy)) *Dummy {
 
 	return s
 }
+func (s *Dummy) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
+	if s == nil {
+		return true
+	}
+
+	if s.Mutable() {
+		return false
+	}
+
+	if seen == nil {
+		return s.IsDeeplyNonMutable(make(map[interface{}]bool))
+	}
+
+	if seen[s] {
+		return true
+	}
+
+	seen[s] = true
+	return true
+}
 func (s *Dummy) Name() string {
 	return s._Name
 }
@@ -248,7 +263,8 @@ func (s *Dummy) SetName(n string) *Dummy {
 // 	}
 //
 type Dummy2 struct {
-	_name    []byte
+	_name []byte
+	// isImm
 	_other   *Dummy3
 	_mine    MyIntf
 	_another MyType
@@ -302,6 +318,43 @@ func (s *Dummy2) WithImmutable(f func(si *Dummy2)) *Dummy2 {
 	s.mutable = prev
 
 	return s
+}
+func (s *Dummy2) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
+	if s == nil {
+		return true
+	}
+
+	if s.Mutable() {
+		return false
+	}
+
+	if seen == nil {
+		return s.IsDeeplyNonMutable(make(map[interface{}]bool))
+	}
+
+	if seen[s] {
+		return true
+	}
+
+	seen[s] = true
+	{
+		v := s._other
+
+		if v != nil && !v.IsDeeplyNonMutable(seen) {
+			return false
+		}
+	}
+	{
+		v := s._mine
+
+		switch v := v.(type) {
+		case immutable.Immutable:
+			if !v.IsDeeplyNonMutable(seen) {
+				return false
+			}
+		}
+	}
+	return true
 }
 func (s *Dummy2) name() []byte {
 	return s._name
@@ -372,6 +425,8 @@ func (s *Dummy2) setAnother(n MyType) *Dummy2 {
 // 	}
 //
 type Dummy3 struct {
+
+	// isImm
 	_other *Dummy2
 
 	mutable bool
@@ -423,6 +478,33 @@ func (s *Dummy3) WithImmutable(f func(si *Dummy3)) *Dummy3 {
 	s.mutable = prev
 
 	return s
+}
+func (s *Dummy3) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
+	if s == nil {
+		return true
+	}
+
+	if s.Mutable() {
+		return false
+	}
+
+	if seen == nil {
+		return s.IsDeeplyNonMutable(make(map[interface{}]bool))
+	}
+
+	if seen[s] {
+		return true
+	}
+
+	seen[s] = true
+	{
+		v := s._other
+
+		if v != nil && !v.IsDeeplyNonMutable(seen) {
+			return false
+		}
+	}
+	return true
 }
 func (s *Dummy3) other() *Dummy2 {
 	return s._other

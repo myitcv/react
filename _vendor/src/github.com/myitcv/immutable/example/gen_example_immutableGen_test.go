@@ -156,13 +156,13 @@ func (m *myTestMap) Del(k string) *myTestMap {
 
 	return res
 }
-
-func (m *myTestMap) ToMap() map[string]int {
-	res := make(map[string]int)
-
-	for k, v := range m.theMap {
-		res[k] = v
+func (s *myTestMap) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
+	if s == nil {
+		return true
 	}
 
-	return res
+	if s.Mutable() {
+		return false
+	}
+	return true
 }

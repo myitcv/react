@@ -1,14 +1,17 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"go/ast"
 	"go/importer"
 	"go/parser"
+	"go/printer"
 	"go/token"
 	"go/types"
 	"os"
+	"path"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -51,9 +54,6 @@ type immutableVetter struct {
 
 var typesCache = map[string]bool{
 	"time.Time": true,
-
-	// TODO remove this hack
-	"*time.Time": true,
 }
 
 type immErr struct {
@@ -62,6 +62,8 @@ type immErr struct {
 }
 
 type errors []immErr
+
+var immIntf *types.Interface
 
 func main() {
 	flag.Parse()
@@ -90,8 +92,69 @@ func main() {
 	}
 }
 
+func loadImmIntf() {
+	ip := "github.com/myitcv/immutable"
+
+	bpkg, err := build.Import(ip, "", 0)
+	if err != nil {
+		fatalf("failed to import %v: %v", ip, err)
+	}
+
+	pkgs, err := parser.ParseDir(fset, bpkg.Dir, nil, 0)
+	if err != nil {
+		fatalf("failed to parse dir %v for package %v: %v", bpkg.Dir, ip, err)
+	}
+
+	pn := path.Base(ip)
+
+	pkg, ok := pkgs[pn]
+	if !ok {
+		fatalf("failed to find package named %v in dir %v", pn, bpkg.Dir)
+	}
+
+	files := make([]*ast.File, 0, len(pkg.Files))
+
+	for _, f := range pkg.Files {
+		files = append(files, f)
+	}
+
+	conf := types.Config{
+		Importer: importer.Default(),
+	}
+
+	tpkg, err := conf.Check(ip, fset, files, nil)
+	if err != nil {
+		fatalf("type checking %v failed, %v", ip, err)
+	}
+
+	o := tpkg.Scope().Lookup("Immutable")
+
+	if o == nil {
+		fatalf("failed to find anything called Immutable in pkg scope of %v", ip)
+	}
+
+	tn, ok := o.(*types.TypeName)
+	if !ok {
+		fatalf("Immutable is not a *types.TypeName: %T", o)
+	}
+
+	nmd, ok := tn.Type().(*types.Named)
+	if !ok {
+		fatalf("Immutable type is not a *types.Named: %T", tn.Type())
+	}
+
+	intf, ok := nmd.Underlying().(*types.Interface)
+	if !ok {
+		fatalf("Underlying type is not a *types.Interface: %T", nmd.Underlying())
+	}
+
+	immIntf = intf
+}
+
 func vet(wd string, specs []string) []immErr {
 	var emsgs []immErr
+
+	loadImmIntf()
 
 	// vetting phase: vet all packages packages passed in through the command line
 	for _, spec := range specs {
@@ -106,27 +169,6 @@ func vet(wd string, specs []string) []immErr {
 
 		emsgs = append(emsgs, iv.vetPackages()...)
 
-	}
-
-	for i := range ifaces {
-		for n := range seenTypes {
-			if types.Implements(n, i) && !isImmType(n) {
-				emsgs = append(emsgs, immErr{
-					msg: fmt.Sprintf("type %v which implements %v is not immutable", n, i),
-					pos: fset.Position(n.Obj().Pos()),
-				})
-				continue
-			}
-
-			p := types.NewPointer(n)
-			if types.Implements(p, i) && !isImmType(p) {
-				emsgs = append(emsgs, immErr{
-					msg: fmt.Sprintf("type %v which implements %v is not immutable", p, i),
-					pos: fset.Position(n.Obj().Pos()),
-				})
-				continue
-			}
-		}
 	}
 
 	for i := range emsgs {
@@ -431,7 +473,7 @@ func (iv *immutableVetter) vetPackages() []immErr {
 				for _, s := range gd.Specs {
 					ts := s.(*ast.TypeSpec)
 
-					_, ok := immutable.IsImmTmpl(ts)
+					_, ok := immutable.IsImmTmplAst(ts)
 					if !ok {
 						continue
 					}
@@ -458,21 +500,40 @@ func (iv *immutableVetter) vetPackages() []immErr {
 		ast.Walk(iv, pkg)
 
 		for exp, t := range info.Types {
-			if !t.IsType() {
-				continue
+			out := bytes.NewBuffer(nil)
+			printer.Fprint(out, fset, exp)
+
+			switch {
+			case t.IsType():
+				typ := t.Type
+
+				if !iv.isImmTmpl(typ) {
+					continue
+				}
+
+				fn := fset.Position(exp.Pos()).Filename
+
+				if !gogenerate.FileGeneratedBy(fn, immutable.CmdImmutableGen) {
+					iv.errorf(exp.Pos(), "template type %v should never get used", typ)
+				}
+
+			case t.IsValue():
+				p := types.NewPointer(t.Type)
+				switch immutable.IsImmType(p).(type) {
+				case immutable.ImmTypeMap:
+				case immutable.ImmTypeSlice:
+				case immutable.ImmTypeStruct:
+				default:
+					continue
+				}
+
+				fn := fset.Position(exp.Pos()).Filename
+
+				if !iv.skipFiles[fn] {
+					iv.errorf(exp.Pos(), "non-pointer value of immutable type %v found", p)
+				}
 			}
 
-			typ := t.Type
-
-			if !iv.isImmTmpl(typ) {
-				continue
-			}
-
-			fn := fset.Position(exp.Pos()).Filename
-
-			if !gogenerate.FileGeneratedBy(fn, immutable.CmdImmutableGen) {
-				iv.errorf(exp.Pos(), "template type %v should never get used", typ)
-			}
 		}
 
 		// find selector exprs which access properties of Immutable types
@@ -505,9 +566,6 @@ func (iv *immutableVetter) vetPackages() []immErr {
 	return iv.errlist
 }
 
-var ifaces = make(map[*types.Interface]bool)
-var seenTypes = make(map[*types.Named]bool)
-
 func isImmType(t types.Type) bool {
 	if v, ok := typesCache[t.String()]; ok {
 		return v
@@ -517,7 +575,6 @@ func isImmType(t types.Type) bool {
 	case *types.Named:
 
 		typesCache[t.String()] = true
-		seenTypes[t] = true
 
 		v := isImmType(t.Underlying())
 		typesCache[t.String()] = v
@@ -539,8 +596,7 @@ func isImmType(t types.Type) bool {
 
 		return true
 	case *types.Interface:
-		ifaces[t] = true
-		return true
+		return types.Implements(t, immIntf)
 	case *types.Signature:
 		return false
 	default:
@@ -585,5 +641,9 @@ func (e errors) Less(i, j int) bool {
 		return l.Line < r.Line
 	}
 
-	return l.Column < r.Column
+	if l.Column != r.Column {
+		return l.Column < r.Column
+	}
+
+	return e[i].msg < e[j].msg
 }

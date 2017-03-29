@@ -4,3 +4,8 @@ Package `immutable` is a helper package for the immutable data structures genera
 [`immutableGen`](https://github.com/myitcv/immutable/tree/master/cmd/immutableGen).
 
 See [the `immutableGen` wiki](https://github.com/myitcv/immutable/wiki/immutableGen) for more details.
+
+### Contributors
+
+* [`@aprotopapas`](https://github.com/aprotopapas)
+* [`@subash-a`](https://github.com/subash-a)

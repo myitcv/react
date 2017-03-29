@@ -2,14 +2,14 @@ package main
 
 import (
 	"go/ast"
-	"go/token"
+	"strings"
 	"text/template"
 
 	"github.com/myitcv/immutable"
 )
 
 type immSlice struct {
-	fset *token.FileSet
+	commonImm
 
 	name   string
 	typ    ast.Expr
@@ -28,7 +28,7 @@ func (o *output) genImmSlices(slices []immSlice) {
 			Type: o.exprString(s.valTyp),
 		}
 
-		fm := exporter(s.name)
+		exp := exporter(s.name)
 
 		o.printCommentGroup(s.dec.Doc)
 		o.printImmPreamble(s.name, s.typ)
@@ -45,7 +45,7 @@ func (o *output) genImmSlices(slices []immSlice) {
 		o.pfln("}")
 
 		tmpl := template.New("immslice")
-		tmpl.Funcs(fm)
+		tmpl.Funcs(exp)
 		_, err := tmpl.Parse(immSliceTmpl)
 		if err != nil {
 			fatalf("failed to parse immutable slice template: %v", err)
@@ -55,5 +55,75 @@ func (o *output) genImmSlices(slices []immSlice) {
 		if err != nil {
 			fatalf("failed to execute immutable slice template: %v", err)
 		}
+
+		o.pt(`
+		func (s *{{.}}) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
+			if s == nil {
+				return true
+			}
+
+			if s.Mutable() {
+				return false
+			}
+		`, exp, s.name)
+
+		vtyp := o.exprString(s.valTyp)
+
+		valIsImm := o.immTypes[strings.TrimPrefix(vtyp, "*")]
+
+		if valIsImm == nil {
+			i, err := immutable.IsImmTypeAst(s.valTyp, s.file.Imports, s.pkg)
+			if err != nil {
+				fatalf("failed to check IsImmTypeAst: %v", err)
+			}
+			valIsImm = i
+		}
+
+		switch valIsImm.(type) {
+		case immutable.ImmTypeAstSlice, immutable.ImmTypeAstStruct, immutable.ImmTypeAstMap, immutable.ImmTypeAstImplsIntf:
+			o.pt(`
+			if s.Len() == 0 {
+				return true
+			}
+
+			if seen == nil {
+				return s.IsDeeplyNonMutable(make(map[interface{}]bool))
+			}
+
+			if seen[s] {
+				return true
+			}
+
+			seen[s] = true
+
+			for _, v := range s.theSlice {
+			`, exp, s.name)
+
+			if _, ok := valIsImm.(immutable.ImmTypeAstExtIntf); ok {
+				o.pt(`
+					switch v := v.(type) {
+					case immutable.Immutable:
+						if !v.IsDeeplyNonMutable(seen) {
+							return false
+						}
+					}
+				`, exp, s.name)
+			} else {
+				o.pt(`
+					if v != nil && !v.IsDeeplyNonMutable(seen) {
+						return false
+					}
+				`, exp, s.name)
+			}
+
+			o.pt(`
+			}
+			`, exp, s.name)
+		}
+
+		o.pt(`
+			return true
+		}
+		`, exp, s.name)
 	}
 }
