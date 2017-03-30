@@ -39,18 +39,31 @@ func main() {
 		}
 	}()
 
+	flag.Usage = usage
 	flag.Parse()
 
+	wd, err := os.Getwd()
+	if err != nil {
+		fatalf("unable to get working directory: %v", err)
+	}
+
+	if fInit.val != nil {
+		mainInit(wd)
+	} else {
+		mainGen(wd)
+	}
+}
+
+func mainInit(wd string) {
+	doinit(wd, *fInit.val)
+}
+
+func mainGen(wd string) {
 	gogenerate.DefaultLogLevel(fGoGenLog, gogenerate.LogFatal)
 
 	envFileName, ok := os.LookupEnv(gogenerate.GOFILE)
 	if !ok {
 		fatalf("env not correct; missing %v", gogenerate.GOFILE)
-	}
-
-	wd, err := os.Getwd()
-	if err != nil {
-		fatalf("unable to get working directory: %v", err)
 	}
 
 	// are we running against the first file that contains the reactGen directive?
