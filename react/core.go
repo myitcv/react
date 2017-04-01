@@ -25,8 +25,8 @@ func newBasicElement() *BasicElement {
 type BasicHTMLElement struct {
 	*BasicElement
 
-	ID        string `js:"id"`
-	Key       string `js:"key"`
+	ID        string `js:"id" react:"omitempty"`
+	Key       string `js:"key" react:"omitempty"`
 	ClassName string `js:"className"`
 	Role      string `js:"role"`
 

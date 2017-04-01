@@ -5,17 +5,13 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"go/ast"
+	"go/build"
 	"go/parser"
+	"go/printer"
 	"go/token"
 	"path"
 	"strings"
-	"text/template"
-	"unicode"
-	"unicode/utf8"
-
-	"golang.org/x/tools/imports"
 
 	"github.com/myitcv/gogenerate"
 )
@@ -25,29 +21,60 @@ const (
 	compDefName   = "ComponentDef"
 	compDefSuffix = "Def"
 
-	stateTypeSuffix = "State"
-	propsTypeSuffix = "Props"
+	stateTypeSuffix     = "State"
+	propsTypeSuffix     = "Props"
+	propsTypeTmplPrefix = "_"
 
 	getInitialState           = "GetInitialState"
 	componentWillReceiveProps = "ComponentWillReceiveProps"
 	equals                    = "Equals"
 )
 
+type typeFile struct {
+	ts   *ast.TypeSpec
+	file *ast.File
+}
+
+type funcFile struct {
+	fn   *ast.FuncDecl
+	file *ast.File
+}
+
+var fset = token.NewFileSet()
+
+func astNodeString(i interface{}) string {
+	b := bytes.NewBuffer(nil)
+	err := printer.Fprint(b, fset, i)
+	if err != nil {
+		fatalf("failed to astNodeString %v: %v", i, err)
+	}
+
+	return b.String()
+}
+
 type gen struct {
-	fset *token.FileSet
+	pkg        string
+	pkgImpPath string
 
-	pkg string
+	isReactCore bool
 
-	components    map[string]*ast.TypeSpec
-	types         map[string]*ast.TypeSpec
-	pointMeths    map[string][]*ast.FuncDecl
-	nonPointMeths map[string][]*ast.FuncDecl
+	propsTmpls    map[string]typeFile
+	components    map[string]typeFile
+	types         map[string]typeFile
+	pointMeths    map[string][]funcFile
+	nonPointMeths map[string][]funcFile
 }
 
 func dogen(dir, license string) {
-	fset := token.NewFileSet()
 
-	pkgs, err := parser.ParseDir(fset, dir, nil, 0)
+	bpkg, err := build.ImportDir(dir, 0)
+	if err != nil {
+		fatalf("unable to import pkg in dir %v: %v", dir, err)
+	}
+
+	isReactCore := bpkg.ImportPath == reactPkg
+
+	pkgs, err := parser.ParseDir(fset, dir, nil, parser.ParseComments)
 	if err != nil {
 		fatalf("unable to parse %v: %v", dir, err)
 	}
@@ -56,13 +83,16 @@ func dogen(dir, license string) {
 	// and any x-test package that may also be present
 	for pn, pkg := range pkgs {
 		g := &gen{
-			fset: fset,
-			pkg:  pn,
+			pkg:        pn,
+			pkgImpPath: bpkg.ImportPath,
 
-			components:    make(map[string]*ast.TypeSpec),
-			types:         make(map[string]*ast.TypeSpec),
-			pointMeths:    make(map[string][]*ast.FuncDecl),
-			nonPointMeths: make(map[string][]*ast.FuncDecl),
+			isReactCore: isReactCore,
+
+			propsTmpls:    make(map[string]typeFile),
+			components:    make(map[string]typeFile),
+			types:         make(map[string]typeFile),
+			pointMeths:    make(map[string][]funcFile),
+			nonPointMeths: make(map[string][]funcFile),
 		}
 
 		for fn, file := range pkg.Files {
@@ -90,7 +120,7 @@ func dogen(dir, license string) {
 				}
 			}
 
-			if !foundImp {
+			if !foundImp && !isReactCore {
 				continue
 			}
 
@@ -109,9 +139,9 @@ func dogen(dir, license string) {
 						if !ok {
 							continue
 						}
-						g.pointMeths[id.Name] = append(g.pointMeths[id.Name], d)
+						g.pointMeths[id.Name] = append(g.pointMeths[id.Name], funcFile{d, file})
 					case *ast.Ident:
-						g.nonPointMeths[v.Name] = append(g.pointMeths[v.Name], d)
+						g.nonPointMeths[v.Name] = append(g.pointMeths[v.Name], funcFile{d, file})
 					}
 
 				case *ast.GenDecl:
@@ -124,6 +154,21 @@ func dogen(dir, license string) {
 
 						st, ok := ts.Type.(*ast.StructType)
 						if !ok || st.Fields == nil {
+							continue
+						}
+
+						if n := ts.Name.Name; strings.HasPrefix(n, propsTypeTmplPrefix) &&
+							strings.HasSuffix(n, propsTypeSuffix) {
+
+							if ts.Doc == nil {
+								ts.Doc = d.Doc
+							}
+
+							g.propsTmpls[n] = typeFile{
+								ts:   ts,
+								file: file,
+							}
+
 							continue
 						}
 
@@ -157,9 +202,9 @@ func dogen(dir, license string) {
 						}
 
 						if foundAnon && strings.HasSuffix(ts.Name.Name, compDefSuffix) {
-							g.components[ts.Name.Name] = ts
+							g.components[ts.Name.Name] = typeFile{ts, file}
 						} else {
-							g.types[ts.Name.Name] = ts
+							g.types[ts.Name.Name] = typeFile{ts, file}
 						}
 					}
 				}
@@ -170,324 +215,9 @@ func dogen(dir, license string) {
 		for cd := range g.components {
 			g.genComp(cd)
 		}
-	}
-}
 
-type compGen struct {
-	*gen
-
-	Recv string
-	Name string
-
-	HasState                     bool
-	HasProps                     bool
-	HasGetInitState              bool
-	HasComponentWillReceiveProps bool
-
-	PropsHasEquals bool
-	StateHasEquals bool
-
-	buf *bytes.Buffer
-}
-
-func (g *gen) genComp(defName string) {
-
-	name := strings.TrimSuffix(defName, compDefSuffix)
-
-	r, _ := utf8.DecodeRuneInString(name)
-
-	cg := &compGen{
-		gen:  g,
-		buf:  bytes.NewBuffer(nil),
-		Name: name,
-		Recv: string(unicode.ToLower(r)),
-	}
-
-	_, hasState := g.types[name+stateTypeSuffix]
-	_, hasProps := g.types[name+propsTypeSuffix]
-
-	cg.HasState = hasState
-	cg.HasProps = hasProps
-
-	if hasState {
-		for _, m := range g.pointMeths[defName] {
-			if m.Name.Name != getInitialState {
-				continue
-			}
-
-			if m.Type.Params != nil && len(m.Type.Params.List) > 0 {
-				continue
-			}
-
-			if m.Type.Results != nil && len(m.Type.Results.List) != 1 {
-				continue
-			}
-
-			rp := m.Type.Results.List[0]
-
-			id, ok := rp.Type.(*ast.Ident)
-			if !ok {
-				continue
-			}
-
-			if id.Name == name+stateTypeSuffix {
-				cg.HasGetInitState = true
-				break
-			}
+		for pt, t := range g.propsTmpls {
+			g.genProps(pt, t)
 		}
-
-		for _, m := range g.nonPointMeths[name+stateTypeSuffix] {
-			if m.Name.Name != equals {
-				continue
-			}
-
-			if m.Type.Params != nil && len(m.Type.Params.List) != 1 {
-				continue
-			}
-
-			if m.Type.Results != nil && len(m.Type.Results.List) != 1 {
-				continue
-			}
-
-			{
-				v := m.Type.Params.List[0]
-
-				id, ok := v.Type.(*ast.Ident)
-				if !ok {
-					continue
-				}
-
-				if id.Name != name+stateTypeSuffix {
-					continue
-				}
-			}
-
-			{
-				v := m.Type.Results.List[0]
-
-				id, ok := v.Type.(*ast.Ident)
-				if !ok {
-					continue
-				}
-
-				if id.Name != "bool" {
-					continue
-				}
-			}
-
-			cg.StateHasEquals = true
-		}
-	}
-
-	if hasProps {
-		for _, m := range g.pointMeths[defName] {
-			if m.Name.Name != componentWillReceiveProps {
-				continue
-			}
-
-			if m.Type.Params != nil && len(m.Type.Params.List) != 1 {
-				continue
-			}
-
-			if m.Type.Results != nil && len(m.Type.Results.List) != 0 {
-				continue
-			}
-
-			p := m.Type.Params.List[0]
-
-			id, ok := p.Type.(*ast.Ident)
-			if !ok {
-				continue
-			}
-
-			if id.Name == name+propsTypeSuffix {
-				cg.HasComponentWillReceiveProps = true
-				break
-			}
-		}
-
-		for _, m := range g.nonPointMeths[name+propsTypeSuffix] {
-			if m.Name.Name != equals {
-				continue
-			}
-
-			if m.Type.Params != nil && len(m.Type.Params.List) != 1 {
-				continue
-			}
-
-			if m.Type.Results != nil && len(m.Type.Results.List) != 1 {
-				continue
-			}
-
-			{
-				v := m.Type.Params.List[0]
-
-				id, ok := v.Type.(*ast.Ident)
-				if !ok {
-					continue
-				}
-
-				if id.Name != name+propsTypeSuffix {
-					continue
-				}
-			}
-
-			{
-				v := m.Type.Results.List[0]
-
-				id, ok := v.Type.(*ast.Ident)
-				if !ok {
-					continue
-				}
-
-				if id.Name != "bool" {
-					continue
-				}
-			}
-
-			cg.PropsHasEquals = true
-		}
-	}
-
-	cg.pf("// Code generated by %v; DO NOT EDIT.\n", reactGenCmd)
-	cg.pln()
-	cg.pf("package %v\n", cg.pkg)
-	cg.pf("import \"%v\"\n", reactPkg)
-	cg.pln()
-
-	cg.pt(`
-func ({{.Recv}} *{{.Name}}Def) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
-	res := false
-
-	{{if .HasProps -}}
-	{
-	{{if .PropsHasEquals -}}
-	res = !{{.Recv}}.Props().Equals(nextProps.({{.Name}}Props)) || res
-	{{else -}}
-	res = {{.Recv}}.Props() != nextProps.({{.Name}}Props) || res
-	{{end -}}
-	}
-	{{end -}}
-	{{if .HasState -}}
-	v := prevState.({{.Name}}State)
-	res = !v.EqualsIntf(nextState) || res
-	{{end -}}
-
-	return res
-}
-
-{{if .HasState}}
-// SetState is an auto-generated proxy proxy to update the state for the
-// {{.Name}} component.  SetState does not immediately mutate {{.Recv}}.State()
-// but creates a pending state transition.
-func ({{.Recv}} *{{.Name}}Def) SetState(s {{.Name}}State) {
-	{{.Recv}}.ComponentDef.SetState(s)
-}
-
-// State is an auto-generated proxy to return the current state in use for the
-// render of the {{.Name}} component
-func ({{.Recv}} *{{.Name}}Def) State() {{.Name}}State {
-	return {{.Recv}}.ComponentDef.State().({{.Name}}State)
-}
-
-// IsState is an auto-generated definition so that {{.Name}}State implements
-// the github.com/myitcv/gopherjs/react.State interface.
-func ({{.Recv}} {{.Name}}State) IsState() {}
-
-var _ react.State = {{.Name}}State{}
-
-// GetInitialStateIntf is an auto-generated proxy to GetInitialState
-func ({{.Recv}} *{{.Name}}Def) GetInitialStateIntf() react.State {
-{{if .HasGetInitState -}}
-	return {{.Recv}}.GetInitialState()
-{{else -}}
-	return {{.Name}}State{}
-{{end -}}
-}
-
-func ({{.Recv}} {{.Name}}State) EqualsIntf(v interface{}) bool {
-	{{if .StateHasEquals -}}
-	return {{.Recv}}.Equals(v.({{.Name}}State))
-	{{else -}}
-	return {{.Recv}} == v.({{.Name}}State)
-	{{end -}}
-}
-{{end}}
-
-
-{{if .HasProps}}
-// Props is an auto-generated proxy to the current props of {{.Name}}
-func ({{.Recv}} *{{.Name}}Def) Props() {{.Name}}Props {
-	uprops := {{.Recv}}.ComponentDef.Props()
-	return uprops.({{.Name}}Props)
-}
-
-{{if .HasComponentWillReceiveProps}}
-// ComponentWillReceivePropsIntf is an auto-generated proxy to
-// ComponentWillReceiveProps
-func ({{.Recv}} *{{.Name}}Def) ComponentWillReceivePropsIntf(i interface{}) {
-	ourProps := i.({{.Name}}Props)
-	{{.Recv}}.ComponentWillReceiveProps(ourProps)
-}
-{{end}}
-
-func ({{.Recv}} {{.Name}}Props) EqualsIntf(v interface{}) bool {
-	{{if .PropsHasEquals -}}
-	return {{.Recv}}.Equals(v.({{.Name}}Props))
-	{{else -}}
-	return {{.Recv}} == v.({{.Name}}Props)
-	{{end -}}
-}
-
-var _ react.Equals = {{.Name}}Props{}
-{{end}}
-	`, cg)
-
-	ofName := gogenerate.NameFile(name, reactGenCmd)
-	toWrite := cg.buf.Bytes()
-
-	res, err := imports.Process(ofName, toWrite, nil)
-	if err == nil {
-		toWrite = res
-	}
-
-	wrote, err := gogenerate.WriteIfDiff(toWrite, ofName)
-	if err != nil {
-		fatalf("could not write %v: %v", ofName, err)
-	}
-
-	if wrote {
-		infof("writing %v", ofName)
-	} else {
-		infof("skipping writing of %v; it's identical", ofName)
-	}
-
-}
-
-func (c *compGen) pf(format string, vals ...interface{}) {
-	fmt.Fprintf(c.buf, format, vals...)
-}
-
-func (c *compGen) pln(vals ...interface{}) {
-	fmt.Fprintln(c.buf, vals...)
-}
-
-func (c *compGen) pt(tmpl string, val interface{}) {
-	// on the basis most templates are for convenience define inline
-	// as raw string literals which start the ` on one line but then start
-	// the template on the next (for readability) we strip the first leading
-	// \n if one exists
-	tmpl = strings.TrimPrefix(tmpl, "\n")
-
-	t := template.New("tmp")
-
-	_, err := t.Parse(tmpl)
-	if err != nil {
-		fatalf("unable to parse template: %v", err)
-	}
-
-	err = t.Execute(c.buf, val)
-	if err != nil {
-		fatalf("cannot execute template: %v", err)
 	}
 }

@@ -10,29 +10,26 @@ type LiDef struct {
 	underlying *js.Object
 }
 
-// LiPropsDef defines the properties for the <li> element
-type LiPropsDef struct {
+// _LiProps defines the properties for the <li> element
+type _LiProps struct {
 	*BasicHTMLElement
-
-	Role string `js:"role"`
-}
-
-// LiProps creates a new instance of <li> properties, mutating the props
-// by the provided initialiser
-func LiProps(f func(p *LiPropsDef)) *LiPropsDef {
-	res := &LiPropsDef{
-		BasicHTMLElement: newBasicHTMLElement(),
-	}
-	f(res)
-	return res
 }
 
 func (d *LiDef) reactElement() {}
 
 // Li creates a new instance of an <li> element with the provided props
 // and children
-func Li(props *LiPropsDef, children ...Element) *LiDef {
-	args := []interface{}{"li", props}
+func Li(props *LiProps, children ...Element) *LiDef {
+
+	rProps := &_LiProps{
+		BasicHTMLElement: newBasicHTMLElement(),
+	}
+
+	if props != nil {
+		props.assign(rProps)
+	}
+
+	args := []interface{}{"li", rProps}
 
 	for _, v := range children {
 		args = append(args, elementToReactObj(v))

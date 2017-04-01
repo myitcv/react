@@ -10,27 +10,26 @@ type SpanDef struct {
 	underlying *js.Object
 }
 
-// SpanPropsDef defines the properties for the <p> element
-type SpanPropsDef struct {
+// _SpanProps defines the properties for the <p> element
+type _SpanProps struct {
 	*BasicHTMLElement
-}
-
-// SpanProps creates a new instance of <p> properties, mutating the props
-// by the provided initiapser
-func SpanProps(f func(p *SpanPropsDef)) *SpanPropsDef {
-	res := &SpanPropsDef{
-		BasicHTMLElement: newBasicHTMLElement(),
-	}
-	f(res)
-	return res
 }
 
 func (d *SpanDef) reactElement() {}
 
 // Span creates a new instance of a <p> element with the provided props and
 // children
-func Span(props *SpanPropsDef, children ...Element) *SpanDef {
-	args := []interface{}{"p", props}
+func Span(props *SpanProps, children ...Element) *SpanDef {
+
+	rProps := &_SpanProps{
+		BasicHTMLElement: newBasicHTMLElement(),
+	}
+
+	if props != nil {
+		props.assign(rProps)
+	}
+
+	args := []interface{}{"p", rProps}
 
 	for _, v := range children {
 		args = append(args, elementToReactObj(v))

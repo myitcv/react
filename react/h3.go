@@ -10,26 +10,24 @@ type H3Def struct {
 	underlying *js.Object
 }
 
-// H3PropsDef defines the properties for the <h3> element
-type H3PropsDef struct {
+// _H3Props defines the properties for the <h3> element
+type _H3Props struct {
 	*BasicHTMLElement
-}
-
-// H3Props creates a new instance of <h3> properties, mutating the props
-// by the provided initiah3ser
-func H3Props(f func(p *H3PropsDef)) *H3PropsDef {
-	res := &H3PropsDef{
-		BasicHTMLElement: newBasicHTMLElement(),
-	}
-	f(res)
-	return res
 }
 
 func (d *H3Def) reactElement() {}
 
 // H3 creates a new instance of a <h3> element with the provided props
-func H3(props *H3PropsDef, child Element) *H3Def {
-	underlying := react.Call("createElement", "h3", props, elementToReactObj(child))
+func H3(props *H3Props, child Element) *H3Def {
+	rProps := &_H3Props{
+		BasicHTMLElement: newBasicHTMLElement(),
+	}
+
+	if props != nil {
+		props.assign(rProps)
+	}
+
+	underlying := react.Call("createElement", "h3", rProps, elementToReactObj(child))
 
 	return &H3Def{underlying: underlying}
 }

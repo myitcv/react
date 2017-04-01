@@ -10,26 +10,25 @@ type DivDef struct {
 	underlying *js.Object
 }
 
-// DivPropsDef defines the properties for the <div> element
-type DivPropsDef struct {
+// _DivProps are the props for a <div> component
+type _DivProps struct {
 	*BasicHTMLElement
-}
-
-// DivProps creates a new instance of <div> properties, mutating the props
-// by the provided initiadivser
-func DivProps(f func(p *DivPropsDef)) *DivPropsDef {
-	res := &DivPropsDef{
-		BasicHTMLElement: newBasicHTMLElement(),
-	}
-	f(res)
-	return res
 }
 
 func (d *DivDef) reactElement() {}
 
 // Div creates a new instance of a <div> element with the provided props and children
-func Div(props *DivPropsDef, children ...Element) *DivDef {
-	args := []interface{}{"div", props}
+func Div(props *DivProps, children ...Element) *DivDef {
+
+	rProps := &_DivProps{
+		BasicHTMLElement: newBasicHTMLElement(),
+	}
+
+	if props != nil {
+		props.assign(rProps)
+	}
+
+	args := []interface{}{"div", rProps}
 
 	for _, v := range children {
 		args = append(args, elementToReactObj(v))

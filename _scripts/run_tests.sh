@@ -16,6 +16,8 @@ do
 	go install $i
 done
 
+rm -f !(_vendor)/**/gen_*.go
+
 go generate ./...
 
 go test ./...

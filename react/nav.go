@@ -10,26 +10,25 @@ type NavDef struct {
 	underlying *js.Object
 }
 
-// NavPropsDef defines the properties for the <nav> element
-type NavPropsDef struct {
+// _NavProps defines the properties for the <nav> element
+type _NavProps struct {
 	*BasicHTMLElement
-}
-
-// NavProps creates a new instance of <nav> properties, mutating the props
-// by the provided initialiser
-func NavProps(f func(p *NavPropsDef)) *NavPropsDef {
-	res := &NavPropsDef{
-		BasicHTMLElement: newBasicHTMLElement(),
-	}
-	f(res)
-	return res
 }
 
 func (d *NavDef) reactElement() {}
 
 // Nav creates a new instance of a <nav> element with the provided props and children
-func Nav(props *NavPropsDef, children ...Element) *NavDef {
-	args := []interface{}{"nav", props}
+func Nav(props *NavProps, children ...Element) *NavDef {
+
+	rProps := &_NavProps{
+		BasicHTMLElement: newBasicHTMLElement(),
+	}
+
+	if props != nil {
+		props.assign(rProps)
+	}
+
+	args := []interface{}{"nav", rProps}
 
 	for _, v := range children {
 		args = append(args, elementToReactObj(v))

@@ -10,27 +10,26 @@ type H1Def struct {
 	underlying *js.Object
 }
 
-// H1PropsDef defines the properties for the <h1> element
-type H1PropsDef struct {
+// _H1Props defines the properties for the <h1> element
+type _H1Props struct {
 	*BasicHTMLElement
-}
-
-// H1Props creates a new instance of <h1> properties, mutating the props
-// by the provided initiah1ser
-func H1Props(f func(p *H1PropsDef)) *H1PropsDef {
-	res := &H1PropsDef{
-		BasicHTMLElement: newBasicHTMLElement(),
-	}
-	f(res)
-	return res
 }
 
 func (d *H1Def) reactElement() {}
 
 // H1 creates a new instance of a <h1> element with the provided props and
 // child
-func H1(props *H1PropsDef, child Element) *H1Def {
-	underlying := react.Call("createElement", "h1", props, elementToReactObj(child))
+func H1(props *H1Props, child Element) *H1Def {
+
+	rProps := &_H1Props{
+		BasicHTMLElement: newBasicHTMLElement(),
+	}
+
+	if props != nil {
+		props.assign(rProps)
+	}
+
+	underlying := react.Call("createElement", "h1", rProps, elementToReactObj(child))
 
 	return &H1Def{underlying: underlying}
 }

@@ -10,26 +10,25 @@ type HRDef struct {
 	underlying *js.Object
 }
 
-// HRPropsDef defines the properties for the <hr> element
-type HRPropsDef struct {
+// _HRProps defines the properties for the <hr> element
+type _HRProps struct {
 	*BasicHTMLElement
-}
-
-// HRProps creates a new instance of <hr> properties, mutating the props
-// by the provided initiahrser
-func HRProps(f func(p *HRPropsDef)) *HRPropsDef {
-	res := &HRPropsDef{
-		BasicHTMLElement: newBasicHTMLElement(),
-	}
-	f(res)
-	return res
 }
 
 func (d *HRDef) reactElement() {}
 
 // HR creates a new instance of a <hr> element with the provided props
-func HR(props *HRPropsDef) *HRDef {
-	underlying := react.Call("createElement", "hr", props)
+func HR(props *HRProps) *HRDef {
+
+	rProps := &_HRProps{
+		BasicHTMLElement: newBasicHTMLElement(),
+	}
+
+	if props != nil {
+		props.assign(rProps)
+	}
+
+	underlying := react.Call("createElement", "hr", rProps)
 
 	return &HRDef{underlying: underlying}
 }

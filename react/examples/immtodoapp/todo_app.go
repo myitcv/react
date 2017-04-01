@@ -52,45 +52,26 @@ func (t *TodoAppDef) Render() r.Element {
 		entries = append(entries, entry)
 	}
 
-	// TODO why does this fail when inline below?
-	theDp := r.DivProps(func(dp *r.DivPropsDef) {
-		dp.ClassName = "form-group"
-	})
-
 	return r.Div(nil,
 		r.H3(nil, r.S("TODO")),
 		r.Ul(nil, entries...),
-		r.Form(
-			r.FormProps(func(fp *r.FormPropsDef) {
-				fp.ClassName = "form-inline"
-			}),
+		r.Form(&r.FormProps{ClassName: "form-inline"},
 			r.Div(
-				theDp,
-				r.Label(
-					r.LabelProps(func(lp *r.LabelPropsDef) {
-						lp.ClassName = "sr-only"
-						lp.For = "todoText"
-					}),
-					r.S("Todo Item"),
-				),
-				r.Input(
-					r.InputProps(func(ip *r.InputPropsDef) {
-						ip.Type = "text"
-						ip.ClassName = "form-control"
-						ip.ID = "todoText"
-						ip.Placeholder = "Todo Item"
-						ip.Value = t.State().currItem
-						ip.OnChange = t.onCurrItemChange
-					}),
-				),
-				r.Button(
-					r.ButtonProps(func(bp *r.ButtonPropsDef) {
-						bp.Type = "submit"
-						bp.ClassName = "btn btn-default"
-						bp.OnClick = t.onAddClicked
-					}),
-					r.S(fmt.Sprintf("Add #%v", t.State().items.Len()+1)),
-				),
+				&r.DivProps{ClassName: "form-group"},
+				r.Label(&r.LabelProps{ClassName: "sr-only", For: "todoText"}, r.S("Todo Item")),
+				r.Input(&r.InputProps{
+					Type:        "text",
+					ClassName:   "form-control",
+					ID:          "todoText",
+					Placeholder: "Todo Item",
+					Value:       t.State().currItem,
+					OnChange:    t.onCurrItemChange,
+				}),
+				r.Button(&r.ButtonProps{
+					Type:      "submit",
+					ClassName: "btn btn-default",
+					OnClick:   t.onAddClicked,
+				}, r.S(fmt.Sprintf("Add #%v", t.State().items.Len()+1))),
 			),
 		),
 	)

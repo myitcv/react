@@ -45,18 +45,18 @@ func (m *MarkdownEditorDef) Render() r.Element {
 	return r.Div(nil,
 		r.H3(nil, r.S("Input")),
 		r.TextArea(
-			r.TextAreaProps(func(tap *r.TextAreaPropsDef) {
-				tap.ClassName = "form-control"
-				tap.Value = m.State().value
-				tap.OnChange = m.handleChange
-			}),
+			&r.TextAreaProps{
+				ClassName: "form-control",
+				Value:     m.State().value,
+				OnChange:  m.handleChange,
+			},
 		),
 		r.H3(nil, r.S("Output")),
 		r.Div(
-			r.DivProps(func(dp *r.DivPropsDef) {
-				dp.ClassName = "well"
-				dp.DangerouslySetInnerHTML = m.getRawMarkup()
-			}),
+			&r.DivProps{
+				ClassName:               "well",
+				DangerouslySetInnerHTML: m.getRawMarkup(),
+			},
 		),
 	)
 }
