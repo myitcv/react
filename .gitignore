@@ -1,2 +1,7 @@
 *.js
 *.js.map
+!react/internal/dev/dev.inc.js
+!react/internal/prod/prod.inc.js
+!remarkable/remarkable.inc.js
+!sites/common/bootstrap/bootstrap.min.js
+!sites/common/jquery/jquery.min.js
