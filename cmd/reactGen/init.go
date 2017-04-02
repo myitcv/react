@@ -9,8 +9,6 @@ import (
 	"path/filepath"
 	"strings"
 	"text/template"
-
-	"golang.org/x/tools/imports"
 )
 
 const (
@@ -48,8 +46,9 @@ func doinit(wd string, tmpl string) {
 
 		if strings.HasSuffix(fn, ".go") {
 
-			if nv, err := imports.Process(fp, toWrite, nil); err == nil {
-				toWrite = nv
+			out, err := fmtBuf(b)
+			if err == nil {
+				toWrite = out.Bytes()
 			}
 		}
 

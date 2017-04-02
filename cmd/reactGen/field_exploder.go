@@ -119,9 +119,11 @@ func (fe *fieldExploder) explode() error {
 			// real fields - we can print the type... but need
 			// to collect the imports first
 
+			newImps := make(map[*ast.ImportSpec]struct{})
+
 			i := &importFinder{
 				imports: tf.file.Imports,
-				matches: fe.imps,
+				matches: newImps,
 			}
 
 			ast.Walk(i, f.Type)
@@ -136,6 +138,10 @@ func (fe *fieldExploder) explode() error {
 
 			if ind == 0 && fe.first && i.isJs {
 				continue
+			}
+
+			for k := range newImps {
+				fe.imps[k] = struct{}{}
 			}
 
 			for _, n := range f.Names {

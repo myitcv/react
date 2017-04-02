@@ -13,7 +13,7 @@ import (
 	"testing"
 
 	"github.com/myitcv/gogenerate"
-	"github.com/myitcv/immutable"
+	"github.com/myitcv/immutable/util"
 )
 
 const (
@@ -71,7 +71,7 @@ func TestBasic(t *testing.T) {
 		for _, s := range gd.Specs {
 			ts := s.(*ast.TypeSpec)
 
-			name, ok := immutable.IsImmTmplAst(ts)
+			name, ok := util.IsImmTmplAst(ts)
 
 			if !ok {
 				continue

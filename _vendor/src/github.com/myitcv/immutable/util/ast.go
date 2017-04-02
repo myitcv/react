@@ -1,4 +1,4 @@
-package immutable
+package util
 
 import (
 	"bytes"
@@ -11,6 +11,8 @@ import (
 	"os"
 	"path"
 	"strings"
+
+	"github.com/myitcv/immutable"
 )
 
 const (
@@ -22,7 +24,7 @@ const (
 func IsImmTmplAst(ts *ast.TypeSpec) (string, bool) {
 	typName := ts.Name.Name
 
-	if !strings.HasPrefix(typName, ImmTypeTmplPrefix) {
+	if !strings.HasPrefix(typName, immutable.ImmTypeTmplPrefix) {
 		return "", false
 	}
 
@@ -43,7 +45,7 @@ func IsImmTmplAst(ts *ast.TypeSpec) (string, bool) {
 		return "", false
 	}
 
-	name := strings.TrimPrefix(typName, ImmTypeTmplPrefix)
+	name := strings.TrimPrefix(typName, immutable.ImmTypeTmplPrefix)
 
 	return name, true
 }
@@ -300,7 +302,7 @@ func isAstTypeImm(pkgStr, typStr string, isPointer bool) (ImmTypeAst, error) {
 
 						case "__tmpl":
 							n, ok := f.Type.(*ast.Ident)
-							if ok && n.Name == ImmTypeTmplPrefix+typStr {
+							if ok && n.Name == immutable.ImmTypeTmplPrefix+typStr {
 								foundTmpl = true
 							}
 

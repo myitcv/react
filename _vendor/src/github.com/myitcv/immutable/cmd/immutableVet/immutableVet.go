@@ -21,6 +21,7 @@ import (
 	"github.com/kisielk/gotool"
 	"github.com/myitcv/gogenerate"
 	"github.com/myitcv/immutable"
+	"github.com/myitcv/immutable/util"
 )
 
 const (
@@ -188,8 +189,8 @@ func vet(wd string, specs []string) []immErr {
 func (iv *immutableVetter) ensurePointerTyp(n ast.Node, typ ast.Expr) {
 	t := iv.info.Types[typ].Type
 	p := types.NewPointer(t)
-	switch immutable.IsImmType(p).(type) {
-	case immutable.ImmTypeMap, immutable.ImmTypeSlice, immutable.ImmTypeStruct:
+	switch util.IsImmType(p).(type) {
+	case util.ImmTypeMap, util.ImmTypeSlice, util.ImmTypeStruct:
 		iv.errorf(n.Pos(), "type should be %v", p)
 	}
 }
@@ -227,8 +228,8 @@ func (iv *immutableVetter) Visit(node ast.Node) ast.Visitor {
 
 		t := iv.info.Types[cl.Type].Type
 		p := types.NewPointer(t)
-		switch immutable.IsImmType(p).(type) {
-		case immutable.ImmTypeMap, immutable.ImmTypeSlice, immutable.ImmTypeStruct:
+		switch util.IsImmType(p).(type) {
+		case util.ImmTypeMap, util.ImmTypeSlice, util.ImmTypeStruct:
 			iv.errorf(node.Pos(), "construct using new() or generated constructors")
 			iv.vcls[cl] = true
 		}
@@ -397,8 +398,8 @@ func (iv *immutableVetter) Visit(node ast.Node) ast.Visitor {
 }
 
 func isImmListOrMap(t types.Type) bool {
-	switch immutable.IsImmType(t).(type) {
-	case immutable.ImmTypeMap, immutable.ImmTypeSlice:
+	switch util.IsImmType(t).(type) {
+	case util.ImmTypeMap, util.ImmTypeSlice:
 		return true
 	}
 
@@ -473,7 +474,7 @@ func (iv *immutableVetter) vetPackages() []immErr {
 				for _, s := range gd.Specs {
 					ts := s.(*ast.TypeSpec)
 
-					_, ok := immutable.IsImmTmplAst(ts)
+					_, ok := util.IsImmTmplAst(ts)
 					if !ok {
 						continue
 					}
@@ -519,10 +520,10 @@ func (iv *immutableVetter) vetPackages() []immErr {
 
 			case t.IsValue():
 				p := types.NewPointer(t.Type)
-				switch immutable.IsImmType(p).(type) {
-				case immutable.ImmTypeMap:
-				case immutable.ImmTypeSlice:
-				case immutable.ImmTypeStruct:
+				switch util.IsImmType(p).(type) {
+				case util.ImmTypeMap:
+				case util.ImmTypeSlice:
+				case util.ImmTypeStruct:
 				default:
 					continue
 				}
@@ -543,7 +544,7 @@ func (iv *immutableVetter) vetPackages() []immErr {
 				continue
 			}
 
-			if immutable.IsImmType(sel.Recv()) == nil {
+			if util.IsImmType(sel.Recv()) == nil {
 				continue
 			}
 
@@ -585,7 +586,7 @@ func isImmType(t types.Type) bool {
 	case *types.Map, *types.Slice:
 		return false
 	case *types.Pointer:
-		return immutable.IsImmType(t) != nil
+		return util.IsImmType(t) != nil
 	case *types.Struct:
 		for i := 0; i < t.NumFields(); i++ {
 			f := t.Field(i)
