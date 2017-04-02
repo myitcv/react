@@ -6,6 +6,7 @@ import (
 	"text/template"
 
 	"github.com/myitcv/immutable"
+	"github.com/myitcv/immutable/util"
 )
 
 type immMap struct {
@@ -76,7 +77,7 @@ func (o *output) genImmMaps(maps []immMap) {
 		valIsImm := o.immTypes[strings.TrimPrefix(vtyp, "*")]
 
 		if keyIsImm == nil {
-			i, err := immutable.IsImmTypeAst(m.keyTyp, m.file.Imports, m.pkg)
+			i, err := util.IsImmTypeAst(m.keyTyp, m.file.Imports, m.pkg)
 			if err != nil {
 				fatalf("failed to check IsImmTypeAst: %v", err)
 			}
@@ -84,7 +85,7 @@ func (o *output) genImmMaps(maps []immMap) {
 		}
 
 		if valIsImm == nil {
-			i, err := immutable.IsImmTypeAst(m.valTyp, m.file.Imports, m.pkg)
+			i, err := util.IsImmTypeAst(m.valTyp, m.file.Imports, m.pkg)
 			if err != nil {
 				fatalf("failed to check IsImmTypeAst: %v", err)
 			}
@@ -93,15 +94,15 @@ func (o *output) genImmMaps(maps []immMap) {
 
 		keyIsImmOk := false
 		switch keyIsImm.(type) {
-		case immutable.ImmTypeAstSlice, immutable.ImmTypeAstStruct, immutable.ImmTypeAstMap,
-			immutable.ImmTypeAstImplsIntf, immutable.ImmTypeAstExtIntf:
+		case util.ImmTypeAstSlice, util.ImmTypeAstStruct, util.ImmTypeAstMap,
+			util.ImmTypeAstImplsIntf, util.ImmTypeAstExtIntf:
 			keyIsImmOk = true
 		}
 
 		valIsImmOk := false
 		switch valIsImm.(type) {
-		case immutable.ImmTypeAstSlice, immutable.ImmTypeAstStruct, immutable.ImmTypeAstMap,
-			immutable.ImmTypeAstImplsIntf, immutable.ImmTypeAstExtIntf:
+		case util.ImmTypeAstSlice, util.ImmTypeAstStruct, util.ImmTypeAstMap,
+			util.ImmTypeAstImplsIntf, util.ImmTypeAstExtIntf:
 			valIsImmOk = true
 		}
 
@@ -139,7 +140,7 @@ func (o *output) genImmMaps(maps []immMap) {
 			}
 
 			if keyIsImmOk {
-				if _, ok := keyIsImm.(immutable.ImmTypeAstExtIntf); ok {
+				if _, ok := keyIsImm.(util.ImmTypeAstExtIntf); ok {
 					o.pt(`
 					switch k.(type) {
 					case immutable.Immutable:
@@ -158,7 +159,7 @@ func (o *output) genImmMaps(maps []immMap) {
 			}
 
 			if valIsImmOk {
-				if _, ok := valIsImm.(immutable.ImmTypeAstExtIntf); ok {
+				if _, ok := valIsImm.(util.ImmTypeAstExtIntf); ok {
 					o.pt(`
 					switch v.(type) {
 					case immutable.Immutable:

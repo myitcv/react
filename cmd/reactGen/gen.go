@@ -10,6 +10,7 @@ import (
 	"go/parser"
 	"go/printer"
 	"go/token"
+	"os/exec"
 	"path"
 	"strings"
 
@@ -50,6 +51,17 @@ func astNodeString(i interface{}) string {
 	}
 
 	return b.String()
+}
+
+func fmtBuf(b *bytes.Buffer) (*bytes.Buffer, error) {
+	out := bytes.NewBuffer(nil)
+	cmd := exec.Command("gofmt", "-s")
+	cmd.Stdin = b
+	cmd.Stdout = out
+
+	err := cmd.Run()
+
+	return out, err
 }
 
 type gen struct {

@@ -1,4 +1,4 @@
-package immutable
+package util
 
 import (
 	"go/types"

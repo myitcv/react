@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/myitcv/immutable"
+	"github.com/myitcv/immutable/util"
 )
 
 type commonImm struct {
@@ -34,7 +35,7 @@ func (o *output) genImmStructs(structs []immStruct) {
 		Name  string
 		Type  string
 		f     *ast.Field
-		IsImm immutable.ImmTypeAst
+		IsImm util.ImmTypeAst
 	}
 
 	for _, s := range structs {
@@ -55,13 +56,13 @@ func (o *output) genImmStructs(structs []immStruct) {
 			names := ""
 			sep := ""
 
-			var isImm immutable.ImmTypeAst
+			var isImm util.ImmTypeAst
 			typ := o.exprString(f.Type)
 
 			isImm = o.immTypes[strings.TrimPrefix(typ, "*")]
 
 			if isImm == nil {
-				i, err := immutable.IsImmTypeAst(f.Type, s.file.Imports, s.pkg)
+				i, err := util.IsImmTypeAst(f.Type, s.file.Imports, s.pkg)
 				if err != nil {
 					panic(err)
 				}
@@ -100,7 +101,7 @@ func (o *output) genImmStructs(structs []immStruct) {
 				}
 			}
 			switch isImm.(type) {
-			case immutable.ImmTypeAstMap, immutable.ImmTypeAstSlice, immutable.ImmTypeAstStruct:
+			case util.ImmTypeAstMap, util.ImmTypeAstSlice, util.ImmTypeAstStruct:
 				o.pln("// isImm")
 			}
 			o.pfln("%v %v %v", names, typ, tag)
@@ -197,7 +198,7 @@ func (o *output) genImmStructs(structs []immStruct) {
 
 		for _, f := range fields {
 			switch f.IsImm.(type) {
-			case immutable.ImmTypeAstSlice, immutable.ImmTypeAstStruct, immutable.ImmTypeAstMap, immutable.ImmTypeAstImplsIntf:
+			case util.ImmTypeAstSlice, util.ImmTypeAstStruct, util.ImmTypeAstMap, util.ImmTypeAstImplsIntf:
 
 				tmpl := struct {
 					TypeName string
@@ -216,7 +217,7 @@ func (o *output) genImmStructs(structs []immStruct) {
 					}
 				}
 				`, exp, tmpl)
-			case immutable.ImmTypeAstExtIntf:
+			case util.ImmTypeAstExtIntf:
 
 				tmpl := struct {
 					TypeName string

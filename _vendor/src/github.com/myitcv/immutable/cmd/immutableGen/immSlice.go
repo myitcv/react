@@ -6,6 +6,7 @@ import (
 	"text/template"
 
 	"github.com/myitcv/immutable"
+	"github.com/myitcv/immutable/util"
 )
 
 type immSlice struct {
@@ -72,7 +73,7 @@ func (o *output) genImmSlices(slices []immSlice) {
 		valIsImm := o.immTypes[strings.TrimPrefix(vtyp, "*")]
 
 		if valIsImm == nil {
-			i, err := immutable.IsImmTypeAst(s.valTyp, s.file.Imports, s.pkg)
+			i, err := util.IsImmTypeAst(s.valTyp, s.file.Imports, s.pkg)
 			if err != nil {
 				fatalf("failed to check IsImmTypeAst: %v", err)
 			}
@@ -80,7 +81,7 @@ func (o *output) genImmSlices(slices []immSlice) {
 		}
 
 		switch valIsImm.(type) {
-		case immutable.ImmTypeAstSlice, immutable.ImmTypeAstStruct, immutable.ImmTypeAstMap, immutable.ImmTypeAstImplsIntf:
+		case util.ImmTypeAstSlice, util.ImmTypeAstStruct, util.ImmTypeAstMap, util.ImmTypeAstImplsIntf:
 			o.pt(`
 			if s.Len() == 0 {
 				return true
@@ -99,7 +100,7 @@ func (o *output) genImmSlices(slices []immSlice) {
 			for _, v := range s.theSlice {
 			`, exp, s.name)
 
-			if _, ok := valIsImm.(immutable.ImmTypeAstExtIntf); ok {
+			if _, ok := valIsImm.(util.ImmTypeAstExtIntf); ok {
 				o.pt(`
 					switch v := v.(type) {
 					case immutable.Immutable:
