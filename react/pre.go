@@ -10,27 +10,26 @@ type PreDef struct {
 	underlying *js.Object
 }
 
-// PrePropsDef defines the properties for the <pre> element
-type PrePropsDef struct {
+// _PreProps defines the properties for the <pre> element
+type _PreProps struct {
 	*BasicHTMLElement
-}
-
-// PreProps creates a new instance of <pre> properties, mutating the props
-// by the provided initiapreser
-func PreProps(f func(p *PrePropsDef)) *PrePropsDef {
-	res := &PrePropsDef{
-		BasicHTMLElement: newBasicHTMLElement(),
-	}
-	f(res)
-	return res
 }
 
 func (d *PreDef) reactElement() {}
 
 // Pre creates a new instance of a <pre> element with the provided props and
 // children
-func Pre(props *PrePropsDef, children ...Element) *PreDef {
-	args := []interface{}{"pre", props}
+func Pre(props *PreProps, children ...Element) *PreDef {
+
+	rProps := &_PreProps{
+		BasicHTMLElement: newBasicHTMLElement(),
+	}
+
+	if props != nil {
+		props.assign(rProps)
+	}
+
+	args := []interface{}{"pre", rProps}
 
 	for _, v := range children {
 		args = append(args, elementToReactObj(v))

@@ -10,31 +10,30 @@ type TextAreaDef struct {
 	underlying *js.Object
 }
 
-// TextAreaPropsDef defines the properties for the <textarea> element
-type TextAreaPropsDef struct {
+// _TextAreaProps defines the properties for the <textarea> element
+type _TextAreaProps struct {
 	*BasicHTMLElement
 
 	Placeholder  string `js:"placeholder"`
 	Value        string `js:"value"`
-	DefaultValue string `js:"defaultValue"`
-}
-
-// TextAreaProps creates a new instance of <textarea> properties, mutating the props
-// by the provided initiatextareaser
-func TextAreaProps(f func(p *TextAreaPropsDef)) *TextAreaPropsDef {
-	res := &TextAreaPropsDef{
-		BasicHTMLElement: newBasicHTMLElement(),
-	}
-	f(res)
-	return res
+	DefaultValue string `js:"defaultValue" react:"omitempty"`
 }
 
 func (d *TextAreaDef) reactElement() {}
 
 // TextArea creates a new instance of a <textarea> element with the provided props and
 // children
-func TextArea(props *TextAreaPropsDef, children ...Element) *TextAreaDef {
-	args := []interface{}{"textarea", props}
+func TextArea(props *TextAreaProps, children ...Element) *TextAreaDef {
+
+	rProps := &_TextAreaProps{
+		BasicHTMLElement: newBasicHTMLElement(),
+	}
+
+	if props != nil {
+		props.assign(rProps)
+	}
+
+	args := []interface{}{"textarea", rProps}
 
 	for _, v := range children {
 		args = append(args, elementToReactObj(v))

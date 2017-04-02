@@ -10,27 +10,26 @@ type UlDef struct {
 	underlying *js.Object
 }
 
-// UlPropsDef defines the properties for the <ul> element
-type UlPropsDef struct {
+// _UlProps defines the properties for the <ul> element
+type _UlProps struct {
 	*BasicHTMLElement
-}
-
-// UlProps creates a new instance of <ul> properties, mutating the props
-// by the provided initiaulser
-func UlProps(f func(p *UlPropsDef)) *UlPropsDef {
-	res := &UlPropsDef{
-		BasicHTMLElement: newBasicHTMLElement(),
-	}
-	f(res)
-	return res
 }
 
 func (d *UlDef) reactElement() {}
 
 // Ul creates a new instance of a <ul> element with the provided props and <li>
 // children
-func Ul(props *UlPropsDef, children ...*LiDef) *UlDef {
-	args := []interface{}{"ul", props}
+func Ul(props *UlProps, children ...*LiDef) *UlDef {
+
+	rProps := &_UlProps{
+		BasicHTMLElement: newBasicHTMLElement(),
+	}
+
+	if props != nil {
+		props.assign(rProps)
+	}
+
+	args := []interface{}{"ul", rProps}
 
 	for _, v := range children {
 		args = append(args, elementToReactObj(v))

@@ -10,29 +10,28 @@ type ButtonDef struct {
 	underlying *js.Object
 }
 
-// ButtonPropsDef defines the properties for the <button> element
-type ButtonPropsDef struct {
+// _ButtonProps defines the properties for the <button> element
+type _ButtonProps struct {
 	*BasicHTMLElement
 
 	Type string `js:"type"`
-}
-
-// ButtonProps creates a new instance of <button> properties, mutating the props
-// by the provided initiabuttonser
-func ButtonProps(f func(p *ButtonPropsDef)) *ButtonPropsDef {
-	res := &ButtonPropsDef{
-		BasicHTMLElement: newBasicHTMLElement(),
-	}
-	f(res)
-	return res
 }
 
 func (d *ButtonDef) reactElement() {}
 
 // Button creates a new instance of a <button> element with the provided props
 // and child
-func Button(props *ButtonPropsDef, child Element) *ButtonDef {
-	args := []interface{}{"button", props, elementToReactObj(child)}
+func Button(props *ButtonProps, child Element) *ButtonDef {
+
+	rProps := &_ButtonProps{
+		BasicHTMLElement: newBasicHTMLElement(),
+	}
+
+	if props != nil {
+		props.assign(rProps)
+	}
+
+	args := []interface{}{"button", rProps, elementToReactObj(child)}
 
 	underlying := react.Call("createElement", args...)
 

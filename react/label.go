@@ -10,29 +10,28 @@ type LabelDef struct {
 	underlying *js.Object
 }
 
-// LabelPropsDef defines the properties for the <label> element
-type LabelPropsDef struct {
+// _LabelProps defines the properties for the <label> element
+type _LabelProps struct {
 	*BasicHTMLElement
 
 	For string `js:"htmlFor"`
-}
-
-// LabelProps creates a new instance of <label> properties, mutating the props
-// by the provided initialabelser
-func LabelProps(f func(p *LabelPropsDef)) *LabelPropsDef {
-	res := &LabelPropsDef{
-		BasicHTMLElement: newBasicHTMLElement(),
-	}
-	f(res)
-	return res
 }
 
 func (d *LabelDef) reactElement() {}
 
 // Label creates a new instance of a <label> element with the provided props and child
 // element
-func Label(props *LabelPropsDef, child Element) *LabelDef {
-	underlying := react.Call("createElement", "label", props, elementToReactObj(child))
+func Label(props *LabelProps, child Element) *LabelDef {
+
+	rProps := &_LabelProps{
+		BasicHTMLElement: newBasicHTMLElement(),
+	}
+
+	if props != nil {
+		props.assign(rProps)
+	}
+
+	underlying := react.Call("createElement", "label", rProps, elementToReactObj(child))
 
 	return &LabelDef{underlying: underlying}
 }

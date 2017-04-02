@@ -22,11 +22,8 @@ import (
 
 const (
 	reactGenCmd = "reactGen"
-)
 
-var (
-	fLicenseFile = gogenerate.LicenseFileFlag()
-	fGoGenLog    = gogenerate.LogFlag()
+	jsPkg = "github.com/gopherjs/gopherjs/js"
 )
 
 func main() {

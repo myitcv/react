@@ -10,30 +10,29 @@ type ADef struct {
 	underlying *js.Object
 }
 
-// APropsDef defines the properties for the <a> element
-type APropsDef struct {
+// _APropsDef defines the properties for the <a> element
+type _AProps struct {
 	*BasicHTMLElement
 
 	Target string `js:"target"`
 	Href   string `js:"href"`
 }
 
-// AProps creates a new instance of <a> properties, mutating the props
-// by the provided initiaaser
-func AProps(f func(p *APropsDef)) *APropsDef {
-	res := &APropsDef{
-		BasicHTMLElement: newBasicHTMLElement(),
-	}
-	f(res)
-	return res
-}
-
 func (d *ADef) reactElement() {}
 
 // A creates a new instance of a <a> element with the provided props and
 // children
-func A(props *APropsDef, children ...Element) *ADef {
-	args := []interface{}{"a", props}
+func A(props *AProps, children ...Element) *ADef {
+
+	rProps := &_AProps{
+		BasicHTMLElement: newBasicHTMLElement(),
+	}
+
+	if props != nil {
+		props.assign(rProps)
+	}
+
+	args := []interface{}{"a", rProps}
 
 	for _, v := range children {
 		args = append(args, elementToReactObj(v))

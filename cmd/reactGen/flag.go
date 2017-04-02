@@ -4,6 +4,15 @@ import (
 	"flag"
 	"fmt"
 	"os"
+
+	"github.com/myitcv/gogenerate"
+)
+
+var (
+	fLicenseFile = gogenerate.LicenseFileFlag()
+	fGoGenLog    = gogenerate.LogFlag()
+	fCore        = flag.Bool("core", false, "indicates we are generating for a core component (only do props expansion)")
+	fInit        initFlag
 )
 
 type initFlag struct {
@@ -19,22 +28,31 @@ func (f *initFlag) Set(s string) error {
 	return nil
 }
 
-var fInit initFlag
-
 func init() {
 	flag.Var(&fInit, "init", "create a GopherJS React application using the specified template (see below)")
 }
 
 func usage() {
-	fmt.Fprintf(os.Stderr, "Usage:\t%v [-init <template>] [-gglog <log_level>] [-licenseFile <filepath>]\n\n", os.Args[0])
+	f := func(format string, args ...interface{}) {
+		fmt.Fprintf(os.Stderr, format, args...)
+	}
+
+	l := func(args ...interface{}) {
+		fmt.Fprintln(os.Stderr, args...)
+	}
+
+	l("Usage:")
+	f("\t%v [-init <template>]\n", os.Args[0])
+	f("\t%v [-gglog <log_level>] [-licenseFile <filepath>] [-core]\n", os.Args[0])
+	l()
 
 	flag.PrintDefaults()
 
-	fmt.Fprintln(os.Stderr, "")
-	fmt.Fprintln(os.Stderr, "The flag -init only understands a single value for now: minimal. This is a minimal")
-	fmt.Fprintln(os.Stderr, "Gopher React application.")
-	fmt.Fprintln(os.Stderr, "")
-	fmt.Fprintln(os.Stderr, "When -init is not specified, it is assumed that reactGen is being called indirectly")
-	fmt.Fprintln(os.Stderr, "via go generate. The options for -gglog and -licenseFile would therefore be set in")
-	fmt.Fprintln(os.Stderr, "via the //go:generate directives. See https://blog.golang.org/generate for more details.")
+	l()
+	l("The flag -init only understands a single value for now: minimal. This is a minimal")
+	l("Gopher React application.")
+	l()
+	l("When -init is not specified, it is assumed that reactGen is being called indirectly")
+	l("via go generate. The options for -gglog and -licenseFile would therefore be set in")
+	l("via the //go:generate directives. See https://blog.golang.org/generate for more details.")
 }

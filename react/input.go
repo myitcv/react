@@ -10,31 +10,30 @@ type InputDef struct {
 	underlying *js.Object
 }
 
-// InputPropsDef defines the properties for the <input> element
-type InputPropsDef struct {
+// _InputProps defines the properties for the <input> element
+type _InputProps struct {
 	*BasicHTMLElement
 
 	Placeholder  string `js:"placeholder"`
 	Type         string `js:"type"`
 	Value        string `js:"value"`
-	DefaultValue string `js:"defaultValue"`
-}
-
-// InputProps creates a new instance of <input> properties, mutating the props
-// by the provided initiainputser
-func InputProps(f func(p *InputPropsDef)) *InputPropsDef {
-	res := &InputPropsDef{
-		BasicHTMLElement: newBasicHTMLElement(),
-	}
-	f(res)
-	return res
+	DefaultValue string `js:"defaultValue" react:"omitempty"`
 }
 
 func (d *InputDef) reactElement() {}
 
 // Input creates a new instance of a <input> element with the provided props
-func Input(props *InputPropsDef) *InputDef {
-	args := []interface{}{"input", props}
+func Input(props *InputProps) *InputDef {
+
+	rProps := &_InputProps{
+		BasicHTMLElement: newBasicHTMLElement(),
+	}
+
+	if props != nil {
+		props.assign(rProps)
+	}
+
+	args := []interface{}{"input", rProps}
 
 	underlying := react.Call("createElement", args...)
 

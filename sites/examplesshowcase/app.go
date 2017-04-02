@@ -39,49 +39,23 @@ func (a *AppDef) Render() r.Element {
 	}
 
 	return r.Div(nil,
-		r.Nav(
-			r.NavProps(func(np *r.NavPropsDef) {
-				np.ClassName = "navbar navbar-inverse navbar-fixed-top"
-			}),
-			r.Div(
-				r.DivProps(func(dp *r.DivPropsDef) {
-					dp.ClassName = "container"
-				}),
-				r.Div(
-					r.DivProps(func(dp *r.DivPropsDef) {
-						dp.ClassName = "navbar-header"
-					}),
-					r.A(
-						r.AProps(func(ap *r.APropsDef) {
-							ap.ClassName = "navbar-brand"
-							ap.Href = "#"
-						}),
+		r.Nav(&r.NavProps{ClassName: "navbar navbar-inverse navbar-fixed-top"},
+			r.Div(&r.DivProps{ClassName: "container"},
+				r.Div(&r.DivProps{ClassName: "navbar-header"},
+					r.A(&r.AProps{ClassName: "navbar-brand", Href: "#"},
 						r.S("GopherJS React Examples"),
 					),
 				),
-				r.Div(
-					r.DivProps(func(dp *r.DivPropsDef) {
-						dp.ID = "navbar"
-						dp.ClassName = "collapse navbar-collapse"
-					}),
-					r.Ul(
-						r.UlProps(func(ul *r.UlPropsDef) {
-							ul.ClassName = "nav navbar-nav"
-						}),
+				r.Div(&r.DivProps{ClassName: "collapse navbar-collapse", ID: "navbar"},
+					r.Ul(&r.UlProps{ClassName: "nav navbar-nav"},
 						a.buildLink("Showcase", tabShowcase, a.selectShowcase),
 						a.buildLink("Immutable", tabImmutable, a.selectImmutable),
 					),
 				),
 			),
 		),
-		r.Div(
-			r.DivProps(func(dp *r.DivPropsDef) {
-				dp.ClassName = "container"
-			}),
-			r.Div(
-				r.DivProps(func(dp *r.DivPropsDef) {
-					dp.ClassName = "starter-template"
-				}),
+		r.Div(&r.DivProps{ClassName: "container"},
+			r.Div(&r.DivProps{ClassName: "starter-template"},
 				view,
 			),
 		),
@@ -89,19 +63,14 @@ func (a *AppDef) Render() r.Element {
 }
 
 func (a *AppDef) buildLink(n string, t tab, cb func(e *r.SyntheticMouseEvent)) *r.LiDef {
-	return r.Li(
-		r.LiProps(func(li *r.LiPropsDef) {
-			if a.State().tab == t {
-				li.ClassName = "active"
-			}
-		}),
-		r.A(
-			r.AProps(func(ap *r.APropsDef) {
-				ap.Href = "#"
-				ap.OnClick = cb
-			}),
-			r.S(n),
-		),
+	var lip *r.LiProps
+
+	if a.State().tab == t {
+		lip = &r.LiProps{ClassName: "active"}
+	}
+
+	return r.Li(lip,
+		r.A(&r.AProps{Href: "#", OnClick: cb}, r.S(n)),
 	)
 }
 

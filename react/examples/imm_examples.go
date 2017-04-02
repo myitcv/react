@@ -63,10 +63,10 @@ func (p *ImmExamplesDef) Render() r.Element {
 		r.P(nil,
 			r.S("For the source code, raising issues, questions etc, please see "),
 			r.A(
-				r.AProps(func(ap *r.APropsDef) {
-					ap.Href = "https://github.com/myitcv/gopherjs/tree/master/react/examples"
-					ap.Target = "_blank"
-				}),
+				&r.AProps{
+					Href:   "https://github.com/myitcv/gopherjs/tree/master/react/examples",
+					Target: "_blank",
+				},
 				r.S("the Github repo"),
 			),
 			r.S("."),
@@ -84,11 +84,7 @@ func (p *ImmExamplesDef) Render() r.Element {
 		),
 	}
 
-	return r.Div(
-		r.DivProps(func(dp *r.DivPropsDef) {
-			dp.ClassName = "container"
-		}),
-
+	return r.Div(&r.DivProps{ClassName: "container"},
 		toRender...,
 	)
 }
@@ -112,43 +108,23 @@ func (p *ImmExamplesDef) renderExample(key exampleKey, title, msg r.Element, jsx
 	return r.Div(nil,
 		r.H3(nil, title),
 		msg,
-		r.Div(
-			r.DivProps(func(dp *r.DivPropsDef) {
-				dp.ClassName = "row"
-			}),
-			r.Div(
-				r.DivProps(func(dp *r.DivPropsDef) {
-					dp.ClassName = "col-md-8"
-				}),
-				r.Div(
-					r.DivProps(func(dp *r.DivPropsDef) {
-						dp.ClassName = "panel panel-default with-nav-tabs"
-					}),
-					r.Div(
-						r.DivProps(func(dp *r.DivPropsDef) {
-							dp.ClassName = "panel-heading"
-						}),
+		r.Div(&r.DivProps{ClassName: "row"},
+			r.Div(&r.DivProps{ClassName: "col-md-8"},
+				r.Div(&r.DivProps{ClassName: "panel panel-default with-nav-tabs"},
+					r.Div(&r.DivProps{ClassName: "panel-heading"},
 						r.Ul(
-							r.UlProps(func(ulp *r.UlPropsDef) {
-								ulp.ClassName = "nav nav-tabs"
-							}),
+							&r.UlProps{ClassName: "nav nav-tabs"},
 
 							p.buildExampleNavTab(key, tabGo, "GopherJS"),
 							p.buildExampleNavTab(key, tabJsx, "JSX"),
 						),
 					),
-					r.Div(
-						r.DivProps(func(dp *r.DivPropsDef) {
-							dp.ClassName = "panel-body"
-						}),
+					r.Div(&r.DivProps{ClassName: "panel-body"},
 						r.Pre(nil, code),
 					),
 				),
 			),
-			r.Div(
-				r.DivProps(func(dp *r.DivPropsDef) {
-					dp.ClassName = "col-md-4"
-				}),
+			r.Div(&r.DivProps{ClassName: "col-md-4"},
 				plainPanel(elem),
 			),
 		),
@@ -156,18 +132,16 @@ func (p *ImmExamplesDef) renderExample(key exampleKey, title, msg r.Element, jsx
 }
 
 func (p *ImmExamplesDef) buildExampleNavTab(key exampleKey, t tab, title string) *r.LiDef {
+	lip := &r.LiProps{Role: "presentation"}
+
+	if v, _ := p.State().selectedTabs.Get(key); v == t {
+		lip.ClassName = "active"
+	}
+
 	return r.Li(
-		r.LiProps(func(lip *r.LiPropsDef) {
-			if v, _ := p.State().selectedTabs.Get(key); v == t {
-				lip.ClassName = "active"
-			}
-			lip.Role = "presentation"
-		}),
+		lip,
 		r.A(
-			r.AProps(func(ap *r.APropsDef) {
-				ap.Href = "#"
-				ap.OnClick = p.handleTabChange(key, t)
-			}),
+			&r.AProps{Href: "#", OnClick: p.handleTabChange(key, t)},
 			r.S(title),
 		),
 	)
