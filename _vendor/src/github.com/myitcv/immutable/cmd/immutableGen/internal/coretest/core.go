@@ -1,5 +1,7 @@
 package coretest
 
+import "github.com/myitcv/immutable"
+
 //go:generate immutableGen -licenseFile license.txt -G "echo \"hello world\""
 
 // a comment about MyMap
@@ -37,11 +39,45 @@ type _Imm_MyStruct struct {
 type _Imm_A struct {
 	Name string
 	A    *A
+
+	Blah
 }
 
 type _Imm_AS []*A
 
 type _Imm_AM map[*A]*A
+
+type Blah interface {
+	immutable.Immutable
+}
+
+type _Imm_BlahUse struct {
+	Blah
+}
+
+type BlahMutable struct{}
+
+var _ Blah = BlahMutable{}
+
+func (b BlahMutable) Mutable() bool {
+	return true
+}
+
+func (b BlahMutable) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
+	return false
+}
+
+type BlahNonMutable struct{}
+
+var _ Blah = BlahNonMutable{}
+
+func (b BlahNonMutable) Mutable() bool {
+	return false
+}
+
+func (b BlahNonMutable) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
+	return true
+}
 
 func main() {
 }

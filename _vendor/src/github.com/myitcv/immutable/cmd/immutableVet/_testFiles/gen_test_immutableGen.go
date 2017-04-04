@@ -344,16 +344,6 @@ func (s *Dummy2) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
 			return false
 		}
 	}
-	{
-		v := s._mine
-
-		switch v := v.(type) {
-		case immutable.Immutable:
-			if !v.IsDeeplyNonMutable(seen) {
-				return false
-			}
-		}
-	}
 	return true
 }
 func (s *Dummy2) name() []byte {

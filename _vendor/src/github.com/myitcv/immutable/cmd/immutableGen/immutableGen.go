@@ -26,13 +26,6 @@ func init() {
 }
 
 func main() {
-	defer func() {
-		err := recover()
-		if err != nil {
-			log.Fatalln(err)
-		}
-	}()
-
 	flag.Parse()
 	log.SetFlags(0)
 	log.SetPrefix(immutableGenCmd + ": ")

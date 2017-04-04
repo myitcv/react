@@ -30,12 +30,6 @@ func main() {
 	log.SetFlags(0)
 	log.SetPrefix(stateGenCmd + ": ")
 
-	defer func() {
-		if err, ok := recover().(error); ok {
-			log.Fatalln(err)
-		}
-	}()
-
 	flag.Parse()
 
 	gogenerate.DefaultLogLevel(fGoGenLog, gogenerate.LogFatal)

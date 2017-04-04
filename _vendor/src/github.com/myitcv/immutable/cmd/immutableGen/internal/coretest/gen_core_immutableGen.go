@@ -872,12 +872,15 @@ func (s *MyStruct) setFieldWithoutTag(n bool) *MyStruct {
 // 	struct {
 // 		Name	string
 // 		A	*A
+//
+// 		Blah
 // 	}
 //
 type A struct {
 	_Name string
 	// isImm
-	_A *A
+	_A    *A
+	_Blah Blah
 
 	mutable bool
 	__tmpl  _Imm_A
@@ -954,6 +957,16 @@ func (s *A) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
 			return false
 		}
 	}
+	{
+		v := s._Blah
+
+		switch v := v.(type) {
+		case immutable.Immutable:
+			if !v.IsDeeplyNonMutable(seen) {
+				return false
+			}
+		}
+	}
 	return true
 }
 func (s *A) Name() string {
@@ -984,5 +997,126 @@ func (s *A) SetA(n *A) *A {
 
 	res := *s
 	res._A = n
+	return &res
+}
+func (s *A) Blah() Blah {
+	return s._Blah
+}
+
+// SetBlah is the setter for Blah()
+func (s *A) SetBlah(n Blah) *A {
+	if s.mutable {
+		s._Blah = n
+		return s
+	}
+
+	res := *s
+	res._Blah = n
+	return &res
+}
+
+//
+// BlahUse is an immutable type and has the following template:
+//
+// 	struct {
+// 		Blah
+// 	}
+//
+type BlahUse struct {
+	_Blah Blah
+
+	mutable bool
+	__tmpl  _Imm_BlahUse
+}
+
+var _ immutable.Immutable = new(BlahUse)
+var _ = new(BlahUse).__tmpl
+
+func (s *BlahUse) AsMutable() *BlahUse {
+	if s.Mutable() {
+		return s
+	}
+
+	res := *s
+	res.mutable = true
+	return &res
+}
+
+func (s *BlahUse) AsImmutable(v *BlahUse) *BlahUse {
+	if s == nil {
+		return nil
+	}
+
+	if s == v {
+		return s
+	}
+
+	s.mutable = false
+	return s
+}
+
+func (s *BlahUse) Mutable() bool {
+	return s.mutable
+}
+
+func (s *BlahUse) WithMutable(f func(si *BlahUse)) *BlahUse {
+	res := s.AsMutable()
+	f(res)
+	res = res.AsImmutable(s)
+
+	return res
+}
+
+func (s *BlahUse) WithImmutable(f func(si *BlahUse)) *BlahUse {
+	prev := s.mutable
+	s.mutable = false
+	f(s)
+	s.mutable = prev
+
+	return s
+}
+func (s *BlahUse) IsDeeplyNonMutable(seen map[interface{}]bool) bool {
+	if s == nil {
+		return true
+	}
+
+	if s.Mutable() {
+		return false
+	}
+
+	if seen == nil {
+		return s.IsDeeplyNonMutable(make(map[interface{}]bool))
+	}
+
+	if seen[s] {
+		return true
+	}
+
+	seen[s] = true
+	{
+		v := s._Blah
+
+		switch v := v.(type) {
+		case immutable.Immutable:
+			if !v.IsDeeplyNonMutable(seen) {
+				return false
+			}
+		}
+	}
+	return true
+}
+func (s *BlahUse) Blah() Blah {
+	return s._Blah
+}
+
+// SetBlah is the setter for Blah()
+func (s *BlahUse) SetBlah(n Blah) *BlahUse {
+	if s.mutable {
+		s._Blah = n
+		return s
+	}
+
+	res := *s
+	res._Blah = n
 	return &res
 }

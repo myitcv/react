@@ -37,6 +37,18 @@ func TestStruct(t *testing.T) {
 	if !a3.IsDeeplyNonMutable(nil) {
 		t.Fatalf("a3 should be DeeplyNonMutable")
 	}
+
+	a4 := new(coretest.A).SetBlah(coretest.BlahNonMutable(struct{}{}))
+
+	if !a4.IsDeeplyNonMutable(nil) {
+		t.Fatalf("a4 should be DeeplyNonMutable")
+	}
+
+	a5 := new(coretest.A).SetBlah(coretest.BlahMutable(struct{}{}))
+
+	if a5.IsDeeplyNonMutable(nil) {
+		t.Fatalf("a5 should not be DeeplyNonMutable")
+	}
 }
 
 func TestSlice(t *testing.T) {

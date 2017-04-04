@@ -69,12 +69,6 @@ var immIntf *types.Interface
 func main() {
 	flag.Parse()
 
-	defer func() {
-		// if err, ok := recover().(error); ok {
-		// 	log.Fatalln(err)
-		// }
-	}()
-
 	wd, err := os.Getwd()
 	if err != nil {
 		fatalf("could not get the working directory")

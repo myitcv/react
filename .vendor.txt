@@ -4,7 +4,7 @@
     ./_vendor/src/github.com/gopherjs/gopherjs    3496c6f94e1b945f3fc9580f6982675c0a74cd6c  git@github.com:gopherjs/gopherjs
     ./_vendor/src/github.com/kisielk/gotool       0de1eaf82fa3f583ce21fde859f1e7e0c5e9b220  git@github.com:kisielk/gotool
     ./_vendor/src/github.com/myitcv/gogenerate    be50d7e11446ba2cc2301752411235f6de22686a  git@github.com:myitcv/gogenerate
-    ./_vendor/src/github.com/myitcv/immutable     0a71e0d60ab0e4a4c573628169f2f3ba4e0eb3e5  git@github.com:myitcv/immutable
+    ./_vendor/src/github.com/myitcv/immutable     4b8dc6fd7729a63a255406144dabc5d0e98a3ba2  git@github.com:myitcv/immutable
     ./_vendor/src/github.com/fsnotify/fsnotify    7d7316ed6e1ed2de075aab8dfc76de5d158d66e1  git@github.com:fsnotify/fsnotify
     ./_vendor/src/github.com/spf13/cobra          16c014f1a19d865b765b420e74508f80eb831ada  git@github.com:spf13/cobra
     ./_vendor/src/github.com/spf13/pflag          9ff6c6923cfffbcd502984b8e0c80539a94968b7  git@github.com:spf13/pflag

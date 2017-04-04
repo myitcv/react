@@ -180,15 +180,9 @@ func isAstTypeImm(pkgStr, typStr string, isPointer bool) (ImmTypeAst, error) {
 		return v, nil
 	}
 
-	pkg, ok := pkgCache[pkgStr]
-	if !ok {
-		p, err := loadPkg(pkgStr)
-		if err != nil {
-			return nil, fmt.Errorf("failed to load package %v: %v", pkgStr, err)
-		}
-
-		pkg = p
-		pkgCache[pkgStr] = p
+	pkg, err := loadPkg(pkgStr)
+	if err != nil {
+		return nil, err
 	}
 
 	// set initially to allow for early return
@@ -245,9 +239,17 @@ func isAstTypeImm(pkgStr, typStr string, isPointer bool) (ImmTypeAst, error) {
 
 					switch t := ts.Type.(type) {
 					case *ast.InterfaceType:
-						// TODO extend this to properly check whether the interface
-						// extends github.com/myitcv/immutable.Immutable
-						res := ImmTypeAstExtIntf{}
+
+						var res ImmTypeAst
+
+						ok, err := interfaceExtendsImmutable(pkgStr, t, f.Imports)
+						if err != nil {
+							return nil, err
+						}
+						if ok {
+							res = ImmTypeAstExtIntf{}
+						}
+
 						astTypeCache[key] = res
 						return res, nil
 
@@ -353,7 +355,121 @@ func isAstTypeImm(pkgStr, typStr string, isPointer bool) (ImmTypeAst, error) {
 	return res, nil
 }
 
+func lookupIntf(pkgStr, intf string) (*ast.InterfaceType, []*ast.ImportSpec, error) {
+	pkg, err := loadPkg(pkgStr)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	for _, f := range pkg.Files {
+		for _, d := range f.Decls {
+			switch t := d.(type) {
+			case *ast.GenDecl:
+				if t.Tok != token.TYPE {
+					continue
+				}
+
+				for _, s := range t.Specs {
+					ts := s.(*ast.TypeSpec)
+
+					switch v := ts.Type.(type) {
+					case *ast.InterfaceType:
+						if ts.Name.Name == intf {
+							return v, f.Imports, nil
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return nil, nil, nil
+}
+
+func interfaceExtendsImmutable(pkgStr string, intf *ast.InterfaceType, imps []*ast.ImportSpec) (bool, error) {
+
+	for _, f := range intf.Methods.List {
+		if len(f.Names) != 0 {
+			// method
+			continue
+		}
+
+		// embedded
+		switch v := f.Type.(type) {
+		case *ast.Ident:
+			ni, _, err := lookupIntf(pkgStr, v.Name)
+			if err != nil {
+				return false, err
+			}
+
+			ok, err := interfaceExtendsImmutable(pkgStr, ni, imps)
+			if err != nil {
+				return false, err
+			}
+			if ok {
+				return true, nil
+			}
+
+		case *ast.SelectorExpr:
+			pn := v.X.(*ast.Ident).Name
+
+			for _, i := range imps {
+				p := strings.Trim(i.Path.Value, "\"")
+
+				toCheck := path.Base(p)
+
+				if i.Name != nil {
+					toCheck = i.Name.Name
+				}
+
+				if pn == toCheck {
+					ni, nimps, err := lookupIntf(p, v.Sel.Name)
+					if err != nil {
+						return false, err
+					}
+
+					if ni != nil {
+						if p == immutable.PkgImportPath && v.Sel.Name == "Immutable" {
+							return true, nil
+						}
+
+						ok, err := interfaceExtendsImmutable(p, ni, nimps)
+						if err != nil {
+							return false, err
+						}
+
+						if ok {
+							return true, nil
+						}
+					}
+				}
+			}
+
+		default:
+			panic(fmt.Errorf("Check %v; it contains an interface we cannot walk", pkgStr))
+		}
+
+	}
+
+	return false, nil
+}
+
 func loadPkg(pkgStr string) (*ast.Package, error) {
+	pkg, ok := pkgCache[pkgStr]
+	if !ok {
+		p, err := loadPkgImpl(pkgStr)
+		if err != nil {
+			return nil, fmt.Errorf("failed to load package %v: %v", pkgStr, err)
+		}
+
+		pkg = p
+		pkgCache[pkgStr] = p
+	}
+
+	return pkg, nil
+}
+
+func loadPkgImpl(pkgStr string) (*ast.Package, error) {
 	wd, err := os.Getwd()
 	if err != nil {
 		return nil, fmt.Errorf("could not get working directory: %v", err)
