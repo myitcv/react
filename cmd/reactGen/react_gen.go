@@ -30,12 +30,6 @@ func main() {
 	log.SetFlags(0)
 	log.SetPrefix(reactGenCmd + ": ")
 
-	defer func() {
-		if err, ok := recover().(error); ok {
-			log.Fatalln(err)
-		}
-	}()
-
 	flag.Usage = usage
 	flag.Parse()
 
