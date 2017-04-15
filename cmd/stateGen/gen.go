@@ -17,7 +17,7 @@ import (
 
 	"golang.org/x/tools/imports"
 
-	"github.com/myitcv/gogenerate"
+	"myitcv.io/gogenerate"
 )
 
 const (

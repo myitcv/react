@@ -14,11 +14,11 @@ import (
 	"path"
 	"strings"
 
-	"github.com/myitcv/gogenerate"
+	"myitcv.io/gogenerate"
 )
 
 const (
-	reactPkg      = "github.com/myitcv/gopherjs/react"
+	reactPkg      = "myitcv.io/react"
 	compDefName   = "ComponentDef"
 	compDefSuffix = "Def"
 

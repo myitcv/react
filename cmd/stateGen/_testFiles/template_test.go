@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/myitcv/gopherjs/cmd/stateGen/_testFiles"
+	"myitcv.io/react/cmd/stateGen/_testFiles"
 )
 
 func TestBasic(t *testing.T) {

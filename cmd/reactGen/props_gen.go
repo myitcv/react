@@ -6,7 +6,7 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"github.com/myitcv/gogenerate"
+	"myitcv.io/gogenerate"
 )
 
 type propsGen struct {

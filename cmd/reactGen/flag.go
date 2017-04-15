@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/myitcv/gogenerate"
+	"myitcv.io/gogenerate"
 )
 
 var (
