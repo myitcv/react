@@ -6,7 +6,7 @@ creating state trees for use in GopherJS React web applications.
 For more information see https://github.com/myitcv/react/wiki
 
 */
-package main
+package main // import "myitcv.io/react/cmd/stateGen"
 
 import (
 	"flag"
