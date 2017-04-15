@@ -7,7 +7,7 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"github.com/myitcv/gogenerate"
+	"myitcv.io/gogenerate"
 )
 
 type compGen struct {
@@ -244,7 +244,7 @@ func ({{.Recv}} *{{.Name}}Def) State() {{.Name}}State {
 }
 
 // IsState is an auto-generated definition so that {{.Name}}State implements
-// the github.com/myitcv/gopherjs/react.State interface.
+// the myitcv.io/react.State interface.
 func ({{.Recv}} {{.Name}}State) IsState() {}
 
 var _ react.State = {{.Name}}State{}

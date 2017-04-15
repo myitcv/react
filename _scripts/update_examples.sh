@@ -22,9 +22,9 @@ do
 	echo $i
 	(
 		cd $t
-		wget --quiet -p -k http://localhost:8080/github.com/myitcv/gopherjs/sites/$i/
+		wget --quiet -p -k http://localhost:8080/myitcv.io/react/examples/sites/$i/
 	)
-	cp -rp $t/localhost:8080/github.com/myitcv/gopherjs/sites/$i/ $r/gopherjs_examples_sites/
+	cp -rp $t/localhost:8080/myitcv.io/react/examples/sites/$i/ $r/gopherjs_examples_sites/
 done
 
 cp -rp sites/common $r/gopherjs_examples_sites/

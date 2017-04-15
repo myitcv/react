@@ -3,6 +3,8 @@ language: go
 go:
   - 1.x
 
+go_import_path: myitcv.io/react
+
 install: true
 
 script:

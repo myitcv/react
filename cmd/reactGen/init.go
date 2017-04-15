@@ -76,7 +76,7 @@ var minimal = map[string]string{
 package main
 
 import (
-	r "github.com/myitcv/gopherjs/react"
+	r "myitcv.io/react"
 )
 
 type AppDef struct {
@@ -107,7 +107,7 @@ func (a *AppDef) Render() r.Element {
 package main
 
 import (
-	r "github.com/myitcv/gopherjs/react"
+	r "myitcv.io/react"
 
 	"honnef.co/go/js/dom"
 )

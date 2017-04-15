@@ -1,7 +1,10 @@
-## GopherJS React bindings
+## `myitcv.io/react`
 
-Package [`github.com/myitcv/gopherjs/react`](https://godoc.org/github.com/myitcv/gopherjs/react) is a set of
-[GopherJS](https://github.com/gopherjs/gopherjs) bindings for Facebook's [React](https://facebook.github.io/react/), a
-Javascript library for building user interfaces.
+```
+go get -u myitcv.io/react
+```
 
-For more information see https://github.com/myitcv/gopherjs/wiki
+[`myitcv.io/react`](https://godoc.org/myitcv.io/react) is a set of [GopherJS](https://github.com/gopherjs/gopherjs)
+bindings/tools for [React](https://facebook.github.io/react/), a Javascript library for building user interfaces.
+
+See [the wiki](https://github.com/myitcv/react/wiki) for more details

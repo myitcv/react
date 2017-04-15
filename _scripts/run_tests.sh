@@ -19,7 +19,7 @@ done
 rm -f !(_vendor)/**/gen_*.go
 
 {
-	pushd sites/helloworld
+	pushd examples/sites/helloworld
 
 	rm -f *.{go,html}
 	reactGen -init minimal
@@ -38,5 +38,5 @@ go vet ./...
 immutableVet ./...
 
 # we need to explicitly test the generated test files
-go test github.com/myitcv/gopherjs/cmd/stateGen/_testFiles/
+go test myitcv.io/react/cmd/stateGen/_testFiles/
 
