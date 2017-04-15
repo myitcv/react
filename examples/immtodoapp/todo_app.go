@@ -1,13 +1,13 @@
 // Copyright (c) 2016 Paul Jolly <paul@myitcv.org.uk>, all rights reserved.
 // Use of this document is governed by a license found in the LICENSE document.
 
-package immtodoapp
+package immtodoapp // import "myitcv.io/react/examples/immtodoapp"
 
 import (
 	"fmt"
 
-	r "myitcv.io/react"
 	"honnef.co/go/js/dom"
+	r "myitcv.io/react"
 )
 
 //go:generate reactGen

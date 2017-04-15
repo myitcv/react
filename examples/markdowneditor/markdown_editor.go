@@ -1,12 +1,12 @@
 // Copyright (c) 2016 Paul Jolly <paul@myitcv.org.uk>, all rights reserved.
 // Use of this document is governed by a license found in the LICENSE document.
 
-package markdowneditor
+package markdowneditor // import "myitcv.io/react/examples/markdowneditor"
 
 import (
+	"honnef.co/go/js/dom"
 	r "myitcv.io/react"
 	"myitcv.io/remarkable"
-	"honnef.co/go/js/dom"
 )
 
 //go:generate reactGen

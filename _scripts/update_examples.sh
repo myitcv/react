@@ -17,7 +17,7 @@ echo ""
 
 echo "Copying..."
 
-for i in $(command ls "${BASH_SOURCE%/*}/../sites" | grep -v common)
+for i in $(command ls "${BASH_SOURCE%/*}/../examples/sites" | grep -v common)
 do
 	echo $i
 	(
@@ -27,7 +27,7 @@ do
 	cp -rp $t/localhost:8080/myitcv.io/react/examples/sites/$i/ $r/gopherjs_examples_sites/
 done
 
-cp -rp sites/common $r/gopherjs_examples_sites/
+cp -rp examples/sites/common $r/gopherjs_examples_sites/
 
 echo ""
 

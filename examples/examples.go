@@ -1,7 +1,7 @@
 // Copyright (c) 2016 Paul Jolly <paul@myitcv.org.uk>, all rights reserved.
 // Use of this document is governed by a license found in the LICENSE document.
 
-package examples
+package examples // import "myitcv.io/react/examples"
 
 import (
 	"honnef.co/go/js/xhr"
