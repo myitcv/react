@@ -269,7 +269,8 @@ func (iv *immutableVetter) Visit(node ast.Node) ast.Visitor {
 
 		sel, ok := iv.info.Selections[se]
 		if !ok {
-			fatalf("unable to type selection %v", se)
+			// then it must be a qualified identifier
+			break
 		}
 
 		if !isImmListOrMap(sel.Recv()) {
