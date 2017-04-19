@@ -1,4 +1,4 @@
-// +build !debug,!noReactBundle
+// +build !debug,!noReactBundle,!preact
 
 package bundle
 
