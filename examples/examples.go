@@ -5,6 +5,7 @@ package examples // import "myitcv.io/react/examples"
 
 import (
 	"honnef.co/go/js/xhr"
+	"myitcv.io/highlightjs"
 	r "myitcv.io/react"
 	"myitcv.io/react/examples/hellomessage"
 	"myitcv.io/react/examples/markdowneditor"
@@ -146,12 +147,12 @@ func (p *ExamplesDef) renderExample(key exampleKey, title, msg r.Element, jsxSrc
 		goSrc = src.src()
 	}
 
-	var code r.Element
+	var code *r.DangerousInnerHTMLDef
 	switch v, _ := p.State().selectedTabs.Get(key); v {
 	case tabGo:
-		code = r.Pre(nil, r.S(goSrc))
+		code = r.DangerousInnerHTML(highlightjs.Highlight("go", goSrc, true).Value)
 	case tabJsx:
-		code = r.Pre(nil, r.S(jsxSrc))
+		code = r.DangerousInnerHTML(highlightjs.Highlight("javascript", jsxSrc, true).Value)
 	}
 
 	return r.Div(nil,
@@ -169,7 +170,9 @@ func (p *ExamplesDef) renderExample(key exampleKey, title, msg r.Element, jsxSrc
 						),
 					),
 					r.Div(&r.DivProps{ClassName: "panel-body"},
-						r.Pre(nil, code),
+						r.Pre(&r.PreProps{
+							DangerouslySetInnerHTML: code,
+						}),
 					),
 				),
 			),
