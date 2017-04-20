@@ -122,6 +122,9 @@ func (p *ImmExamplesDef) renderExample(key exampleKey, title, msg r.Element, jsx
 					),
 					r.Div(&r.DivProps{ClassName: "panel-body"},
 						r.Pre(&r.PreProps{
+							Style: &r.CSS{
+								MaxHeight: "400px",
+							},
 							DangerouslySetInnerHTML: code,
 						}),
 					),

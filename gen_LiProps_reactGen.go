@@ -8,6 +8,7 @@ type LiProps struct {
 	Key                     string
 	ClassName               string
 	Role                    string
+	Style                   *CSS
 	OnChange                func(e *SyntheticEvent)
 	OnClick                 func(e *SyntheticMouseEvent)
 	DangerouslySetInnerHTML *DangerousInnerHTMLDef
@@ -26,6 +27,10 @@ func (l *LiProps) assign(v *_LiProps) {
 	v.ClassName = l.ClassName
 
 	v.Role = l.Role
+
+	// TODO: until we have a resolution on
+	// https://github.com/gopherjs/gopherjs/issues/236
+	v.Style = l.Style.hack()
 
 	v.OnChange = l.OnChange
 

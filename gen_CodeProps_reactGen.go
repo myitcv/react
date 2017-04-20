@@ -8,6 +8,7 @@ type CodeProps struct {
 	Key                     string
 	ClassName               string
 	Role                    string
+	Style                   *CSS
 	OnChange                func(e *SyntheticEvent)
 	OnClick                 func(e *SyntheticMouseEvent)
 	DangerouslySetInnerHTML *DangerousInnerHTMLDef
@@ -26,6 +27,10 @@ func (c *CodeProps) assign(v *_CodeProps) {
 	v.ClassName = c.ClassName
 
 	v.Role = c.Role
+
+	// TODO: until we have a resolution on
+	// https://github.com/gopherjs/gopherjs/issues/236
+	v.Style = c.Style.hack()
 
 	v.OnChange = c.OnChange
 

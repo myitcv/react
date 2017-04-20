@@ -8,6 +8,7 @@ type ButtonProps struct {
 	Key                     string
 	ClassName               string
 	Role                    string
+	Style                   *CSS
 	OnChange                func(e *SyntheticEvent)
 	OnClick                 func(e *SyntheticMouseEvent)
 	DangerouslySetInnerHTML *DangerousInnerHTMLDef
@@ -27,6 +28,10 @@ func (b *ButtonProps) assign(v *_ButtonProps) {
 	v.ClassName = b.ClassName
 
 	v.Role = b.Role
+
+	// TODO: until we have a resolution on
+	// https://github.com/gopherjs/gopherjs/issues/236
+	v.Style = b.Style.hack()
 
 	v.OnChange = b.OnChange
 
