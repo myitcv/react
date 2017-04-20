@@ -10,6 +10,8 @@ import "github.com/gopherjs/gopherjs/js"
 type CSS struct {
 	o *js.Object
 
+	FontSize  string
+	FontStyle string
 	Height    string
 	MaxHeight string
 	MinHeight string
@@ -28,6 +30,8 @@ func (c *CSS) hack() *CSS {
 
 	o := object.New()
 
+	o.Set("fontSize", c.FontSize)
+	o.Set("fontStyle", c.FontStyle)
 	o.Set("height", c.Height)
 	o.Set("maxHeight", c.MaxHeight)
 	o.Set("minHeight", c.MinHeight)

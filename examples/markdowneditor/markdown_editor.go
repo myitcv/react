@@ -45,7 +45,7 @@ func (m *MarkdownEditorDef) Render() r.Element {
 			&r.TextAreaProps{
 				ClassName: "form-control",
 				Value:     m.State().value,
-				OnChange:  m,
+				OnChange:  inputChange{m},
 			},
 		),
 		r.H3(nil, r.S("Output")),
@@ -58,14 +58,16 @@ func (m *MarkdownEditorDef) Render() r.Element {
 	)
 }
 
-func (m *MarkdownEditorDef) OnChange(se *r.SyntheticEvent) {
-	target := se.Target().(*dom.HTMLTextAreaElement)
-
-	m.SetState(MarkdownEditorState{value: target.Value})
-}
-
 func (m *MarkdownEditorDef) getRawMarkup() *r.DangerousInnerHTMLDef {
 	rem := m.remark.Render(m.State().value)
 
 	return r.DangerousInnerHTML(rem)
+}
+
+type inputChange struct{ m *MarkdownEditorDef }
+
+func (i inputChange) OnChange(se *r.SyntheticEvent) {
+	target := se.Target().(*dom.HTMLTextAreaElement)
+
+	i.m.SetState(MarkdownEditorState{value: target.Value})
 }

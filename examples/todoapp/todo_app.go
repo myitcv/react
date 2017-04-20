@@ -71,33 +71,36 @@ func (t *TodoAppDef) Render() r.Element {
 					ID:          "todoText",
 					Placeholder: "Todo Item",
 					Value:       t.State().currItem,
-					OnChange:    t,
+					OnChange:    inputChange{t},
 				}),
 				r.Button(&r.ButtonProps{
 					Type:      "submit",
 					ClassName: "btn btn-default",
-					OnClick:   t,
+					OnClick:   add{t},
 				}, r.S(fmt.Sprintf("Add #%v", len(t.State().items)+1))),
 			),
 		),
 	)
 }
 
-func (t *TodoAppDef) OnChange(se *r.SyntheticEvent) {
+type inputChange struct{ t *TodoAppDef }
+type add struct{ t *TodoAppDef }
+
+func (i inputChange) OnChange(se *r.SyntheticEvent) {
 	target := se.Target().(*dom.HTMLInputElement)
 
-	ns := t.State()
+	ns := i.t.State()
 	ns.currItem = target.Value
 
-	t.SetState(ns)
+	i.t.SetState(ns)
 }
 
-func (t *TodoAppDef) OnClick(se *r.SyntheticMouseEvent) {
-	ns := t.State()
+func (a add) OnClick(se *r.SyntheticMouseEvent) {
+	ns := a.t.State()
 	ns.items = append(ns.items, ns.currItem)
 	ns.currItem = ""
 
-	t.SetState(ns)
+	a.t.SetState(ns)
 
 	se.PreventDefault()
 }
