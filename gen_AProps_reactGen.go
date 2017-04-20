@@ -8,6 +8,7 @@ type AProps struct {
 	Key                     string
 	ClassName               string
 	Role                    string
+	Style                   *CSS
 	OnChange                func(e *SyntheticEvent)
 	OnClick                 func(e *SyntheticMouseEvent)
 	DangerouslySetInnerHTML *DangerousInnerHTMLDef
@@ -28,6 +29,10 @@ func (a *AProps) assign(v *_AProps) {
 	v.ClassName = a.ClassName
 
 	v.Role = a.Role
+
+	// TODO: until we have a resolution on
+	// https://github.com/gopherjs/gopherjs/issues/236
+	v.Style = a.Style.hack()
 
 	v.OnChange = a.OnChange
 

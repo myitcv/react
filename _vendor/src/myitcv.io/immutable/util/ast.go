@@ -486,11 +486,9 @@ func loadPkgImpl(pkgStr string) (*ast.Package, error) {
 		return nil, fmt.Errorf("could not parse %v in %v: %v", pkgStr, bpkg.Dir, err)
 	}
 
-	base := path.Base(pkgStr)
-
-	p, ok := pkgs[base]
+	p, ok := pkgs[bpkg.Name]
 	if !ok {
-		return nil, fmt.Errorf("failed to find package %v (%v) in %v", base, pkgStr, bpkg.Dir)
+		return nil, fmt.Errorf("failed to find package %v (%v) in %v", bpkg.Name, pkgStr, bpkg.Dir)
 	}
 
 	return p, nil

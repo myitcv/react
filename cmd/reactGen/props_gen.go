@@ -91,7 +91,13 @@ func (g *gen) genProps(defName string, t typeFile) {
 					v.{{.Name}} = {{$recv}}.{{.Name}}
 				}
 			{{else}}
+			{{if eq .Name "Style"}}
+				// TODO: until we have a resolution on
+				// https://github.com/gopherjs/gopherjs/issues/236
+				v.{{.Name}} = {{$recv}}.{{.Name}}.hack()
+			{{else}}
 				v.{{.Name}} = {{$recv}}.{{.Name}}
+			{{end}}
 			{{end}}
 		{{- end}}
 	}

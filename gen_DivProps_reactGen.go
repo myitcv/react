@@ -8,6 +8,7 @@ type DivProps struct {
 	Key                     string
 	ClassName               string
 	Role                    string
+	Style                   *CSS
 	OnChange                func(e *SyntheticEvent)
 	OnClick                 func(e *SyntheticMouseEvent)
 	DangerouslySetInnerHTML *DangerousInnerHTMLDef
@@ -26,6 +27,10 @@ func (d *DivProps) assign(v *_DivProps) {
 	v.ClassName = d.ClassName
 
 	v.Role = d.Role
+
+	// TODO: until we have a resolution on
+	// https://github.com/gopherjs/gopherjs/issues/236
+	v.Style = d.Style.hack()
 
 	v.OnChange = d.OnChange
 

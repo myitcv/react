@@ -29,6 +29,7 @@ type BasicHTMLElement struct {
 	Key       string `js:"key" react:"omitempty"`
 	ClassName string `js:"className"`
 	Role      string `js:"role"`
+	Style     *CSS   `js:"style"`
 
 	OnChange func(e *SyntheticEvent)      `js:"onChange"`
 	OnClick  func(e *SyntheticMouseEvent) `js:"onClick"`

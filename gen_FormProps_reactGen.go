@@ -8,6 +8,7 @@ type FormProps struct {
 	Key                     string
 	ClassName               string
 	Role                    string
+	Style                   *CSS
 	OnChange                func(e *SyntheticEvent)
 	OnClick                 func(e *SyntheticMouseEvent)
 	DangerouslySetInnerHTML *DangerousInnerHTMLDef
@@ -26,6 +27,10 @@ func (f *FormProps) assign(v *_FormProps) {
 	v.ClassName = f.ClassName
 
 	v.Role = f.Role
+
+	// TODO: until we have a resolution on
+	// https://github.com/gopherjs/gopherjs/issues/236
+	v.Style = f.Style.hack()
 
 	v.OnChange = f.OnChange
 

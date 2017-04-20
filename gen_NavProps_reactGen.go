@@ -8,6 +8,7 @@ type NavProps struct {
 	Key                     string
 	ClassName               string
 	Role                    string
+	Style                   *CSS
 	OnChange                func(e *SyntheticEvent)
 	OnClick                 func(e *SyntheticMouseEvent)
 	DangerouslySetInnerHTML *DangerousInnerHTMLDef
@@ -26,6 +27,10 @@ func (n *NavProps) assign(v *_NavProps) {
 	v.ClassName = n.ClassName
 
 	v.Role = n.Role
+
+	// TODO: until we have a resolution on
+	// https://github.com/gopherjs/gopherjs/issues/236
+	v.Style = n.Style.hack()
 
 	v.OnChange = n.OnChange
 
