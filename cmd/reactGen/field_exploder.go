@@ -8,12 +8,19 @@ import (
 	"go/token"
 	"os"
 	"path"
+	"reflect"
 	"strings"
 )
 
 type field struct {
-	Name string
-	Type string
+	TName string
+	Name  string
+	FName string
+	Type  string
+
+	GapBefore bool
+
+	IsEvent bool
 
 	Omit bool
 }
@@ -28,24 +35,12 @@ type fieldExploder struct {
 	imps   map[*ast.ImportSpec]struct{}
 }
 
-func (fe *fieldExploder) explode() error {
-	tf, err := loadStructType(fe.pkgStr, fe.sn)
-	if err != nil {
-		return err
-	}
-
-	if tf == nil {
-		// we can't do any better...
-		return nil
-	}
+func (fe *fieldExploder) explode(tf *typeFile) error {
 
 	st := tf.ts.Type.(*ast.StructType)
 
 	for ind, f := range st.Fields.List {
 		if f.Names == nil {
-			// embedded struct
-			// cannot be a paren expr
-
 			t := f.Type
 
 			if v, ok := t.(*ast.StarExpr); ok {
@@ -96,8 +91,7 @@ func (fe *fieldExploder) explode() error {
 				}
 
 				if !foundImp {
-					// let's move on for now
-					continue
+					return fmt.Errorf("failed to find import %v", x.Name)
 				}
 
 				nfe = &fieldExploder{
@@ -108,53 +102,101 @@ func (fe *fieldExploder) explode() error {
 				}
 			}
 
-			err := nfe.explode()
-			if err != nil {
-				return err
-			}
+			tf, err := loadStructType(nfe.pkgStr, nfe.sn)
+			if err == nil && tf != nil {
+				err := nfe.explode(tf)
+				if err != nil {
+					return err
+				}
 
-			fe.fields = append(fe.fields, nfe.fields...)
-
-		} else {
-			// real fields - we can print the type... but need
-			// to collect the imports first
-
-			newImps := make(map[*ast.ImportSpec]struct{})
-
-			i := &importFinder{
-				imports: tf.file.Imports,
-				matches: newImps,
-			}
-
-			ast.Walk(i, f.Type)
-
-			ts := astNodeString(f.Type)
-
-			var omit bool
-
-			if f.Tag != nil {
-				omit = strings.Contains(f.Tag.Value, `react:"omitempty"`)
-			}
-
-			if ind == 0 && fe.first && i.isJs {
+				fe.fields = append(fe.fields, nfe.fields...)
 				continue
 			}
 
-			for k := range newImps {
-				fe.imps[k] = struct{}{}
+		}
+
+		// at this point we know we do _not_ have an embedded
+		// struct type
+
+		newImps := make(map[*ast.ImportSpec]struct{})
+
+		i := &importFinder{
+			imports: tf.file.Imports,
+			matches: newImps,
+		}
+
+		ast.Walk(i, f.Type)
+
+		ts := astNodeString(f.Type)
+
+		var fn string
+
+		// TODO we need a more definitive way to ascertain whether
+		// the type of this field is an interface that extends the
+		// Event interface
+		isEvent := strings.HasPrefix(ts, "On")
+
+		// TODO better support for omit based on type of field
+		// need to check vs zero value
+		var omit bool
+
+		if f.Tag != nil {
+			s := reflect.StructTag(strings.Trim(f.Tag.Value, "`"))
+
+			if v, ok := s.Lookup("js"); ok {
+				fn = v
 			}
 
+			if v, ok := s.Lookup("react"); ok {
+				omit = v == "omitempty"
+			}
+		}
+
+		if ind == 0 && fe.first && i.isJs {
+			continue
+		}
+
+		for k := range newImps {
+			fe.imps[k] = struct{}{}
+		}
+
+		if len(f.Names) == 0 {
+			fe.fields = append(fe.fields, field{
+				TName:   typeToName(f.Type),
+				FName:   fn,
+				Type:    ts,
+				IsEvent: isEvent,
+				Omit:    omit,
+			})
+
+		} else {
 			for _, n := range f.Names {
 				fe.fields = append(fe.fields, field{
-					Name: n.Name,
-					Type: ts,
-					Omit: omit,
+					Name:    n.Name,
+					TName:   n.Name,
+					FName:   fn,
+					Type:    ts,
+					IsEvent: isEvent,
+					Omit:    omit,
 				})
 			}
 		}
 	}
 
 	return nil
+}
+
+func typeToName(t ast.Expr) string {
+	switch t := t.(type) {
+	case *ast.Ident:
+		return t.Name
+	case *ast.StarExpr:
+		return typeToName(t.X)
+	case *ast.ParenExpr:
+		return typeToName(t.X)
+	default:
+		panic(fmt.Errorf("don't know how to handle %T", t))
+	}
 }
 
 var pkgCache = make(map[string]*ast.Package)

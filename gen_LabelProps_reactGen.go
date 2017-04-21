@@ -9,10 +9,12 @@ type LabelProps struct {
 	For                     string
 	ID                      string
 	Key                     string
-	OnChange                func(e *SyntheticEvent)
-	OnClick                 func(e *SyntheticMouseEvent)
-	Role                    string
-	Style                   *CSS
+
+	OnChange
+	OnClick
+
+	Role  string
+	Style *CSS
 }
 
 func (l *LabelProps) assign(v *_LabelProps) {
@@ -31,9 +33,13 @@ func (l *LabelProps) assign(v *_LabelProps) {
 		v.Key = l.Key
 	}
 
-	v.OnChange = l.OnChange
+	if l.OnChange != nil {
+		v.o.Set("onChange", l.OnChange.OnChange)
+	}
 
-	v.OnClick = l.OnClick
+	if l.OnClick != nil {
+		v.o.Set("onClick", l.OnClick.OnClick)
+	}
 
 	v.Role = l.Role
 

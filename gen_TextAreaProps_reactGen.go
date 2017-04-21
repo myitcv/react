@@ -9,12 +9,14 @@ type TextAreaProps struct {
 	DefaultValue            string
 	ID                      string
 	Key                     string
-	OnChange                func(e *SyntheticEvent)
-	OnClick                 func(e *SyntheticMouseEvent)
-	Placeholder             string
-	Role                    string
-	Style                   *CSS
-	Value                   string
+
+	OnChange
+	OnClick
+
+	Placeholder string
+	Role        string
+	Style       *CSS
+	Value       string
 }
 
 func (t *TextAreaProps) assign(v *_TextAreaProps) {
@@ -35,9 +37,13 @@ func (t *TextAreaProps) assign(v *_TextAreaProps) {
 		v.Key = t.Key
 	}
 
-	v.OnChange = t.OnChange
+	if t.OnChange != nil {
+		v.o.Set("onChange", t.OnChange.OnChange)
+	}
 
-	v.OnClick = t.OnClick
+	if t.OnClick != nil {
+		v.o.Set("onClick", t.OnClick.OnClick)
+	}
 
 	v.Placeholder = t.Placeholder
 

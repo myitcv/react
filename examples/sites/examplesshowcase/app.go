@@ -48,8 +48,8 @@ func (a *AppDef) Render() r.Element {
 				),
 				r.Div(&r.DivProps{ClassName: "collapse navbar-collapse", ID: "navbar"},
 					r.Ul(&r.UlProps{ClassName: "nav navbar-nav"},
-						a.buildLink("Showcase", tabShowcase, a.selectShowcase),
-						a.buildLink("Immutable", tabImmutable, a.selectImmutable),
+						a.buildLink("Showcase", tabShowcase, tabChange{a, tabShowcase}),
+						a.buildLink("Immutable", tabImmutable, tabChange{a, tabImmutable}),
 					),
 				),
 			),
@@ -62,7 +62,17 @@ func (a *AppDef) Render() r.Element {
 	)
 }
 
-func (a *AppDef) buildLink(n string, t tab, cb func(e *r.SyntheticMouseEvent)) *r.LiDef {
+type tabChange struct {
+	a *AppDef
+	t tab
+}
+
+func (tc tabChange) OnClick(e *r.SyntheticMouseEvent) {
+	tc.a.SetState(AppState{tc.t})
+	e.PreventDefault()
+}
+
+func (a *AppDef) buildLink(n string, t tab, tc tabChange) *r.LiDef {
 	var lip *r.LiProps
 
 	if a.State().tab == t {
@@ -70,16 +80,6 @@ func (a *AppDef) buildLink(n string, t tab, cb func(e *r.SyntheticMouseEvent)) *
 	}
 
 	return r.Li(lip,
-		r.A(&r.AProps{Href: "#", OnClick: cb}, r.S(n)),
+		r.A(&r.AProps{Href: "#", OnClick: tc}, r.S(n)),
 	)
-}
-
-func (a *AppDef) selectShowcase(e *r.SyntheticMouseEvent) {
-	a.SetState(AppState{tabShowcase})
-	e.PreventDefault()
-}
-
-func (a *AppDef) selectImmutable(e *r.SyntheticMouseEvent) {
-	a.SetState(AppState{tabImmutable})
-	e.PreventDefault()
 }

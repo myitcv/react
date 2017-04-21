@@ -8,10 +8,12 @@ type DivProps struct {
 	DangerouslySetInnerHTML *DangerousInnerHTMLDef
 	ID                      string
 	Key                     string
-	OnChange                func(e *SyntheticEvent)
-	OnClick                 func(e *SyntheticMouseEvent)
-	Role                    string
-	Style                   *CSS
+
+	OnChange
+	OnClick
+
+	Role  string
+	Style *CSS
 }
 
 func (d *DivProps) assign(v *_DivProps) {
@@ -28,9 +30,13 @@ func (d *DivProps) assign(v *_DivProps) {
 		v.Key = d.Key
 	}
 
-	v.OnChange = d.OnChange
+	if d.OnChange != nil {
+		v.o.Set("onChange", d.OnChange.OnChange)
+	}
 
-	v.OnClick = d.OnClick
+	if d.OnClick != nil {
+		v.o.Set("onClick", d.OnClick.OnClick)
+	}
 
 	v.Role = d.Role
 

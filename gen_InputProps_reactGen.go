@@ -9,13 +9,15 @@ type InputProps struct {
 	DefaultValue            string
 	ID                      string
 	Key                     string
-	OnChange                func(e *SyntheticEvent)
-	OnClick                 func(e *SyntheticMouseEvent)
-	Placeholder             string
-	Role                    string
-	Style                   *CSS
-	Type                    string
-	Value                   string
+
+	OnChange
+	OnClick
+
+	Placeholder string
+	Role        string
+	Style       *CSS
+	Type        string
+	Value       string
 }
 
 func (i *InputProps) assign(v *_InputProps) {
@@ -36,9 +38,13 @@ func (i *InputProps) assign(v *_InputProps) {
 		v.Key = i.Key
 	}
 
-	v.OnChange = i.OnChange
+	if i.OnChange != nil {
+		v.o.Set("onChange", i.OnChange.OnChange)
+	}
 
-	v.OnClick = i.OnClick
+	if i.OnClick != nil {
+		v.o.Set("onClick", i.OnClick.OnClick)
+	}
 
 	v.Placeholder = i.Placeholder
 

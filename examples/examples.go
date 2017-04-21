@@ -196,23 +196,31 @@ func (p *ExamplesDef) buildExampleNavTab(key exampleKey, t tab, title string) *r
 	return r.Li(
 		lip,
 		r.A(
-			&r.AProps{Href: "#", OnClick: p.handleTabChange(key, t)},
+			&r.AProps{Href: "#", OnClick: tabChange{p, key, t}},
 			r.S(title),
 		),
 	)
 
 }
 
-func (p *ExamplesDef) handleTabChange(key exampleKey, t tab) func(*r.SyntheticMouseEvent) {
-	return func(e *r.SyntheticMouseEvent) {
-		cts := p.State().selectedTabs
-		newSt := p.State()
+type tabChange struct {
+	e   *ExamplesDef
+	key exampleKey
+	t   tab
+}
 
-		newSt.selectedTabs = cts.Set(key, t)
-		p.SetState(newSt)
+func (tc tabChange) OnClick(e *r.SyntheticMouseEvent) {
+	p := tc.e
+	key := tc.key
+	t := tc.t
 
-		e.PreventDefault()
-	}
+	cts := p.State().selectedTabs
+	newSt := p.State()
+
+	newSt.selectedTabs = cts.Set(key, t)
+	p.SetState(newSt)
+
+	e.PreventDefault()
 }
 
 func plainPanel(children ...r.Element) r.Element {

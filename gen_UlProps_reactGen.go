@@ -8,10 +8,12 @@ type UlProps struct {
 	DangerouslySetInnerHTML *DangerousInnerHTMLDef
 	ID                      string
 	Key                     string
-	OnChange                func(e *SyntheticEvent)
-	OnClick                 func(e *SyntheticMouseEvent)
-	Role                    string
-	Style                   *CSS
+
+	OnChange
+	OnClick
+
+	Role  string
+	Style *CSS
 }
 
 func (u *UlProps) assign(v *_UlProps) {
@@ -28,9 +30,13 @@ func (u *UlProps) assign(v *_UlProps) {
 		v.Key = u.Key
 	}
 
-	v.OnChange = u.OnChange
+	if u.OnChange != nil {
+		v.o.Set("onChange", u.OnChange.OnChange)
+	}
 
-	v.OnClick = u.OnClick
+	if u.OnClick != nil {
+		v.o.Set("onClick", u.OnClick.OnClick)
+	}
 
 	v.Role = u.Role
 

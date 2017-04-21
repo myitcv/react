@@ -8,10 +8,12 @@ type FormProps struct {
 	DangerouslySetInnerHTML *DangerousInnerHTMLDef
 	ID                      string
 	Key                     string
-	OnChange                func(e *SyntheticEvent)
-	OnClick                 func(e *SyntheticMouseEvent)
-	Role                    string
-	Style                   *CSS
+
+	OnChange
+	OnClick
+
+	Role  string
+	Style *CSS
 }
 
 func (f *FormProps) assign(v *_FormProps) {
@@ -28,9 +30,13 @@ func (f *FormProps) assign(v *_FormProps) {
 		v.Key = f.Key
 	}
 
-	v.OnChange = f.OnChange
+	if f.OnChange != nil {
+		v.o.Set("onChange", f.OnChange.OnChange)
+	}
 
-	v.OnClick = f.OnClick
+	if f.OnClick != nil {
+		v.o.Set("onClick", f.OnClick.OnClick)
+	}
 
 	v.Role = f.Role
 

@@ -9,11 +9,13 @@ type AProps struct {
 	Href                    string
 	ID                      string
 	Key                     string
-	OnChange                func(e *SyntheticEvent)
-	OnClick                 func(e *SyntheticMouseEvent)
-	Role                    string
-	Style                   *CSS
-	Target                  string
+
+	OnChange
+	OnClick
+
+	Role   string
+	Style  *CSS
+	Target string
 }
 
 func (a *AProps) assign(v *_AProps) {
@@ -32,9 +34,13 @@ func (a *AProps) assign(v *_AProps) {
 		v.Key = a.Key
 	}
 
-	v.OnChange = a.OnChange
+	if a.OnChange != nil {
+		v.o.Set("onChange", a.OnChange.OnChange)
+	}
 
-	v.OnClick = a.OnClick
+	if a.OnClick != nil {
+		v.o.Set("onClick", a.OnClick.OnClick)
+	}
 
 	v.Role = a.Role
 
