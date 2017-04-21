@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"go/ast"
+	"go/format"
 	"strings"
 	"unicode"
 	"unicode/utf8"
@@ -299,9 +300,9 @@ var _ react.Equals = {{.Name}}Props{}
 	ofName := gogenerate.NameFile(name, reactGenCmd)
 	toWrite := cg.buf.Bytes()
 
-	out, err := fmtBuf(cg.buf)
+	out, err := format.Source(toWrite)
 	if err == nil {
-		toWrite = out.Bytes()
+		toWrite = out
 	}
 
 	wrote, err := gogenerate.WriteIfDiff(toWrite, ofName)

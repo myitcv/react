@@ -53,7 +53,7 @@ func astNodeString(i interface{}) string {
 	return b.String()
 }
 
-func fmtBuf(b *bytes.Buffer) (*bytes.Buffer, error) {
+func goFmtBuf(b *bytes.Buffer) (*bytes.Buffer, error) {
 	out := bytes.NewBuffer(nil)
 	cmd := exec.Command("gofmt", "-s")
 	cmd.Stdin = b

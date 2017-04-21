@@ -4,17 +4,21 @@ package react
 
 // UlProps defines the properties for the <ul> element
 type UlProps struct {
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTMLDef
 	ID                      string
 	Key                     string
-	ClassName               string
-	Role                    string
-	Style                   *CSS
 	OnChange                func(e *SyntheticEvent)
 	OnClick                 func(e *SyntheticMouseEvent)
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	Role                    string
+	Style                   *CSS
 }
 
 func (u *UlProps) assign(v *_UlProps) {
+
+	v.ClassName = u.ClassName
+
+	v.DangerouslySetInnerHTML = u.DangerouslySetInnerHTML
 
 	if u.ID != "" {
 		v.ID = u.ID
@@ -24,18 +28,14 @@ func (u *UlProps) assign(v *_UlProps) {
 		v.Key = u.Key
 	}
 
-	v.ClassName = u.ClassName
+	v.OnChange = u.OnChange
+
+	v.OnClick = u.OnClick
 
 	v.Role = u.Role
 
 	// TODO: until we have a resolution on
 	// https://github.com/gopherjs/gopherjs/issues/236
 	v.Style = u.Style.hack()
-
-	v.OnChange = u.OnChange
-
-	v.OnClick = u.OnClick
-
-	v.DangerouslySetInnerHTML = u.DangerouslySetInnerHTML
 
 }

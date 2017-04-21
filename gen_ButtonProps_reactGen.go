@@ -4,18 +4,22 @@ package react
 
 // ButtonProps defines the properties for the <button> element
 type ButtonProps struct {
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTMLDef
 	ID                      string
 	Key                     string
-	ClassName               string
-	Role                    string
-	Style                   *CSS
 	OnChange                func(e *SyntheticEvent)
 	OnClick                 func(e *SyntheticMouseEvent)
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	Role                    string
+	Style                   *CSS
 	Type                    string
 }
 
 func (b *ButtonProps) assign(v *_ButtonProps) {
+
+	v.ClassName = b.ClassName
+
+	v.DangerouslySetInnerHTML = b.DangerouslySetInnerHTML
 
 	if b.ID != "" {
 		v.ID = b.ID
@@ -25,19 +29,15 @@ func (b *ButtonProps) assign(v *_ButtonProps) {
 		v.Key = b.Key
 	}
 
-	v.ClassName = b.ClassName
+	v.OnChange = b.OnChange
+
+	v.OnClick = b.OnClick
 
 	v.Role = b.Role
 
 	// TODO: until we have a resolution on
 	// https://github.com/gopherjs/gopherjs/issues/236
 	v.Style = b.Style.hack()
-
-	v.OnChange = b.OnChange
-
-	v.OnClick = b.OnClick
-
-	v.DangerouslySetInnerHTML = b.DangerouslySetInnerHTML
 
 	v.Type = b.Type
 

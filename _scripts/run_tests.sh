@@ -29,6 +29,25 @@ rm -f !(_vendor)/**/gen_*.go
 
 go generate ./...
 
+z=$(goimports -l !(_vendor)/**/!(gen_*).go !(gen_*).go)
+if [ ! -z "$z" ]
+then
+	echo "The following files are not formatted:"
+	echo ""
+	echo "$z"
+	exit 1
+fi
+
+z=$(gofmt -l !(_vendor)/**/gen_*.go gen_*.go)
+
+if [ ! -z "$z" ]
+then
+	echo "The following generated files are not formatted:"
+	echo ""
+	echo "$z"
+	exit 1
+fi
+
 go test ./...
 
 go install ./...

@@ -4,17 +4,21 @@ package react
 
 // NavProps defines the properties for the <nav> element
 type NavProps struct {
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTMLDef
 	ID                      string
 	Key                     string
-	ClassName               string
-	Role                    string
-	Style                   *CSS
 	OnChange                func(e *SyntheticEvent)
 	OnClick                 func(e *SyntheticMouseEvent)
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	Role                    string
+	Style                   *CSS
 }
 
 func (n *NavProps) assign(v *_NavProps) {
+
+	v.ClassName = n.ClassName
+
+	v.DangerouslySetInnerHTML = n.DangerouslySetInnerHTML
 
 	if n.ID != "" {
 		v.ID = n.ID
@@ -24,18 +28,14 @@ func (n *NavProps) assign(v *_NavProps) {
 		v.Key = n.Key
 	}
 
-	v.ClassName = n.ClassName
+	v.OnChange = n.OnChange
+
+	v.OnClick = n.OnClick
 
 	v.Role = n.Role
 
 	// TODO: until we have a resolution on
 	// https://github.com/gopherjs/gopherjs/issues/236
 	v.Style = n.Style.hack()
-
-	v.OnChange = n.OnChange
-
-	v.OnClick = n.OnClick
-
-	v.DangerouslySetInnerHTML = n.DangerouslySetInnerHTML
 
 }

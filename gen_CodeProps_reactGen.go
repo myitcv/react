@@ -4,17 +4,21 @@ package react
 
 // CodeProps defines the properties for the <code> element
 type CodeProps struct {
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTMLDef
 	ID                      string
 	Key                     string
-	ClassName               string
-	Role                    string
-	Style                   *CSS
 	OnChange                func(e *SyntheticEvent)
 	OnClick                 func(e *SyntheticMouseEvent)
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	Role                    string
+	Style                   *CSS
 }
 
 func (c *CodeProps) assign(v *_CodeProps) {
+
+	v.ClassName = c.ClassName
+
+	v.DangerouslySetInnerHTML = c.DangerouslySetInnerHTML
 
 	if c.ID != "" {
 		v.ID = c.ID
@@ -24,18 +28,14 @@ func (c *CodeProps) assign(v *_CodeProps) {
 		v.Key = c.Key
 	}
 
-	v.ClassName = c.ClassName
+	v.OnChange = c.OnChange
+
+	v.OnClick = c.OnClick
 
 	v.Role = c.Role
 
 	// TODO: until we have a resolution on
 	// https://github.com/gopherjs/gopherjs/issues/236
 	v.Style = c.Style.hack()
-
-	v.OnChange = c.OnChange
-
-	v.OnClick = c.OnClick
-
-	v.DangerouslySetInnerHTML = c.DangerouslySetInnerHTML
 
 }
