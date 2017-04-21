@@ -4,17 +4,21 @@ package react
 
 // LiProps defines the properties for the <li> element
 type LiProps struct {
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTMLDef
 	ID                      string
 	Key                     string
-	ClassName               string
-	Role                    string
-	Style                   *CSS
 	OnChange                func(e *SyntheticEvent)
 	OnClick                 func(e *SyntheticMouseEvent)
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	Role                    string
+	Style                   *CSS
 }
 
 func (l *LiProps) assign(v *_LiProps) {
+
+	v.ClassName = l.ClassName
+
+	v.DangerouslySetInnerHTML = l.DangerouslySetInnerHTML
 
 	if l.ID != "" {
 		v.ID = l.ID
@@ -24,18 +28,14 @@ func (l *LiProps) assign(v *_LiProps) {
 		v.Key = l.Key
 	}
 
-	v.ClassName = l.ClassName
+	v.OnChange = l.OnChange
+
+	v.OnClick = l.OnClick
 
 	v.Role = l.Role
 
 	// TODO: until we have a resolution on
 	// https://github.com/gopherjs/gopherjs/issues/236
 	v.Style = l.Style.hack()
-
-	v.OnChange = l.OnChange
-
-	v.OnClick = l.OnClick
-
-	v.DangerouslySetInnerHTML = l.DangerouslySetInnerHTML
 
 }

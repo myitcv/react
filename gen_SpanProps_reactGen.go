@@ -4,17 +4,21 @@ package react
 
 // SpanProps defines the properties for the <p> element
 type SpanProps struct {
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTMLDef
 	ID                      string
 	Key                     string
-	ClassName               string
-	Role                    string
-	Style                   *CSS
 	OnChange                func(e *SyntheticEvent)
 	OnClick                 func(e *SyntheticMouseEvent)
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	Role                    string
+	Style                   *CSS
 }
 
 func (s *SpanProps) assign(v *_SpanProps) {
+
+	v.ClassName = s.ClassName
+
+	v.DangerouslySetInnerHTML = s.DangerouslySetInnerHTML
 
 	if s.ID != "" {
 		v.ID = s.ID
@@ -24,18 +28,14 @@ func (s *SpanProps) assign(v *_SpanProps) {
 		v.Key = s.Key
 	}
 
-	v.ClassName = s.ClassName
+	v.OnChange = s.OnChange
+
+	v.OnClick = s.OnClick
 
 	v.Role = s.Role
 
 	// TODO: until we have a resolution on
 	// https://github.com/gopherjs/gopherjs/issues/236
 	v.Style = s.Style.hack()
-
-	v.OnChange = s.OnChange
-
-	v.OnClick = s.OnClick
-
-	v.DangerouslySetInnerHTML = s.DangerouslySetInnerHTML
 
 }

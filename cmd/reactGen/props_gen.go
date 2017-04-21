@@ -2,6 +2,8 @@ package main
 
 import (
 	"go/ast"
+	"go/format"
+	"sort"
 	"strings"
 	"unicode"
 	"unicode/utf8"
@@ -52,6 +54,10 @@ func (g *gen) genProps(defName string, t typeFile) {
 	if err != nil {
 		fatalf("could not explode fields: %v", err)
 	}
+
+	sort.Slice(fe.fields, func(i, j int) bool {
+		return fe.fields[i].Name < fe.fields[j].Name
+	})
 
 	pg.Fields = fe.fields
 
@@ -106,9 +112,9 @@ func (g *gen) genProps(defName string, t typeFile) {
 	ofName := gogenerate.NameFile(name, reactGenCmd)
 	toWrite := pg.buf.Bytes()
 
-	out, err := fmtBuf(pg.buf)
+	out, err := format.Source(toWrite)
 	if err == nil {
-		toWrite = out.Bytes()
+		toWrite = out
 	}
 
 	wrote, err := gogenerate.WriteIfDiff(toWrite, ofName)

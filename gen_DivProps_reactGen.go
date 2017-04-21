@@ -4,17 +4,21 @@ package react
 
 // DivProps are the props for a <div> component
 type DivProps struct {
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTMLDef
 	ID                      string
 	Key                     string
-	ClassName               string
-	Role                    string
-	Style                   *CSS
 	OnChange                func(e *SyntheticEvent)
 	OnClick                 func(e *SyntheticMouseEvent)
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	Role                    string
+	Style                   *CSS
 }
 
 func (d *DivProps) assign(v *_DivProps) {
+
+	v.ClassName = d.ClassName
+
+	v.DangerouslySetInnerHTML = d.DangerouslySetInnerHTML
 
 	if d.ID != "" {
 		v.ID = d.ID
@@ -24,18 +28,14 @@ func (d *DivProps) assign(v *_DivProps) {
 		v.Key = d.Key
 	}
 
-	v.ClassName = d.ClassName
+	v.OnChange = d.OnChange
+
+	v.OnClick = d.OnClick
 
 	v.Role = d.Role
 
 	// TODO: until we have a resolution on
 	// https://github.com/gopherjs/gopherjs/issues/236
 	v.Style = d.Style.hack()
-
-	v.OnChange = d.OnChange
-
-	v.OnClick = d.OnClick
-
-	v.DangerouslySetInnerHTML = d.DangerouslySetInnerHTML
 
 }

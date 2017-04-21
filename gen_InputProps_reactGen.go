@@ -4,21 +4,29 @@ package react
 
 // InputProps defines the properties for the <input> element
 type InputProps struct {
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	DefaultValue            string
 	ID                      string
 	Key                     string
-	ClassName               string
-	Role                    string
-	Style                   *CSS
 	OnChange                func(e *SyntheticEvent)
 	OnClick                 func(e *SyntheticMouseEvent)
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
 	Placeholder             string
+	Role                    string
+	Style                   *CSS
 	Type                    string
 	Value                   string
-	DefaultValue            string
 }
 
 func (i *InputProps) assign(v *_InputProps) {
+
+	v.ClassName = i.ClassName
+
+	v.DangerouslySetInnerHTML = i.DangerouslySetInnerHTML
+
+	if i.DefaultValue != "" {
+		v.DefaultValue = i.DefaultValue
+	}
 
 	if i.ID != "" {
 		v.ID = i.ID
@@ -28,7 +36,11 @@ func (i *InputProps) assign(v *_InputProps) {
 		v.Key = i.Key
 	}
 
-	v.ClassName = i.ClassName
+	v.OnChange = i.OnChange
+
+	v.OnClick = i.OnClick
+
+	v.Placeholder = i.Placeholder
 
 	v.Role = i.Role
 
@@ -36,20 +48,8 @@ func (i *InputProps) assign(v *_InputProps) {
 	// https://github.com/gopherjs/gopherjs/issues/236
 	v.Style = i.Style.hack()
 
-	v.OnChange = i.OnChange
-
-	v.OnClick = i.OnClick
-
-	v.DangerouslySetInnerHTML = i.DangerouslySetInnerHTML
-
-	v.Placeholder = i.Placeholder
-
 	v.Type = i.Type
 
 	v.Value = i.Value
-
-	if i.DefaultValue != "" {
-		v.DefaultValue = i.DefaultValue
-	}
 
 }

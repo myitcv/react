@@ -4,18 +4,24 @@ package react
 
 // LabelProps defines the properties for the <label> element
 type LabelProps struct {
-	ID                      string
-	Key                     string
 	ClassName               string
-	Role                    string
-	Style                   *CSS
-	OnChange                func(e *SyntheticEvent)
-	OnClick                 func(e *SyntheticMouseEvent)
 	DangerouslySetInnerHTML *DangerousInnerHTMLDef
 	For                     string
+	ID                      string
+	Key                     string
+	OnChange                func(e *SyntheticEvent)
+	OnClick                 func(e *SyntheticMouseEvent)
+	Role                    string
+	Style                   *CSS
 }
 
 func (l *LabelProps) assign(v *_LabelProps) {
+
+	v.ClassName = l.ClassName
+
+	v.DangerouslySetInnerHTML = l.DangerouslySetInnerHTML
+
+	v.For = l.For
 
 	if l.ID != "" {
 		v.ID = l.ID
@@ -25,20 +31,14 @@ func (l *LabelProps) assign(v *_LabelProps) {
 		v.Key = l.Key
 	}
 
-	v.ClassName = l.ClassName
+	v.OnChange = l.OnChange
+
+	v.OnClick = l.OnClick
 
 	v.Role = l.Role
 
 	// TODO: until we have a resolution on
 	// https://github.com/gopherjs/gopherjs/issues/236
 	v.Style = l.Style.hack()
-
-	v.OnChange = l.OnChange
-
-	v.OnClick = l.OnClick
-
-	v.DangerouslySetInnerHTML = l.DangerouslySetInnerHTML
-
-	v.For = l.For
 
 }

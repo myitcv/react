@@ -46,7 +46,7 @@ func doinit(wd string, tmpl string) {
 
 		if strings.HasSuffix(fn, ".go") {
 
-			out, err := fmtBuf(b)
+			out, err := goFmtBuf(b)
 			if err == nil {
 				toWrite = out.Bytes()
 			}

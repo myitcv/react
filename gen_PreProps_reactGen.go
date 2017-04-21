@@ -4,17 +4,21 @@ package react
 
 // PreProps defines the properties for the <pre> element
 type PreProps struct {
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTMLDef
 	ID                      string
 	Key                     string
-	ClassName               string
-	Role                    string
-	Style                   *CSS
 	OnChange                func(e *SyntheticEvent)
 	OnClick                 func(e *SyntheticMouseEvent)
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	Role                    string
+	Style                   *CSS
 }
 
 func (p *PreProps) assign(v *_PreProps) {
+
+	v.ClassName = p.ClassName
+
+	v.DangerouslySetInnerHTML = p.DangerouslySetInnerHTML
 
 	if p.ID != "" {
 		v.ID = p.ID
@@ -24,18 +28,14 @@ func (p *PreProps) assign(v *_PreProps) {
 		v.Key = p.Key
 	}
 
-	v.ClassName = p.ClassName
+	v.OnChange = p.OnChange
+
+	v.OnClick = p.OnClick
 
 	v.Role = p.Role
 
 	// TODO: until we have a resolution on
 	// https://github.com/gopherjs/gopherjs/issues/236
 	v.Style = p.Style.hack()
-
-	v.OnChange = p.OnChange
-
-	v.OnClick = p.OnClick
-
-	v.DangerouslySetInnerHTML = p.DangerouslySetInnerHTML
 
 }

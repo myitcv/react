@@ -4,20 +4,28 @@ package react
 
 // TextAreaProps defines the properties for the <textarea> element
 type TextAreaProps struct {
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	DefaultValue            string
 	ID                      string
 	Key                     string
-	ClassName               string
-	Role                    string
-	Style                   *CSS
 	OnChange                func(e *SyntheticEvent)
 	OnClick                 func(e *SyntheticMouseEvent)
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
 	Placeholder             string
+	Role                    string
+	Style                   *CSS
 	Value                   string
-	DefaultValue            string
 }
 
 func (t *TextAreaProps) assign(v *_TextAreaProps) {
+
+	v.ClassName = t.ClassName
+
+	v.DangerouslySetInnerHTML = t.DangerouslySetInnerHTML
+
+	if t.DefaultValue != "" {
+		v.DefaultValue = t.DefaultValue
+	}
 
 	if t.ID != "" {
 		v.ID = t.ID
@@ -27,7 +35,11 @@ func (t *TextAreaProps) assign(v *_TextAreaProps) {
 		v.Key = t.Key
 	}
 
-	v.ClassName = t.ClassName
+	v.OnChange = t.OnChange
+
+	v.OnClick = t.OnClick
+
+	v.Placeholder = t.Placeholder
 
 	v.Role = t.Role
 
@@ -35,18 +47,6 @@ func (t *TextAreaProps) assign(v *_TextAreaProps) {
 	// https://github.com/gopherjs/gopherjs/issues/236
 	v.Style = t.Style.hack()
 
-	v.OnChange = t.OnChange
-
-	v.OnClick = t.OnClick
-
-	v.DangerouslySetInnerHTML = t.DangerouslySetInnerHTML
-
-	v.Placeholder = t.Placeholder
-
 	v.Value = t.Value
-
-	if t.DefaultValue != "" {
-		v.DefaultValue = t.DefaultValue
-	}
 
 }

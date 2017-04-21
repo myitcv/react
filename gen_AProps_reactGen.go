@@ -4,19 +4,25 @@ package react
 
 // APropsDef defines the properties for the <a> element
 type AProps struct {
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	Href                    string
 	ID                      string
 	Key                     string
-	ClassName               string
-	Role                    string
-	Style                   *CSS
 	OnChange                func(e *SyntheticEvent)
 	OnClick                 func(e *SyntheticMouseEvent)
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	Role                    string
+	Style                   *CSS
 	Target                  string
-	Href                    string
 }
 
 func (a *AProps) assign(v *_AProps) {
+
+	v.ClassName = a.ClassName
+
+	v.DangerouslySetInnerHTML = a.DangerouslySetInnerHTML
+
+	v.Href = a.Href
 
 	if a.ID != "" {
 		v.ID = a.ID
@@ -26,7 +32,9 @@ func (a *AProps) assign(v *_AProps) {
 		v.Key = a.Key
 	}
 
-	v.ClassName = a.ClassName
+	v.OnChange = a.OnChange
+
+	v.OnClick = a.OnClick
 
 	v.Role = a.Role
 
@@ -34,14 +42,6 @@ func (a *AProps) assign(v *_AProps) {
 	// https://github.com/gopherjs/gopherjs/issues/236
 	v.Style = a.Style.hack()
 
-	v.OnChange = a.OnChange
-
-	v.OnClick = a.OnClick
-
-	v.DangerouslySetInnerHTML = a.DangerouslySetInnerHTML
-
 	v.Target = a.Target
-
-	v.Href = a.Href
 
 }

@@ -4,17 +4,21 @@ package react
 
 // H3Props defines the properties for the <h3> element
 type H3Props struct {
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTMLDef
 	ID                      string
 	Key                     string
-	ClassName               string
-	Role                    string
-	Style                   *CSS
 	OnChange                func(e *SyntheticEvent)
 	OnClick                 func(e *SyntheticMouseEvent)
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	Role                    string
+	Style                   *CSS
 }
 
 func (h *H3Props) assign(v *_H3Props) {
+
+	v.ClassName = h.ClassName
+
+	v.DangerouslySetInnerHTML = h.DangerouslySetInnerHTML
 
 	if h.ID != "" {
 		v.ID = h.ID
@@ -24,18 +28,14 @@ func (h *H3Props) assign(v *_H3Props) {
 		v.Key = h.Key
 	}
 
-	v.ClassName = h.ClassName
+	v.OnChange = h.OnChange
+
+	v.OnClick = h.OnClick
 
 	v.Role = h.Role
 
 	// TODO: until we have a resolution on
 	// https://github.com/gopherjs/gopherjs/issues/236
 	v.Style = h.Style.hack()
-
-	v.OnChange = h.OnChange
-
-	v.OnClick = h.OnClick
-
-	v.DangerouslySetInnerHTML = h.DangerouslySetInnerHTML
 
 }
