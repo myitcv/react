@@ -4,22 +4,18 @@ package react
 
 import "github.com/gopherjs/gopherjs/js"
 
-// CSS defines CSS attributes for HTML components
+// CSS defines CSS attributes for HTML components. Largely based on
+// https://developer.mozilla.org/en-US/docs/Web/CSS/Reference
 //
 type CSS struct {
 	o *js.Object
 
-	Height string
-
+	Height    string
 	MaxHeight string
-
 	MinHeight string
-
-	Overflow string
-
-	Resize string
-
-	Width string
+	Overflow  string
+	Resize    string
+	Width     string
 }
 
 // TODO: until we have a resolution on
@@ -33,15 +29,10 @@ func (c *CSS) hack() *CSS {
 	o := object.New()
 
 	o.Set("height", c.Height)
-
 	o.Set("maxHeight", c.MaxHeight)
-
 	o.Set("minHeight", c.MinHeight)
-
 	o.Set("overflow", c.Overflow)
-
 	o.Set("resize", c.Resize)
-
 	o.Set("width", c.Width)
 
 	return &CSS{o: o}

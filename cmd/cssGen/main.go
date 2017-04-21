@@ -7,10 +7,10 @@ import (
 	"flag"
 	"fmt"
 	"go/format"
-	"html/template"
 	"log"
 	"os"
 	"path/filepath"
+	"text/template"
 
 	"myitcv.io/gogenerate"
 )
@@ -87,14 +87,15 @@ package react
 
 import "github.com/gopherjs/gopherjs/js"
 
-// CSS defines CSS attributes for HTML components
+// CSS defines CSS attributes for HTML components. Largely based on
+// https://developer.mozilla.org/en-US/docs/Web/CSS/Reference
 //
 type CSS struct {
 	o *js.Object
 
-	{{range $k, $v := .}}
+	{{range $k, $v := . }}
 	{{$k}} {{$v.Type}}
-	{{end}}
+	{{- end}}
 }
 
 // TODO: until we have a resolution on
@@ -107,9 +108,9 @@ func (c *CSS) hack() *CSS {
 
 	o := object.New()
 
-	{{range $k, $v := .}}
+	{{range $k, $v := . }}
 	o.Set("{{$v.Attr}}", c.{{$k}})
-	{{end}}
+	{{- end}}
 
 	return &CSS{o: o}
 }

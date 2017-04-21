@@ -25,6 +25,8 @@ do
 		wget --quiet -p -k http://localhost:8080/myitcv.io/react/examples/sites/$i/
 	)
 	cp -rp $t/localhost:8080/myitcv.io/react/examples/sites/$i/ $r/gopherjs_examples_sites/
+
+	du -sh $r/gopherjs_examples_sites/$i
 done
 
 cp -rp examples/sites/common $r/gopherjs_examples_sites/
