@@ -8,10 +8,12 @@ type PProps struct {
 	DangerouslySetInnerHTML *DangerousInnerHTMLDef
 	ID                      string
 	Key                     string
-	OnChange                func(e *SyntheticEvent)
-	OnClick                 func(e *SyntheticMouseEvent)
-	Role                    string
-	Style                   *CSS
+
+	OnChange
+	OnClick
+
+	Role  string
+	Style *CSS
 }
 
 func (p *PProps) assign(v *_PProps) {
@@ -28,9 +30,13 @@ func (p *PProps) assign(v *_PProps) {
 		v.Key = p.Key
 	}
 
-	v.OnChange = p.OnChange
+	if p.OnChange != nil {
+		v.o.Set("onChange", p.OnChange.OnChange)
+	}
 
-	v.OnClick = p.OnClick
+	if p.OnClick != nil {
+		v.o.Set("onClick", p.OnClick.OnClick)
+	}
 
 	v.Role = p.Role
 

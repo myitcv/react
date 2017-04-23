@@ -147,11 +147,31 @@ func (p *ImmExamplesDef) buildExampleNavTab(key exampleKey, t tab, title string)
 	return r.Li(
 		lip,
 		r.A(
-			&r.AProps{Href: "#", OnClick: p.handleTabChange(key, t)},
+			&r.AProps{Href: "#", OnClick: immTabChange{p, key, t}},
 			r.S(title),
 		),
 	)
 
+}
+
+type immTabChange struct {
+	e   *ImmExamplesDef
+	key exampleKey
+	t   tab
+}
+
+func (tc immTabChange) OnClick(e *r.SyntheticMouseEvent) {
+	p := tc.e
+	key := tc.key
+	t := tc.t
+
+	cts := p.State().selectedTabs
+	newSt := p.State()
+
+	newSt.selectedTabs = cts.Set(key, t)
+	p.SetState(newSt)
+
+	e.PreventDefault()
 }
 
 func (p *ImmExamplesDef) handleTabChange(key exampleKey, t tab) func(*r.SyntheticMouseEvent) {

@@ -31,8 +31,8 @@ type BasicHTMLElement struct {
 	Role      string `js:"role"`
 	Style     *CSS   `js:"style"`
 
-	OnChange func(e *SyntheticEvent)      `js:"onChange"`
-	OnClick  func(e *SyntheticMouseEvent) `js:"onClick"`
+	OnChange `js:"onChange"`
+	OnClick  `js:"onClick"`
 
 	DangerouslySetInnerHTML *DangerousInnerHTMLDef `js:"dangerouslySetInnerHTML"`
 }

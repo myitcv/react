@@ -1,6 +1,3 @@
-// Copyright (c) 2016 Paul Jolly <paul@myitcv.org.uk>, all rights reserved.
-// Use of this document is governed by a license found in the LICENSE document.
-
 package immtodoapp // import "myitcv.io/react/examples/immtodoapp"
 
 import (
@@ -65,19 +62,19 @@ func (t *TodoAppDef) Render() r.Element {
 					ID:          "todoText",
 					Placeholder: "Todo Item",
 					Value:       t.State().currItem,
-					OnChange:    t.onCurrItemChange,
+					OnChange:    t,
 				}),
 				r.Button(&r.ButtonProps{
 					Type:      "submit",
 					ClassName: "btn btn-default",
-					OnClick:   t.onAddClicked,
+					OnClick:   t,
 				}, r.S(fmt.Sprintf("Add #%v", t.State().items.Len()+1))),
 			),
 		),
 	)
 }
 
-func (t *TodoAppDef) onCurrItemChange(se *r.SyntheticEvent) {
+func (t *TodoAppDef) OnChange(se *r.SyntheticEvent) {
 	target := se.Target().(*dom.HTMLInputElement)
 
 	ns := t.State()
@@ -86,7 +83,7 @@ func (t *TodoAppDef) onCurrItemChange(se *r.SyntheticEvent) {
 	t.SetState(ns)
 }
 
-func (t *TodoAppDef) onAddClicked(se *r.SyntheticMouseEvent) {
+func (t *TodoAppDef) OnClick(se *r.SyntheticMouseEvent) {
 	ns := t.State()
 
 	ns.items = ns.items.Append(new(item).setName(ns.currItem))

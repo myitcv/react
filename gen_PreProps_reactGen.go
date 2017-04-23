@@ -8,10 +8,12 @@ type PreProps struct {
 	DangerouslySetInnerHTML *DangerousInnerHTMLDef
 	ID                      string
 	Key                     string
-	OnChange                func(e *SyntheticEvent)
-	OnClick                 func(e *SyntheticMouseEvent)
-	Role                    string
-	Style                   *CSS
+
+	OnChange
+	OnClick
+
+	Role  string
+	Style *CSS
 }
 
 func (p *PreProps) assign(v *_PreProps) {
@@ -28,9 +30,13 @@ func (p *PreProps) assign(v *_PreProps) {
 		v.Key = p.Key
 	}
 
-	v.OnChange = p.OnChange
+	if p.OnChange != nil {
+		v.o.Set("onChange", p.OnChange.OnChange)
+	}
 
-	v.OnClick = p.OnClick
+	if p.OnClick != nil {
+		v.o.Set("onClick", p.OnClick.OnClick)
+	}
 
 	v.Role = p.Role
 

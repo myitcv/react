@@ -8,11 +8,13 @@ type ButtonProps struct {
 	DangerouslySetInnerHTML *DangerousInnerHTMLDef
 	ID                      string
 	Key                     string
-	OnChange                func(e *SyntheticEvent)
-	OnClick                 func(e *SyntheticMouseEvent)
-	Role                    string
-	Style                   *CSS
-	Type                    string
+
+	OnChange
+	OnClick
+
+	Role  string
+	Style *CSS
+	Type  string
 }
 
 func (b *ButtonProps) assign(v *_ButtonProps) {
@@ -29,9 +31,13 @@ func (b *ButtonProps) assign(v *_ButtonProps) {
 		v.Key = b.Key
 	}
 
-	v.OnChange = b.OnChange
+	if b.OnChange != nil {
+		v.o.Set("onChange", b.OnChange.OnChange)
+	}
 
-	v.OnClick = b.OnClick
+	if b.OnClick != nil {
+		v.o.Set("onClick", b.OnClick.OnClick)
+	}
 
 	v.Role = b.Role
 

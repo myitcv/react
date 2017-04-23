@@ -8,10 +8,12 @@ type H1Props struct {
 	DangerouslySetInnerHTML *DangerousInnerHTMLDef
 	ID                      string
 	Key                     string
-	OnChange                func(e *SyntheticEvent)
-	OnClick                 func(e *SyntheticMouseEvent)
-	Role                    string
-	Style                   *CSS
+
+	OnChange
+	OnClick
+
+	Role  string
+	Style *CSS
 }
 
 func (h *H1Props) assign(v *_H1Props) {
@@ -28,9 +30,13 @@ func (h *H1Props) assign(v *_H1Props) {
 		v.Key = h.Key
 	}
 
-	v.OnChange = h.OnChange
+	if h.OnChange != nil {
+		v.o.Set("onChange", h.OnChange.OnChange)
+	}
 
-	v.OnClick = h.OnClick
+	if h.OnClick != nil {
+		v.o.Set("onClick", h.OnClick.OnClick)
+	}
 
 	v.Role = h.Role
 

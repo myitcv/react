@@ -14,9 +14,10 @@ import (
 type propsGen struct {
 	*coreGen
 
-	Recv string
-	Name string
-	Doc  string
+	Recv  string
+	Name  string
+	TName string
+	Doc   string
 
 	Fields []field
 }
@@ -50,14 +51,22 @@ func (g *gen) genProps(defName string, t typeFile) {
 		imps:   make(map[*ast.ImportSpec]struct{}),
 	}
 
-	err := fe.explode()
+	err := fe.explode(&t)
 	if err != nil {
 		fatalf("could not explode fields: %v", err)
 	}
 
 	sort.Slice(fe.fields, func(i, j int) bool {
-		return fe.fields[i].Name < fe.fields[j].Name
+		return fe.fields[i].TName < fe.fields[j].TName
 	})
+
+	if len(fe.fields) > 2 {
+		for i := 1; i < len(fe.fields)-1; i++ {
+			if fe.fields[i].IsEvent != fe.fields[i-1].IsEvent {
+				fe.fields[i].GapBefore = true
+			}
+		}
+	}
 
 	pg.Fields = fe.fields
 
@@ -85,24 +94,30 @@ func (g *gen) genProps(defName string, t typeFile) {
 
 	{{.Doc}}
 	type {{.Name}} struct {
-	{{range .Fields}}
-		{{.Name}} {{.Type}}
+	{{range $i, $v := .Fields}}
+		{{if $v.GapBefore}}
+		{{end -}}
+		{{$v.Name}} {{$v.Type}}
 	{{- end}}
 	}
 
 	func ({{$recv}} *{{.Name}}) assign(v *_{{.Name}}) {
 		{{- range .Fields}}
 			{{ if .Omit }}
-				if {{$recv}}.{{.Name}} != "" {
-					v.{{.Name}} = {{$recv}}.{{.Name}}
+				if {{$recv}}.{{.TName}} != "" {
+					v.{{.TName}} = {{$recv}}.{{.TName}}
 				}
 			{{else}}
-			{{if eq .Name "Style"}}
+			{{if .IsEvent}}
+				if {{$recv}}.{{.TName}} != nil {
+					v.o.Set("{{.FName}}", {{$recv}}.{{.TName}}.{{.TName}})
+				}
+			{{else if eq .Name "Style"}}
 				// TODO: until we have a resolution on
 				// https://github.com/gopherjs/gopherjs/issues/236
-				v.{{.Name}} = {{$recv}}.{{.Name}}.hack()
+				v.{{.TName}} = {{$recv}}.{{.TName}}.hack()
 			{{else}}
-				v.{{.Name}} = {{$recv}}.{{.Name}}
+				v.{{.TName}} = {{$recv}}.{{.TName}}
 			{{end}}
 			{{end}}
 		{{- end}}

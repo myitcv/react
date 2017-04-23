@@ -8,10 +8,12 @@ type SpanProps struct {
 	DangerouslySetInnerHTML *DangerousInnerHTMLDef
 	ID                      string
 	Key                     string
-	OnChange                func(e *SyntheticEvent)
-	OnClick                 func(e *SyntheticMouseEvent)
-	Role                    string
-	Style                   *CSS
+
+	OnChange
+	OnClick
+
+	Role  string
+	Style *CSS
 }
 
 func (s *SpanProps) assign(v *_SpanProps) {
@@ -28,9 +30,13 @@ func (s *SpanProps) assign(v *_SpanProps) {
 		v.Key = s.Key
 	}
 
-	v.OnChange = s.OnChange
+	if s.OnChange != nil {
+		v.o.Set("onChange", s.OnChange.OnChange)
+	}
 
-	v.OnClick = s.OnClick
+	if s.OnClick != nil {
+		v.o.Set("onClick", s.OnClick.OnClick)
+	}
 
 	v.Role = s.Role
 

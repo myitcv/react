@@ -8,10 +8,12 @@ type CodeProps struct {
 	DangerouslySetInnerHTML *DangerousInnerHTMLDef
 	ID                      string
 	Key                     string
-	OnChange                func(e *SyntheticEvent)
-	OnClick                 func(e *SyntheticMouseEvent)
-	Role                    string
-	Style                   *CSS
+
+	OnChange
+	OnClick
+
+	Role  string
+	Style *CSS
 }
 
 func (c *CodeProps) assign(v *_CodeProps) {
@@ -28,9 +30,13 @@ func (c *CodeProps) assign(v *_CodeProps) {
 		v.Key = c.Key
 	}
 
-	v.OnChange = c.OnChange
+	if c.OnChange != nil {
+		v.o.Set("onChange", c.OnChange.OnChange)
+	}
 
-	v.OnClick = c.OnClick
+	if c.OnClick != nil {
+		v.o.Set("onClick", c.OnClick.OnClick)
+	}
 
 	v.Role = c.Role
 
