@@ -78,11 +78,20 @@ func (l *LatencyDef) Render() r.Element {
 			),
 			c,
 			r.Div(&r.DivProps{ClassName: "Title margin center"},
-				r.Span(&r.SpanProps{
-					ClassName: "subtext",
-					Style:     &r.CSS{FontSize: "smaller", FontStyle: "italic"},
-				},
-					r.S("(randomly generated results)")),
+				r.Span(
+					&r.SpanProps{
+						ClassName: "subtext",
+						Style:     &r.CSS{FontSize: "smaller", FontStyle: "italic"},
+					},
+					r.S("(randomly generated results)"),
+				),
+				r.Span(
+					&r.SpanProps{
+						ClassName: "subtext",
+						Style:     &r.CSS{FontSize: "smaller", FontStyle: "italic"},
+					},
+					r.S("Real, original version "), r.A(&r.AProps{Href: "https://latency.apex.sh/", Target: "_blank"}, r.S("https://latency.apex.sh/")),
+				),
 			),
 		),
 	)
