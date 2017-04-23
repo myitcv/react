@@ -131,6 +131,20 @@ func (p *ExamplesDef) Render() r.Element {
 			markdownEditorJsx,
 			markdowneditor.MarkdownEditor(),
 		),
+
+		r.HR(nil),
+
+		p.renderExample(
+			exampleLatency,
+			r.S("Latency Checker"),
+			r.P(nil,
+				r.S("By kind permission of "), r.A(&r.AProps{Href: "http://tjholowaychuk.com/"}, r.S("TJ Holowaychuk")),
+				r.S(", a basic, component-based version of the beautiful APEX "), r.A(&r.AProps{Href: "https://latency.apex.sh/"}, r.S("Latency Tool")),
+				r.S(" that uses randomly generated latency values."),
+			),
+			latencyJsx,
+			r.A(&r.AProps{Href: "../latency", Target: "_blank"}, r.S("Launch in new tab")),
+		),
 	}
 
 	return r.Div(

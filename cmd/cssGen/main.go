@@ -15,7 +15,13 @@ import (
 	"myitcv.io/gogenerate"
 )
 
+// using
+// https://github.com/Microsoft/TypeScript/blob/8b9fa4ce7420fdf2f540300dc80fa91f5b89ea93/lib/lib.dom.d.ts#L1692
+// as a reference
+//
 var attrs = map[string]typ{
+	"FontSize":  typ{"fontSize", "string"},
+	"FontStyle": typ{"fontStyle", "string"},
 	"Height":    typ{"height", "string"},
 	"MaxHeight": typ{"maxHeight", "string"},
 	"MinHeight": typ{"minHeight", "string"},
