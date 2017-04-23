@@ -27,7 +27,7 @@ var sources = newExampleSource(func(es *exampleSource) {
 	es.Set(exampleTodo, new(source).setFile("todoapp/todo_app.go"))
 	es.Set(exampleImmTodo, new(source).setFile("immtodoapp/todo_app.go"))
 	es.Set(exampleMarkdown, new(source).setFile("markdowneditor/markdown_editor.go"))
-	es.Set(exampleLatency, new(source).setFile("latency/latency.go"))
+	es.Set(exampleLatency, new(source).setFile("sites/latency/latency.go"))
 })
 
 var fetchStarted bool
