@@ -22,7 +22,7 @@ do
 	echo $i
 	(
 		cd $t
-		wget --quiet -p -k http://localhost:8080/myitcv.io/react/examples/sites/$i/
+		wget --quiet --mirror http://localhost:8080/myitcv.io/react/examples/sites/$i/
 	)
 	cp -rp $t/localhost:8080/myitcv.io/react/examples/sites/$i/ $r/gopherjs_examples_sites/
 
@@ -45,4 +45,3 @@ fi
 git add -A
 git commit -am "Examples update at $(date)"
 git push
-
