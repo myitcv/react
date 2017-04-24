@@ -72,27 +72,18 @@ func (l *LatencyDef) Render() r.Element {
 
 	return r.Div(&r.DivProps{ClassName: "App"},
 		r.Div(&r.DivProps{ClassName: "Content center full column"},
-			r.Div(&r.DivProps{ClassName: "Title margin center"},
-				r.Span(&r.SpanProps{ClassName: "text"}, r.S("Latency")),
-				r.Span(&r.SpanProps{ClassName: "subtext"}, r.S("Global latency testing tool")),
-			),
+			r.Div(&r.DivProps{ClassName: "Title margin center", DangerouslySetInnerHTML: r.DangerousInnerHTML(`
+				<span class="text">Latency</span>
+				<span class="subtext">Global latency testing tool</span>
+			`)}),
 			c,
-			r.Div(&r.DivProps{ClassName: "Title margin center"},
-				r.Span(
-					&r.SpanProps{
-						ClassName: "subtext",
-						Style:     &r.CSS{FontSize: "smaller", FontStyle: "italic"},
-					},
-					r.S("(randomly generated results)"),
-				),
-				r.Span(
-					&r.SpanProps{
-						ClassName: "subtext",
-						Style:     &r.CSS{FontSize: "smaller", FontStyle: "italic"},
-					},
-					r.S("Real, original version "), r.A(&r.AProps{Href: "https://latency.apex.sh/", Target: "_blank"}, r.S("https://latency.apex.sh/")),
-				),
-			),
+			r.Div(&r.DivProps{ClassName: "Title margin center", DangerouslySetInnerHTML: r.DangerousInnerHTML(`
+				<br/>
+				<span class="subtext" style="font-size:smaller; font-style: italic">(randomly generated results)</span>
+				<span class="subtext" style="font-size:smaller; font-style: italic">
+					Real, original version <a href="https://latency.apex.sh/", target="_blank">https://latency.apex.sh/</a>
+				</span>
+			`)}),
 		),
 	)
 }
