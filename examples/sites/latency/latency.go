@@ -13,8 +13,10 @@ import (
 //go:generate reactGen
 //go:generate immutableGen
 
+type location string
+
 var (
-	Locations = [...]string{
+	locations = [...]location{
 		"Oregon",
 		"California",
 		"Ohio",
@@ -30,7 +32,7 @@ var (
 	}
 )
 
-type _Imm_latencies map[string]latency
+type _Imm_latencies map[location]latency
 
 type latency struct {
 	dns      time.Duration
@@ -89,13 +91,6 @@ func (l *LatencyDef) Render() r.Element {
 }
 
 func (l *LatencyDef) renderInput() r.Element {
-	inStyle := "btn btn-default"
-	resStyle := "btn btn-default disabled"
-
-	if l.State().output {
-		inStyle, resStyle = resStyle, inStyle
-	}
-
 	return r.Form(&r.FormProps{ClassName: "LatencyForm"},
 		r.Div(&r.DivProps{ClassName: "group"},
 			r.Input(&r.InputProps{
@@ -124,6 +119,7 @@ func (l *LatencyDef) renderInput() r.Element {
 }
 
 const (
+	// gross hack for now
 	resultWidth = 500.0
 )
 
@@ -143,7 +139,7 @@ func (l *LatencyDef) renderOutput() r.Element {
 	awfulTime := maxTot / 3
 	okTime := maxTot * 2 / 3
 
-	for _, v := range Locations {
+	for _, v := range locations {
 		regClass := "Region"
 
 		timings := []r.Element{
@@ -232,32 +228,34 @@ func (c check) OnClick(e *r.SyntheticMouseEvent) {
 
 	reqId := l.State().reqId
 
-	for _, v := range Locations {
+	for _, v := range locations {
 		loc := v
-		to := rand.Intn(3000)
+		to := rand.Int63n(3000) * int64(time.Millisecond)
 
 		go func() {
-			<-time.After(time.Duration(to) * time.Millisecond)
+			<-time.After(time.Duration(to))
 			s := l.State()
 
 			if s.reqId == reqId {
 				lat := latency{}
 
-				ints := make([]int, 4)
+				ints := make([]int64, 4)
 
 				for i := range ints {
-					ints[i] = rand.Intn(to)
+					ints[i] = rand.Int63n(to)
 				}
 
-				ints = append([]int{0}, ints...)
+				ints = append([]int64{0}, ints...)
 				ints = append(ints, to)
 
-				sort.Ints(ints)
+				sort.Slice(ints, func(i, j int) bool {
+					return ints[i] < ints[j]
+				})
 
 				vs := make([]time.Duration, len(ints)-1)
 
 				for i := range vs {
-					vs[i] = time.Duration(ints[i+1]-ints[i]) * time.Millisecond
+					vs[i] = time.Duration(ints[i+1] - ints[i])
 				}
 
 				lat.dns = vs[0]
@@ -265,7 +263,7 @@ func (c check) OnClick(e *r.SyntheticMouseEvent) {
 				lat.tls = vs[2]
 				lat.wait = vs[3]
 				lat.download = vs[4]
-				lat.total = time.Duration(to) * time.Millisecond
+				lat.total = time.Duration(to)
 
 				s.latencies = s.latencies.Set(loc, lat)
 
