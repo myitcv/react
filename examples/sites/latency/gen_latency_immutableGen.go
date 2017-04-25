@@ -11,10 +11,10 @@ import (
 //
 // latencies is an immutable type and has the following template:
 //
-// 	map[string]latency
+// 	map[location]latency
 //
 type latencies struct {
-	theMap  map[string]latency
+	theMap  map[location]latency
 	mutable bool
 	__tmpl  _Imm_latencies
 }
@@ -37,7 +37,7 @@ func newLatencies(inits ...func(m *latencies)) *latencies {
 
 func newLatenciesCap(l int) *latencies {
 	return &latencies{
-		theMap: make(map[string]latency, l),
+		theMap: make(map[location]latency, l),
 	}
 }
 
@@ -53,7 +53,7 @@ func (m *latencies) Len() int {
 	return len(m.theMap)
 }
 
-func (m *latencies) Get(k string) (latency, bool) {
+func (m *latencies) Get(k location) (latency, bool) {
 	v, ok := m.theMap[k]
 	return v, ok
 }
@@ -74,7 +74,7 @@ func (m *latencies) AsMutable() *latencies {
 }
 
 func (m *latencies) dup() *latencies {
-	resMap := make(map[string]latency, len(m.theMap))
+	resMap := make(map[location]latency, len(m.theMap))
 
 	for k := range m.theMap {
 		resMap[k] = m.theMap[k]
@@ -100,7 +100,7 @@ func (m *latencies) AsImmutable(v *latencies) *latencies {
 	return m
 }
 
-func (m *latencies) Range() map[string]latency {
+func (m *latencies) Range() map[location]latency {
 	if m == nil {
 		return nil
 	}
@@ -125,7 +125,7 @@ func (m *latencies) WithImmutable(f func(mi *latencies)) *latencies {
 	return m
 }
 
-func (m *latencies) Set(k string, v latency) *latencies {
+func (m *latencies) Set(k location, v latency) *latencies {
 	if m.mutable {
 		m.theMap[k] = v
 		return m
@@ -137,7 +137,7 @@ func (m *latencies) Set(k string, v latency) *latencies {
 	return res
 }
 
-func (m *latencies) Del(k string) *latencies {
+func (m *latencies) Del(k location) *latencies {
 	if _, ok := m.theMap[k]; !ok {
 		return m
 	}
