@@ -15,8 +15,8 @@ func (i *ImmExamplesDef) ShouldComponentUpdateIntf(nextProps, prevState, nextSta
 // SetState is an auto-generated proxy proxy to update the state for the
 // ImmExamples component.  SetState does not immediately mutate i.State()
 // but creates a pending state transition.
-func (i *ImmExamplesDef) SetState(s ImmExamplesState) {
-	i.ComponentDef.SetState(s)
+func (i *ImmExamplesDef) SetState(state ImmExamplesState) {
+	i.ComponentDef.SetState(state)
 }
 
 // State is an auto-generated proxy to return the current state in use for the
@@ -36,6 +36,6 @@ func (i *ImmExamplesDef) GetInitialStateIntf() react.State {
 	return i.GetInitialState()
 }
 
-func (i ImmExamplesState) EqualsIntf(v interface{}) bool {
-	return i == v.(ImmExamplesState)
+func (i ImmExamplesState) EqualsIntf(val interface{}) bool {
+	return i == val.(ImmExamplesState)
 }

@@ -19,8 +19,8 @@ func (h *HelloMessageDef) Props() HelloMessageProps {
 	return uprops.(HelloMessageProps)
 }
 
-func (h HelloMessageProps) EqualsIntf(v interface{}) bool {
-	return h == v.(HelloMessageProps)
+func (h HelloMessageProps) EqualsIntf(val interface{}) bool {
+	return h == val.(HelloMessageProps)
 }
 
 var _ react.Equals = HelloMessageProps{}

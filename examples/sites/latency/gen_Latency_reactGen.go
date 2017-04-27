@@ -15,8 +15,8 @@ func (l *LatencyDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState i
 // SetState is an auto-generated proxy proxy to update the state for the
 // Latency component.  SetState does not immediately mutate l.State()
 // but creates a pending state transition.
-func (l *LatencyDef) SetState(s LatencyState) {
-	l.ComponentDef.SetState(s)
+func (l *LatencyDef) SetState(state LatencyState) {
+	l.ComponentDef.SetState(state)
 }
 
 // State is an auto-generated proxy to return the current state in use for the
@@ -36,6 +36,6 @@ func (l *LatencyDef) GetInitialStateIntf() react.State {
 	return LatencyState{}
 }
 
-func (l LatencyState) EqualsIntf(v interface{}) bool {
-	return l == v.(LatencyState)
+func (l LatencyState) EqualsIntf(val interface{}) bool {
+	return l == val.(LatencyState)
 }

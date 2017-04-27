@@ -15,8 +15,8 @@ func (t *TimerDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState int
 // SetState is an auto-generated proxy proxy to update the state for the
 // Timer component.  SetState does not immediately mutate t.State()
 // but creates a pending state transition.
-func (t *TimerDef) SetState(s TimerState) {
-	t.ComponentDef.SetState(s)
+func (t *TimerDef) SetState(state TimerState) {
+	t.ComponentDef.SetState(state)
 }
 
 // State is an auto-generated proxy to return the current state in use for the
@@ -36,6 +36,6 @@ func (t *TimerDef) GetInitialStateIntf() react.State {
 	return TimerState{}
 }
 
-func (t TimerState) EqualsIntf(v interface{}) bool {
-	return t == v.(TimerState)
+func (t TimerState) EqualsIntf(val interface{}) bool {
+	return t == val.(TimerState)
 }

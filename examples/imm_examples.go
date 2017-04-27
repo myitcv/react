@@ -58,35 +58,29 @@ func (p *ImmExamplesDef) GetInitialState() ImmExamplesState {
 
 // Render renders the ImmExamples component
 func (p *ImmExamplesDef) Render() r.Element {
-	toRender := []r.Element{
-		r.H3(nil, r.S("Reference")),
-		r.P(nil, r.S("This entire page is a React application. An outer "), r.Code(nil, r.S("ImmExamples")), r.S(" component contains a number of inner components.")),
-		r.P(nil,
-			r.S("For the source code, raising issues, questions etc, please see "),
-			r.A(
-				&r.AProps{
-					Href:   "https://github.com/myitcv/react/tree/master/examples",
-					Target: "_blank",
-				},
-				r.S("the Github repo"),
-			),
-			r.S("."),
-		),
-		r.P(nil,
-			r.S("Note the examples below show the GopherJS source code from "), r.Code(nil, r.S("master")),
-		),
+
+	return r.Div(&r.DivProps{ClassName: "container"},
+		r.Div(&r.DivProps{DangerouslySetInnerHTML: r.DangerousInnerHTML(`
+		<h3>Using immutable data structures</h3>
+
+		<p>This page focuses on using <a href="https://myitcv.io/immutable"><code>myitcv.io/immutable</code></a>
+		(specifically <a href="https://github.com/myitcv/immutable/wiki/immutableGen"><code>immutableGen</code></a>) to
+		help make building components easier. The pattern of immutable data structures lends itself well to React's style
+		of composition.</p>
+
+		<p>For the source code, raising issues, questions etc, please see
+		<a href="https://github.com/myitcv/react/tree/master/examples" target="_blank">the Github repo</a>.</p>
+
+		<p>Note the examples below show the Go source code from <code>master</code>.</p>
+		`)}),
 
 		p.renderExample(
 			exampleImmTodo,
-			r.Span(nil, r.S("An Application using "), r.Code(nil, r.S("myitcv.io/immutable"))),
+			r.Span(nil, r.S("A simple TODO app")),
 			r.P(nil, r.S("The immtodoapp.TodoApp component is a reimplementation of todoapp.TodoApp using immutable data structures.")),
 			"n/a",
 			immtodoapp.TodoApp(),
 		),
-	}
-
-	return r.Div(&r.DivProps{ClassName: "container"},
-		toRender...,
 	)
 }
 

@@ -78,20 +78,21 @@ func (p *ExamplesDef) GetInitialState() ExamplesState {
 
 // Render renders the Examples component
 func (p *ExamplesDef) Render() r.Element {
-	toRender := []r.Element{
-		r.H3(nil, r.S("Reference")),
-		r.P(nil, r.S("This entire page is a React application. An outer "), r.Code(nil, r.S("Examples")), r.S(" component contains a number of inner components.")),
-		r.P(nil,
-			r.S("For the source code, raising issues, questions etc, please see "),
-			r.A(&r.AProps{
-				Href:   "https://github.com/myitcv/react/tree/master/examples",
-				Target: "_blank",
-			}, r.S("the Github repo")),
-			r.S("."),
-		),
-		r.P(nil,
-			r.S("Note the examples below show the GopherJS source code from "), r.Code(nil, r.S("master")),
-		),
+
+	return r.Div(
+		&r.DivProps{ClassName: "container"},
+
+		r.Div(&r.DivProps{DangerouslySetInnerHTML: r.DangerousInnerHTML(`
+		<h3>Introduction</h3>
+
+		<p>This entire page is a React application. An outer <code>Examples</code> component
+		contains a number of inner components.</p>
+
+		<p>For the source code, raising issues, questions etc, please see
+		<a href="https://github.com/myitcv/react/tree/master/examples" target="_blank">the Github repo</a>.</p>
+
+		<p>Note the examples below show the Go source code from <code>master</code>.</p>
+		`)}),
 
 		p.renderExample(
 			exampleHello,
@@ -145,11 +146,6 @@ func (p *ExamplesDef) Render() r.Element {
 			latencyJsx,
 			r.A(&r.AProps{Href: "../latency", Target: "_blank"}, r.S("Launch in new tab")),
 		),
-	}
-
-	return r.Div(
-		&r.DivProps{ClassName: "container"},
-		toRender...,
 	)
 }
 
