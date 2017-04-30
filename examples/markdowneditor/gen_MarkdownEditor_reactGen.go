@@ -15,8 +15,8 @@ func (m *MarkdownEditorDef) ShouldComponentUpdateIntf(nextProps, prevState, next
 // SetState is an auto-generated proxy proxy to update the state for the
 // MarkdownEditor component.  SetState does not immediately mutate m.State()
 // but creates a pending state transition.
-func (m *MarkdownEditorDef) SetState(s MarkdownEditorState) {
-	m.ComponentDef.SetState(s)
+func (m *MarkdownEditorDef) SetState(state MarkdownEditorState) {
+	m.ComponentDef.SetState(state)
 }
 
 // State is an auto-generated proxy to return the current state in use for the
@@ -36,6 +36,6 @@ func (m *MarkdownEditorDef) GetInitialStateIntf() react.State {
 	return m.GetInitialState()
 }
 
-func (m MarkdownEditorState) EqualsIntf(v interface{}) bool {
-	return m == v.(MarkdownEditorState)
+func (m MarkdownEditorState) EqualsIntf(val interface{}) bool {
+	return m == val.(MarkdownEditorState)
 }

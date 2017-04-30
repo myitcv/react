@@ -234,8 +234,8 @@ func ({{.Recv}} *{{.Name}}Def) ShouldComponentUpdateIntf(nextProps, prevState, n
 // SetState is an auto-generated proxy proxy to update the state for the
 // {{.Name}} component.  SetState does not immediately mutate {{.Recv}}.State()
 // but creates a pending state transition.
-func ({{.Recv}} *{{.Name}}Def) SetState(s {{.Name}}State) {
-	{{.Recv}}.ComponentDef.SetState(s)
+func ({{.Recv}} *{{.Name}}Def) SetState(state {{.Name}}State) {
+	{{.Recv}}.ComponentDef.SetState(state)
 }
 
 // State is an auto-generated proxy to return the current state in use for the
@@ -259,11 +259,11 @@ func ({{.Recv}} *{{.Name}}Def) GetInitialStateIntf() react.State {
 {{end -}}
 }
 
-func ({{.Recv}} {{.Name}}State) EqualsIntf(v interface{}) bool {
+func ({{.Recv}} {{.Name}}State) EqualsIntf(val interface{}) bool {
 	{{if .StateHasEquals -}}
-	return {{.Recv}}.Equals(v.({{.Name}}State))
+	return {{.Recv}}.Equals(val.({{.Name}}State))
 	{{else -}}
-	return {{.Recv}} == v.({{.Name}}State)
+	return {{.Recv}} == val.({{.Name}}State)
 	{{end -}}
 }
 {{end}}
@@ -279,17 +279,17 @@ func ({{.Recv}} *{{.Name}}Def) Props() {{.Name}}Props {
 {{if .HasComponentWillReceiveProps}}
 // ComponentWillReceivePropsIntf is an auto-generated proxy to
 // ComponentWillReceiveProps
-func ({{.Recv}} *{{.Name}}Def) ComponentWillReceivePropsIntf(i interface{}) {
-	ourProps := i.({{.Name}}Props)
+func ({{.Recv}} *{{.Name}}Def) ComponentWillReceivePropsIntf(val interface{}) {
+	ourProps := val.({{.Name}}Props)
 	{{.Recv}}.ComponentWillReceiveProps(ourProps)
 }
 {{end}}
 
-func ({{.Recv}} {{.Name}}Props) EqualsIntf(v interface{}) bool {
+func ({{.Recv}} {{.Name}}Props) EqualsIntf(val interface{}) bool {
 	{{if .PropsHasEquals -}}
-	return {{.Recv}}.Equals(v.({{.Name}}Props))
+	return {{.Recv}}.Equals(val.({{.Name}}Props))
 	{{else -}}
-	return {{.Recv}} == v.({{.Name}}Props)
+	return {{.Recv}} == val.({{.Name}}Props)
 	{{end -}}
 }
 

@@ -10,6 +10,7 @@ type tab uint32
 const (
 	tabShowcase tab = iota
 	tabImmutable
+	tabGlobalState
 )
 
 type AppDef struct {
@@ -36,6 +37,8 @@ func (a *AppDef) Render() r.Element {
 		view = examples.Examples()
 	case tabImmutable:
 		view = examples.ImmExamples()
+	case tabGlobalState:
+		view = examples.GlobalStateExamples()
 	}
 
 	return r.Div(nil,
@@ -48,8 +51,9 @@ func (a *AppDef) Render() r.Element {
 				),
 				r.Div(&r.DivProps{ClassName: "collapse navbar-collapse", ID: "navbar"},
 					r.Ul(&r.UlProps{ClassName: "nav navbar-nav"},
-						a.buildLink("Showcase", tabShowcase, tabChange{a, tabShowcase}),
+						a.buildLink("Simple", tabShowcase, tabChange{a, tabShowcase}),
 						a.buildLink("Immutable", tabImmutable, tabChange{a, tabImmutable}),
+						a.buildLink("Global State", tabGlobalState, tabChange{a, tabGlobalState}),
 					),
 				),
 			),

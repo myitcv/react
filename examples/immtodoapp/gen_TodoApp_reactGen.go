@@ -15,8 +15,8 @@ func (t *TodoAppDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState i
 // SetState is an auto-generated proxy proxy to update the state for the
 // TodoApp component.  SetState does not immediately mutate t.State()
 // but creates a pending state transition.
-func (t *TodoAppDef) SetState(s TodoAppState) {
-	t.ComponentDef.SetState(s)
+func (t *TodoAppDef) SetState(state TodoAppState) {
+	t.ComponentDef.SetState(state)
 }
 
 // State is an auto-generated proxy to return the current state in use for the
@@ -36,6 +36,6 @@ func (t *TodoAppDef) GetInitialStateIntf() react.State {
 	return t.GetInitialState()
 }
 
-func (t TodoAppState) EqualsIntf(v interface{}) bool {
-	return t == v.(TodoAppState)
+func (t TodoAppState) EqualsIntf(val interface{}) bool {
+	return t == val.(TodoAppState)
 }
