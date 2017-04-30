@@ -14,6 +14,8 @@ type TextAreaDef struct {
 type _TextAreaProps struct {
 	*BasicHTMLElement
 
+	Rows         uint   `js:"rows"`
+	Cols         uint   `js:"cols"`
 	Placeholder  string `js:"placeholder"`
 	Value        string `js:"value"`
 	DefaultValue string `js:"defaultValue" react:"omitempty"`
