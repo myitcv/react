@@ -5,6 +5,7 @@ package react
 // TextAreaProps defines the properties for the <textarea> element
 type TextAreaProps struct {
 	ClassName               string
+	Cols                    uint
 	DangerouslySetInnerHTML *DangerousInnerHTMLDef
 	DefaultValue            string
 	ID                      string
@@ -15,6 +16,7 @@ type TextAreaProps struct {
 
 	Placeholder string
 	Role        string
+	Rows        uint
 	Style       *CSS
 	Value       string
 }
@@ -22,6 +24,8 @@ type TextAreaProps struct {
 func (t *TextAreaProps) assign(v *_TextAreaProps) {
 
 	v.ClassName = t.ClassName
+
+	v.Cols = t.Cols
 
 	v.DangerouslySetInnerHTML = t.DangerouslySetInnerHTML
 
@@ -48,6 +52,8 @@ func (t *TextAreaProps) assign(v *_TextAreaProps) {
 	v.Placeholder = t.Placeholder
 
 	v.Role = t.Role
+
+	v.Rows = t.Rows
 
 	// TODO: until we have a resolution on
 	// https://github.com/gopherjs/gopherjs/issues/236
