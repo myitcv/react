@@ -29,7 +29,7 @@ func Span(props *SpanProps, children ...Element) *SpanDef {
 		props.assign(rProps)
 	}
 
-	args := []interface{}{"p", rProps}
+	args := []interface{}{"span", rProps}
 
 	for _, v := range children {
 		args = append(args, elementToReactObj(v))

@@ -19,7 +19,7 @@ func (d *H1Def) reactElement() {}
 
 // H1 creates a new instance of a <h1> element with the provided props and
 // child
-func H1(props *H1Props, child Element) *H1Def {
+func H1(props *H1Props, children ...Element) *H1Def {
 
 	rProps := &_H1Props{
 		BasicHTMLElement: newBasicHTMLElement(),
@@ -29,7 +29,13 @@ func H1(props *H1Props, child Element) *H1Def {
 		props.assign(rProps)
 	}
 
-	underlying := react.Call("createElement", "h1", rProps, elementToReactObj(child))
+	args := []interface{}{"h1", rProps}
+
+	for _, v := range children {
+		args = append(args, elementToReactObj(v))
+	}
+
+	underlying := react.Call("createElement", args...)
 
 	return &H1Def{underlying: underlying}
 }

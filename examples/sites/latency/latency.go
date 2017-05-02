@@ -8,6 +8,7 @@ import (
 
 	"honnef.co/go/js/dom"
 	r "myitcv.io/react"
+	"myitcv.io/react/jsx"
 )
 
 //go:generate reactGen
@@ -74,18 +75,22 @@ func (l *LatencyDef) Render() r.Element {
 
 	return r.Div(&r.DivProps{ClassName: "App"},
 		r.Div(&r.DivProps{ClassName: "Content center full column"},
-			r.Div(&r.DivProps{ClassName: "Title margin center", DangerouslySetInnerHTML: r.DangerousInnerHTML(`
-				<span class="text">Latency</span>
-				<span class="subtext">Global latency testing tool</span>
-			`)}),
+			jsx.HTMLElem(`
+			<div className="Title margin center">
+				<span className="text">Latency</span>
+				<span className="subtext">Global latency testing tool</span>
+			</div>
+			`),
 			c,
-			r.Div(&r.DivProps{ClassName: "Title margin center", DangerouslySetInnerHTML: r.DangerousInnerHTML(`
+			jsx.HTMLElem(`
+			<div className="Title margin center">
 				<br/>
-				<span class="subtext" style="font-size:smaller; font-style: italic">(randomly generated results)</span>
-				<span class="subtext" style="font-size:smaller; font-style: italic">
-					Real, original version <a href="https://latency.apex.sh/", target="_blank">https://latency.apex.sh/</a>
+				<span className="subtext" style="font-size:smaller; font-style: italic">(randomly generated results)</span>
+				<span className="subtext" style="font-size:smaller; font-style: italic">
+					Real, original version <a href="https://latency.apex.sh/" target="_blank">https://latency.apex.sh/</a>
 				</span>
-			`)}),
+			</div>
+			`),
 		),
 	)
 }
