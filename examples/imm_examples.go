@@ -5,6 +5,7 @@ import (
 	"myitcv.io/highlightjs"
 	r "myitcv.io/react"
 	"myitcv.io/react/examples/immtodoapp"
+	"myitcv.io/react/jsx"
 )
 
 // ImmExamplesDef is the definition of the ImmExamples component
@@ -58,9 +59,7 @@ func (p *ImmExamplesDef) GetInitialState() ImmExamplesState {
 
 // Render renders the ImmExamples component
 func (p *ImmExamplesDef) Render() r.Element {
-
-	return r.Div(&r.DivProps{ClassName: "container"},
-		r.Div(&r.DivProps{DangerouslySetInnerHTML: r.DangerousInnerHTML(`
+	dc := jsx.HTML(`
 		<h3>Using immutable data structures</h3>
 
 		<p>This page focuses on using <a href="https://myitcv.io/immutable"><code>myitcv.io/immutable</code></a>
@@ -72,8 +71,9 @@ func (p *ImmExamplesDef) Render() r.Element {
 		<a href="https://github.com/myitcv/react/tree/master/examples" target="_blank">the Github repo</a>.</p>
 
 		<p>Note the examples below show the Go source code from <code>master</code>.</p>
-		`)}),
+		`)
 
+	dc = append(dc,
 		p.renderExample(
 			exampleImmTodo,
 			r.Span(nil, r.S("A simple TODO app")),
@@ -81,6 +81,10 @@ func (p *ImmExamplesDef) Render() r.Element {
 			"n/a",
 			immtodoapp.TodoApp(),
 		),
+	)
+
+	return r.Div(&r.DivProps{ClassName: "container"},
+		dc...,
 	)
 }
 

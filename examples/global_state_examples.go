@@ -2,7 +2,6 @@ package examples
 
 import (
 	"honnef.co/go/js/xhr"
-	"myitcv.io/highlightjs"
 	r "myitcv.io/react"
 )
 
@@ -80,100 +79,4 @@ func (p *GlobalStateExamplesDef) Render() r.Element {
 		Github repo</a>.
 		`)}),
 	)
-}
-
-func (p *GlobalStateExamplesDef) renderExample(key exampleKey, title, msg r.Element, jsxSrc string, elem r.Element) r.Element {
-
-	var goSrc string
-	src, _ := p.State().examples.Get(key)
-	if src != nil {
-		goSrc = src.src()
-	}
-
-	var code *r.DangerousInnerHTMLDef
-	switch v, _ := p.State().selectedTabs.Get(key); v {
-	case tabGo:
-		code = r.DangerousInnerHTML(highlightjs.Highlight("go", goSrc, true).Value)
-	case tabJsx:
-		code = r.DangerousInnerHTML(highlightjs.Highlight("javascript", jsxSrc, true).Value)
-	}
-
-	return r.Div(nil,
-		r.H3(nil, title),
-		msg,
-		r.Div(&r.DivProps{ClassName: "row"},
-			r.Div(&r.DivProps{ClassName: "col-md-8"},
-				r.Div(&r.DivProps{ClassName: "panel panel-default with-nav-tabs"},
-					r.Div(&r.DivProps{ClassName: "panel-heading"},
-						r.Ul(
-							&r.UlProps{ClassName: "nav nav-tabs"},
-
-							p.buildExampleNavTab(key, tabGo, "GopherJS"),
-							p.buildExampleNavTab(key, tabJsx, "JSX"),
-						),
-					),
-					r.Div(&r.DivProps{ClassName: "panel-body"},
-						r.Pre(&r.PreProps{
-							Style: &r.CSS{
-								MaxHeight: "400px",
-							},
-							DangerouslySetInnerHTML: code,
-						}),
-					),
-				),
-			),
-			r.Div(&r.DivProps{ClassName: "col-md-4"},
-				plainPanel(elem),
-			),
-		),
-	)
-}
-
-func (p *GlobalStateExamplesDef) buildExampleNavTab(key exampleKey, t tab, title string) *r.LiDef {
-	lip := &r.LiProps{Role: "presentation"}
-
-	if v, _ := p.State().selectedTabs.Get(key); v == t {
-		lip.ClassName = "active"
-	}
-
-	return r.Li(
-		lip,
-		r.A(
-			&r.AProps{Href: "#", OnClick: gsTabChange{p, key, t}},
-			r.S(title),
-		),
-	)
-
-}
-
-type gsTabChange struct {
-	e   *GlobalStateExamplesDef
-	key exampleKey
-	t   tab
-}
-
-func (tc gsTabChange) OnClick(e *r.SyntheticMouseEvent) {
-	p := tc.e
-	key := tc.key
-	t := tc.t
-
-	cts := p.State().selectedTabs
-	newSt := p.State()
-
-	newSt.selectedTabs = cts.Set(key, t)
-	p.SetState(newSt)
-
-	e.PreventDefault()
-}
-
-func (p *GlobalStateExamplesDef) handleTabChange(key exampleKey, t tab) func(*r.SyntheticMouseEvent) {
-	return func(e *r.SyntheticMouseEvent) {
-		cts := p.State().selectedTabs
-		newSt := p.State()
-
-		newSt.selectedTabs = cts.Set(key, t)
-		p.SetState(newSt)
-
-		e.PreventDefault()
-	}
 }

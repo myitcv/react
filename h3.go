@@ -17,8 +17,10 @@ type _H3Props struct {
 
 func (d *H3Def) reactElement() {}
 
-// H3 creates a new instance of a <h3> element with the provided props
-func H3(props *H3Props, child Element) *H3Def {
+// H3 creates a new instance of a <h3> element with the provided props and
+// child
+func H3(props *H3Props, children ...Element) *H3Def {
+
 	rProps := &_H3Props{
 		BasicHTMLElement: newBasicHTMLElement(),
 	}
@@ -27,7 +29,13 @@ func H3(props *H3Props, child Element) *H3Def {
 		props.assign(rProps)
 	}
 
-	underlying := react.Call("createElement", "h3", rProps, elementToReactObj(child))
+	args := []interface{}{"h3", rProps}
+
+	for _, v := range children {
+		args = append(args, elementToReactObj(v))
+	}
+
+	underlying := react.Call("createElement", args...)
 
 	return &H3Def{underlying: underlying}
 }

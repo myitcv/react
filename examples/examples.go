@@ -11,6 +11,7 @@ import (
 	"myitcv.io/react/examples/markdowneditor"
 	"myitcv.io/react/examples/timer"
 	"myitcv.io/react/examples/todoapp"
+	"myitcv.io/react/jsx"
 )
 
 //go:generate reactGen
@@ -78,11 +79,7 @@ func (p *ExamplesDef) GetInitialState() ExamplesState {
 
 // Render renders the Examples component
 func (p *ExamplesDef) Render() r.Element {
-
-	return r.Div(
-		&r.DivProps{ClassName: "container"},
-
-		r.Div(&r.DivProps{DangerouslySetInnerHTML: r.DangerousInnerHTML(`
+	dc := jsx.HTML(`
 		<h3>Introduction</h3>
 
 		<p>This entire page is a React application. An outer <code>Examples</code> component
@@ -92,8 +89,9 @@ func (p *ExamplesDef) Render() r.Element {
 		<a href="https://github.com/myitcv/react/tree/master/examples" target="_blank">the Github repo</a>.</p>
 
 		<p>Note the examples below show the Go source code from <code>master</code>.</p>
-		`)}),
+		`)
 
+	dc = append(dc,
 		p.renderExample(
 			exampleHello,
 			r.S("A Simple Example"),
@@ -146,6 +144,10 @@ func (p *ExamplesDef) Render() r.Element {
 			latencyJsx,
 			r.A(&r.AProps{Href: "../latency", Target: "_blank"}, r.S("Launch in new tab")),
 		),
+	)
+
+	return r.Div(&r.DivProps{ClassName: "container"},
+		dc...,
 	)
 }
 
