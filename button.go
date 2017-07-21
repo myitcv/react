@@ -21,7 +21,7 @@ func (d *ButtonDef) reactElement() {}
 
 // Button creates a new instance of a <button> element with the provided props
 // and child
-func Button(props *ButtonProps, child Element) *ButtonDef {
+func Button(props *ButtonProps, children ...Element) *ButtonDef {
 
 	rProps := &_ButtonProps{
 		BasicHTMLElement: newBasicHTMLElement(),
@@ -31,7 +31,11 @@ func Button(props *ButtonProps, child Element) *ButtonDef {
 		props.assign(rProps)
 	}
 
-	args := []interface{}{"button", rProps, elementToReactObj(child)}
+	args := []interface{}{"button", rProps}
+
+	for _, v := range children {
+		args = append(args, elementToReactObj(v))
+	}
 
 	underlying := react.Call("createElement", args...)
 
