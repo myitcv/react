@@ -24,6 +24,8 @@ var attrs = map[string]typ{
 	"FontStyle": typ{"fontStyle", "string"},
 	"Height":    typ{"height", "string"},
 	"MaxHeight": typ{"maxHeight", "string"},
+	"MarginTop": typ{"marginTop", "string"},
+	"OverflowY": typ{"overflowY", "string"},
 	"MinHeight": typ{"minHeight", "string"},
 	"Overflow":  typ{"overflow", "string"},
 	"Resize":    typ{"resize", "string"},

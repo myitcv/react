@@ -29,6 +29,12 @@ func parseP(n *html.Node) *r.PDef {
 	return r.P(nil, kids...)
 }
 
+func parseHR(n *html.Node) *r.HRDef {
+	// TODO attributes
+
+	return r.HR(nil)
+}
+
 func parseBR(n *html.Node) *r.BRDef {
 	// TODO attributes
 
@@ -74,6 +80,60 @@ func parseSpan(n *html.Node) *r.SpanDef {
 	return r.Span(vp, kids...)
 }
 
+func parseI(n *html.Node) *r.IDef {
+	var kids []r.Element
+
+	var vp *r.IProps
+
+	if len(n.Attr) > 0 {
+		vp = new(r.IProps)
+
+		for _, a := range n.Attr {
+			switch a.Key {
+			case "id":
+				vp.ID = a.Val
+			case "classname":
+				vp.ClassName = a.Val
+			default:
+				panic(fmt.Errorf("don't know how to handle <i> attribute %q", a.Key))
+			}
+		}
+	}
+
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		kids = append(kids, parse(c))
+	}
+
+	return r.I(vp, kids...)
+}
+
+func parseFooter(n *html.Node) *r.FooterDef {
+	var kids []r.Element
+
+	var vp *r.FooterProps
+
+	if len(n.Attr) > 0 {
+		vp = new(r.FooterProps)
+
+		for _, a := range n.Attr {
+			switch a.Key {
+			case "id":
+				vp.ID = a.Val
+			case "classname":
+				vp.ClassName = a.Val
+			default:
+				panic(fmt.Errorf("don't know how to handle <footer> attribute %q", a.Key))
+			}
+		}
+	}
+
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		kids = append(kids, parse(c))
+	}
+
+	return r.Footer(vp, kids...)
+}
+
 func parseDiv(n *html.Node) *r.DivDef {
 	var kids []r.Element
 
@@ -84,6 +144,37 @@ func parseDiv(n *html.Node) *r.DivDef {
 
 		for _, a := range n.Attr {
 			switch a.Key {
+			case "id":
+				vp.ID = a.Val
+			case "classname":
+				vp.ClassName = a.Val
+			case "style":
+				vp.Style = parseCSS(a.Val)
+			default:
+				panic(fmt.Errorf("don't know how to handle <div> attribute %q", a.Key))
+			}
+		}
+	}
+
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		kids = append(kids, parse(c))
+	}
+
+	return r.Div(vp, kids...)
+}
+
+func parseButton(n *html.Node) *r.ButtonDef {
+	var kids []r.Element
+
+	var vp *r.ButtonProps
+
+	if len(n.Attr) > 0 {
+		vp = new(r.ButtonProps)
+
+		for _, a := range n.Attr {
+			switch a.Key {
+			case "id":
+				vp.ID = a.Val
 			case "classname":
 				vp.ClassName = a.Val
 			default:
@@ -96,7 +187,7 @@ func parseDiv(n *html.Node) *r.DivDef {
 		kids = append(kids, parse(c))
 	}
 
-	return r.Div(vp, kids...)
+	return r.Button(vp, kids...)
 }
 
 func parseCode(n *html.Node) *r.CodeDef {
@@ -121,6 +212,33 @@ func parseH3(n *html.Node) *r.H3Def {
 	}
 
 	return r.H3(nil, kids...)
+}
+
+func parseImg(n *html.Node) *r.ImgDef {
+	var kids []r.Element
+
+	var vp *r.ImgProps
+
+	if len(n.Attr) > 0 {
+		vp = new(r.ImgProps)
+
+		for _, a := range n.Attr {
+			switch a.Key {
+			case "src":
+				vp.Src = a.Val
+			case "style":
+				vp.Style = parseCSS(a.Val)
+			default:
+				panic(fmt.Errorf("don't know how to handle <img> attribute %q", a.Key))
+			}
+		}
+	}
+
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		kids = append(kids, parse(c))
+	}
+
+	return r.Img(vp, kids...)
 }
 
 func parseA(n *html.Node) *r.ADef {
@@ -169,6 +287,10 @@ func parseCSS(s string) *r.CSS {
 		v = strings.Trim(v, "\"")
 
 		switch k {
+		case "overflow-y":
+			res.OverflowY = v
+		case "margin-top":
+			res.MarginTop = v
 		case "font-size":
 			res.FontSize = v
 		case "font-style":
@@ -200,14 +322,24 @@ func parse(n *html.Node) r.Element {
 		return parseCode(n)
 	case "h3":
 		return parseH3(n)
+	case "img":
+		return parseImg(n)
 	case "a":
 		return parseA(n)
+	case "footer":
+		return parseFooter(n)
 	case "div":
 		return parseDiv(n)
 	case "span":
 		return parseSpan(n)
+	case "hr":
+		return parseHR(n)
 	case "br":
 		return parseBR(n)
+	case "button":
+		return parseButton(n)
+	case "i":
+		return parseI(n)
 	default:
 		panic(fmt.Errorf("cannot handle Element %v", n.Data))
 	}

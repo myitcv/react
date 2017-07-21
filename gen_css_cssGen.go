@@ -13,9 +13,11 @@ type CSS struct {
 	FontSize  string
 	FontStyle string
 	Height    string
+	MarginTop string
 	MaxHeight string
 	MinHeight string
 	Overflow  string
+	OverflowY string
 	Resize    string
 	Width     string
 }
@@ -33,9 +35,11 @@ func (c *CSS) hack() *CSS {
 	o.Set("fontSize", c.FontSize)
 	o.Set("fontStyle", c.FontStyle)
 	o.Set("height", c.Height)
+	o.Set("marginTop", c.MarginTop)
 	o.Set("maxHeight", c.MaxHeight)
 	o.Set("minHeight", c.MinHeight)
 	o.Set("overflow", c.Overflow)
+	o.Set("overflowY", c.OverflowY)
 	o.Set("resize", c.Resize)
 	o.Set("width", c.Width)
 
