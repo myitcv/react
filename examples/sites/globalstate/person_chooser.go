@@ -29,13 +29,11 @@ type PersonChooserState struct {
 	currPersonSub *state.Sub
 }
 
-func PersonChooser(props PersonChooserProps) *PersonChooserDef {
-	res := new(PersonChooserDef)
-	r.BlessElement(res, props)
-	return res
+func PersonChooser(props PersonChooserProps) *PersonChooserElem {
+	return &PersonChooserElem{Element: r.CreateElement(buildPersonChooser, props)}
 }
 
-func (p *PersonChooserDef) ComponentWillMount() {
+func (p PersonChooserDef) ComponentWillMount() {
 	sub := p.Props().PersonState.Subscribe(p.personStateChanged)
 	st := p.State()
 	st.currPersonSub = sub
@@ -43,11 +41,11 @@ func (p *PersonChooserDef) ComponentWillMount() {
 	p.SetState(st)
 }
 
-func (p *PersonChooserDef) ComponentWillUnmount() {
+func (p PersonChooserDef) ComponentWillUnmount() {
 	p.State().currPersonSub.Clear()
 }
 
-func (p *PersonChooserDef) Render() r.Element {
+func (p PersonChooserDef) Render() r.Element {
 
 	ppl := sortPeopleKeysByName(state.State.Root().People().Get())
 
@@ -66,7 +64,7 @@ func (p *PersonChooserDef) Render() r.Element {
 	)
 }
 
-func (p *PersonChooserDef) personStateChanged() {
+func (p PersonChooserDef) personStateChanged() {
 	s := p.State()
 	s.currPerson = p.Props().PersonState.Get()
 	p.SetState(s)
@@ -89,7 +87,7 @@ func (p personLabel) Label() string {
 	return p.Person.Name()
 }
 
-type personSelected struct{ *PersonChooserDef }
+type personSelected struct{ PersonChooserDef }
 
 func (p personSelected) OnSelect(l c.Label) {
 	pl := l.(personLabel)

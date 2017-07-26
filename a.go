@@ -3,11 +3,9 @@
 
 package react
 
-import "github.com/gopherjs/gopherjs/js"
-
-// ADef is the React component definition corresponding to the HTML <a> element
-type ADef struct {
-	underlying *js.Object
+// AElem is the React element definition corresponding to the HTML <a> element
+type AElem struct {
+	Element
 }
 
 // _APropsDef defines the properties for the <a> element
@@ -18,11 +16,9 @@ type _AProps struct {
 	Href   string `js:"href"`
 }
 
-func (d *ADef) reactElement() {}
-
 // A creates a new instance of a <a> element with the provided props and
 // children
-func A(props *AProps, children ...Element) *ADef {
+func A(props *AProps, children ...Element) *AElem {
 
 	rProps := &_AProps{
 		BasicHTMLElement: newBasicHTMLElement(),
@@ -40,5 +36,5 @@ func A(props *AProps, children ...Element) *ADef {
 
 	underlying := react.Call("createElement", args...)
 
-	return &ADef{underlying: underlying}
+	return &AElem{Element: elementHolder{elem: underlying}}
 }

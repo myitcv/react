@@ -3,11 +3,9 @@
 
 package react
 
-import "github.com/gopherjs/gopherjs/js"
-
-// PreDef is the React component definition corresponding to the HTML <pre> element
-type PreDef struct {
-	underlying *js.Object
+// PreElem is the React element definition corresponding to the HTML <pre> element
+type PreElem struct {
+	Element
 }
 
 // _PreProps defines the properties for the <pre> element
@@ -15,11 +13,9 @@ type _PreProps struct {
 	*BasicHTMLElement
 }
 
-func (d *PreDef) reactElement() {}
-
 // Pre creates a new instance of a <pre> element with the provided props and
 // children
-func Pre(props *PreProps, children ...Element) *PreDef {
+func Pre(props *PreProps, children ...Element) *PreElem {
 
 	rProps := &_PreProps{
 		BasicHTMLElement: newBasicHTMLElement(),
@@ -37,5 +33,5 @@ func Pre(props *PreProps, children ...Element) *PreDef {
 
 	underlying := react.Call("createElement", args...)
 
-	return &PreDef{underlying: underlying}
+	return &PreElem{Element: elementHolder{elem: underlying}}
 }

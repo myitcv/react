@@ -28,21 +28,19 @@ type TodoAppState struct {
 }
 
 // TodoApp creates instances of the TodoApp component
-func TodoApp() *TodoAppDef {
-	res := &TodoAppDef{}
-	r.BlessElement(res, nil)
-	return res
+func TodoApp() *TodoAppElem {
+	return &TodoAppElem{Element: r.CreateElement(buildTodoApp, nil)}
 }
 
-func (t *TodoAppDef) GetInitialState() TodoAppState {
+func (t TodoAppDef) GetInitialState() TodoAppState {
 	return TodoAppState{
 		items: new(itemS),
 	}
 }
 
 // Render renders the TodoApp component
-func (t *TodoAppDef) Render() r.Element {
-	var entries []*r.LiDef
+func (t TodoAppDef) Render() r.Element {
+	var entries []*r.LiElem
 
 	for _, v := range t.State().items.Range() {
 		entry := r.Li(nil, r.S(v.name()))
@@ -74,8 +72,8 @@ func (t *TodoAppDef) Render() r.Element {
 	)
 }
 
-type inputChange struct{ t *TodoAppDef }
-type add struct{ t *TodoAppDef }
+type inputChange struct{ t TodoAppDef }
+type add struct{ t TodoAppDef }
 
 func (i inputChange) OnChange(se *r.SyntheticEvent) {
 	target := se.Target().(*dom.HTMLInputElement)

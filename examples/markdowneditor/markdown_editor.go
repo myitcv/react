@@ -11,40 +11,38 @@ import (
 // MarkdownEditorDef is the definition of the MarkdownEditor component
 type MarkdownEditorDef struct {
 	r.ComponentDef
-
-	remark *remarkable.Remarkable
 }
 
 // MarkdownEditorState is the state type for the MarkdownEditor component
 type MarkdownEditorState struct {
-	value string
+	value  string
+	remark *remarkable.Remarkable
 }
 
 // MarkdownEditor creates instances of the MarkdownEditor component
-func MarkdownEditor() *MarkdownEditorDef {
-	res := &MarkdownEditorDef{}
-	res.remark = remarkable.NewRemarkable()
-
-	r.BlessElement(res, nil)
-
-	return res
+func MarkdownEditor() *MarkdownEditorElem {
+	return &MarkdownEditorElem{Element: r.CreateElement(buildMarkdownEditor, nil)}
 }
 
 // GetInitialState returns the initial state for a MarkdownEditor component
-func (m *MarkdownEditorDef) GetInitialState() MarkdownEditorState {
+func (m MarkdownEditorDef) GetInitialState() MarkdownEditorState {
+	remark := remarkable.NewRemarkable()
 	return MarkdownEditorState{
-		value: "Type some *markdown* here!",
+		value:  "Type some *markdown* here!",
+		remark: remark,
 	}
 }
 
 // Render renders the MarkdownEditor component
-func (m *MarkdownEditorDef) Render() r.Element {
+func (m MarkdownEditorDef) Render() r.Element {
+	val := m.State().value
+
 	return r.Div(nil,
 		r.H3(nil, r.S("Input")),
 		r.TextArea(
 			&r.TextAreaProps{
 				ClassName: "form-control",
-				Value:     m.State().value,
+				Value:     val,
 				OnChange:  inputChange{m},
 			},
 		),
@@ -58,16 +56,19 @@ func (m *MarkdownEditorDef) Render() r.Element {
 	)
 }
 
-func (m *MarkdownEditorDef) getRawMarkup() *r.DangerousInnerHTMLDef {
-	rem := m.remark.Render(m.State().value)
-
-	return r.DangerousInnerHTML(rem)
+func (m MarkdownEditorDef) getRawMarkup() *r.DangerousInnerHTML {
+	st := m.State()
+	md := st.remark.Render(st.value)
+	return r.NewDangerousInnerHTML(md)
 }
 
-type inputChange struct{ m *MarkdownEditorDef }
+type inputChange struct{ m MarkdownEditorDef }
 
 func (i inputChange) OnChange(se *r.SyntheticEvent) {
-	target := se.Target().(*dom.HTMLTextAreaElement)
+	st := i.m.State()
 
-	i.m.SetState(MarkdownEditorState{value: target.Value})
+	target := se.Target().(*dom.HTMLTextAreaElement)
+	st.value = target.Value
+
+	i.m.SetState(st)
 }

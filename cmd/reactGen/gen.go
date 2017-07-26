@@ -153,7 +153,7 @@ func dogen(dir, license string) {
 						}
 						g.pointMeths[id.Name] = append(g.pointMeths[id.Name], funcFile{d, file})
 					case *ast.Ident:
-						g.nonPointMeths[v.Name] = append(g.pointMeths[v.Name], funcFile{d, file})
+						g.nonPointMeths[v.Name] = append(g.nonPointMeths[v.Name], funcFile{d, file})
 					}
 
 				case *ast.GenDecl:

@@ -3,11 +3,9 @@
 
 package react
 
-import "github.com/gopherjs/gopherjs/js"
-
-// TextAreaDef is the React component definition corresponding to the HTML <textarea> element
-type TextAreaDef struct {
-	underlying *js.Object
+// TextAreaElem is the React element definition corresponding to the HTML <textarea> element
+type TextAreaElem struct {
+	Element
 }
 
 // _TextAreaProps defines the properties for the <textarea> element
@@ -21,11 +19,9 @@ type _TextAreaProps struct {
 	DefaultValue string `js:"defaultValue" react:"omitempty"`
 }
 
-func (d *TextAreaDef) reactElement() {}
-
 // TextArea creates a new instance of a <textarea> element with the provided props and
 // children
-func TextArea(props *TextAreaProps, children ...Element) *TextAreaDef {
+func TextArea(props *TextAreaProps, children ...Element) *TextAreaElem {
 
 	rProps := &_TextAreaProps{
 		BasicHTMLElement: newBasicHTMLElement(),
@@ -43,5 +39,5 @@ func TextArea(props *TextAreaProps, children ...Element) *TextAreaDef {
 
 	underlying := react.Call("createElement", args...)
 
-	return &TextAreaDef{underlying: underlying}
+	return &TextAreaElem{Element: elementHolder{elem: underlying}}
 }

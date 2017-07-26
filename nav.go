@@ -3,11 +3,9 @@
 
 package react
 
-import "github.com/gopherjs/gopherjs/js"
-
-// NavDef is the React component definition corresponding to the HTML <nav> element
-type NavDef struct {
-	underlying *js.Object
+// NavElem is the React element definition corresponding to the HTML <nav> element
+type NavElem struct {
+	Element
 }
 
 // _NavProps defines the properties for the <nav> element
@@ -15,10 +13,8 @@ type _NavProps struct {
 	*BasicHTMLElement
 }
 
-func (d *NavDef) reactElement() {}
-
 // Nav creates a new instance of a <nav> element with the provided props and children
-func Nav(props *NavProps, children ...Element) *NavDef {
+func Nav(props *NavProps, children ...Element) *NavElem {
 
 	rProps := &_NavProps{
 		BasicHTMLElement: newBasicHTMLElement(),
@@ -36,5 +32,5 @@ func Nav(props *NavProps, children ...Element) *NavDef {
 
 	underlying := react.Call("createElement", args...)
 
-	return &NavDef{underlying: underlying}
+	return &NavElem{Element: elementHolder{elem: underlying}}
 }

@@ -3,11 +3,9 @@
 
 package react
 
-import "github.com/gopherjs/gopherjs/js"
-
-// UlDef is the React component definition corresponding to the HTML <ul> element
-type UlDef struct {
-	underlying *js.Object
+// UlElem is the React element definition corresponding to the HTML <ul> element
+type UlElem struct {
+	Element
 }
 
 // _UlProps defines the properties for the <ul> element
@@ -15,11 +13,9 @@ type _UlProps struct {
 	*BasicHTMLElement
 }
 
-func (d *UlDef) reactElement() {}
-
 // Ul creates a new instance of a <ul> element with the provided props and <li>
 // children
-func Ul(props *UlProps, children ...*LiDef) *UlDef {
+func Ul(props *UlProps, children ...*LiElem) *UlElem {
 
 	rProps := &_UlProps{
 		BasicHTMLElement: newBasicHTMLElement(),
@@ -37,5 +33,5 @@ func Ul(props *UlProps, children ...*LiDef) *UlDef {
 
 	underlying := react.Call("createElement", args...)
 
-	return &UlDef{underlying: underlying}
+	return &UlElem{Element: elementHolder{elem: underlying}}
 }

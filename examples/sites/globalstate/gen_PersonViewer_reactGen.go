@@ -4,7 +4,11 @@ package main
 
 import "myitcv.io/react"
 
-func (p *PersonViewerDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+type PersonViewerElem struct {
+	react.Element
+}
+
+func (p PersonViewerDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
 	res := false
 
 	v := prevState.(PersonViewerState)
@@ -12,16 +16,20 @@ func (p *PersonViewerDef) ShouldComponentUpdateIntf(nextProps, prevState, nextSt
 	return res
 }
 
+func buildPersonViewer(cd react.ComponentDef) react.Component {
+	return PersonViewerDef{ComponentDef: cd}
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // PersonViewer component.  SetState does not immediately mutate p.State()
 // but creates a pending state transition.
-func (p *PersonViewerDef) SetState(state PersonViewerState) {
+func (p PersonViewerDef) SetState(state PersonViewerState) {
 	p.ComponentDef.SetState(state)
 }
 
 // State is an auto-generated proxy to return the current state in use for the
 // render of the PersonViewer component
-func (p *PersonViewerDef) State() PersonViewerState {
+func (p PersonViewerDef) State() PersonViewerState {
 	return p.ComponentDef.State().(PersonViewerState)
 }
 
@@ -32,7 +40,7 @@ func (p PersonViewerState) IsState() {}
 var _ react.State = PersonViewerState{}
 
 // GetInitialStateIntf is an auto-generated proxy to GetInitialState
-func (p *PersonViewerDef) GetInitialStateIntf() react.State {
+func (p PersonViewerDef) GetInitialStateIntf() react.State {
 	return PersonViewerState{}
 }
 

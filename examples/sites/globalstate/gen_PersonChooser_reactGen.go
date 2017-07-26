@@ -4,7 +4,11 @@ package main
 
 import "myitcv.io/react"
 
-func (p *PersonChooserDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+type PersonChooserElem struct {
+	react.Element
+}
+
+func (p PersonChooserDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
 	res := false
 
 	{
@@ -15,16 +19,20 @@ func (p *PersonChooserDef) ShouldComponentUpdateIntf(nextProps, prevState, nextS
 	return res
 }
 
+func buildPersonChooser(cd react.ComponentDef) react.Component {
+	return PersonChooserDef{ComponentDef: cd}
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // PersonChooser component.  SetState does not immediately mutate p.State()
 // but creates a pending state transition.
-func (p *PersonChooserDef) SetState(state PersonChooserState) {
+func (p PersonChooserDef) SetState(state PersonChooserState) {
 	p.ComponentDef.SetState(state)
 }
 
 // State is an auto-generated proxy to return the current state in use for the
 // render of the PersonChooser component
-func (p *PersonChooserDef) State() PersonChooserState {
+func (p PersonChooserDef) State() PersonChooserState {
 	return p.ComponentDef.State().(PersonChooserState)
 }
 
@@ -35,7 +43,7 @@ func (p PersonChooserState) IsState() {}
 var _ react.State = PersonChooserState{}
 
 // GetInitialStateIntf is an auto-generated proxy to GetInitialState
-func (p *PersonChooserDef) GetInitialStateIntf() react.State {
+func (p PersonChooserDef) GetInitialStateIntf() react.State {
 	return PersonChooserState{}
 }
 
@@ -44,7 +52,7 @@ func (p PersonChooserState) EqualsIntf(val interface{}) bool {
 }
 
 // Props is an auto-generated proxy to the current props of PersonChooser
-func (p *PersonChooserDef) Props() PersonChooserProps {
+func (p PersonChooserDef) Props() PersonChooserProps {
 	uprops := p.ComponentDef.Props()
 	return uprops.(PersonChooserProps)
 }

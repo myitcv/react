@@ -5,7 +5,7 @@ package react
 // InputProps defines the properties for the <input> element
 type InputProps struct {
 	ClassName               string
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	DangerouslySetInnerHTML *DangerousInnerHTML
 	DefaultValue            string
 	ID                      string
 	Key                     string

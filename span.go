@@ -3,11 +3,9 @@
 
 package react
 
-import "github.com/gopherjs/gopherjs/js"
-
-// SpanDef is the React component definition corresponding to the HTML <p> element
-type SpanDef struct {
-	underlying *js.Object
+// SpanElem is the React element definition corresponding to the HTML <p> element
+type SpanElem struct {
+	Element
 }
 
 // _SpanProps defines the properties for the <p> element
@@ -15,11 +13,9 @@ type _SpanProps struct {
 	*BasicHTMLElement
 }
 
-func (d *SpanDef) reactElement() {}
-
 // Span creates a new instance of a <p> element with the provided props and
 // children
-func Span(props *SpanProps, children ...Element) *SpanDef {
+func Span(props *SpanProps, children ...Element) *SpanElem {
 
 	rProps := &_SpanProps{
 		BasicHTMLElement: newBasicHTMLElement(),
@@ -37,5 +33,5 @@ func Span(props *SpanProps, children ...Element) *SpanDef {
 
 	underlying := react.Call("createElement", args...)
 
-	return &SpanDef{underlying: underlying}
+	return &SpanElem{Element: elementHolder{elem: underlying}}
 }

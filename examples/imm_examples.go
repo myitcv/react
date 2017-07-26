@@ -14,10 +14,8 @@ type ImmExamplesDef struct {
 }
 
 // ImmExamples creates instances of the ImmExamples component
-func ImmExamples() *ImmExamplesDef {
-	res := new(ImmExamplesDef)
-	r.BlessElement(res, nil)
-	return res
+func ImmExamples() *ImmExamplesElem {
+	return &ImmExamplesElem{Element: r.CreateElement(buildImmExamples, nil)}
 }
 
 // ImmExamplesState is the state type for the ImmExamples component
@@ -27,7 +25,7 @@ type ImmExamplesState struct {
 }
 
 // ComponentWillMount is a React lifecycle method for the ImmExamples component
-func (p *ImmExamplesDef) ComponentWillMount() {
+func (p ImmExamplesDef) ComponentWillMount() {
 	if !fetchStarted {
 		for i, e := range sources.Range() {
 			go func(i exampleKey, e *source) {
@@ -50,7 +48,7 @@ func (p *ImmExamplesDef) ComponentWillMount() {
 }
 
 // GetInitialState returns in the initial state for the ImmExamples component
-func (p *ImmExamplesDef) GetInitialState() ImmExamplesState {
+func (p ImmExamplesDef) GetInitialState() ImmExamplesState {
 	return ImmExamplesState{
 		examples:     sources,
 		selectedTabs: newTabS(),
@@ -58,7 +56,7 @@ func (p *ImmExamplesDef) GetInitialState() ImmExamplesState {
 }
 
 // Render renders the ImmExamples component
-func (p *ImmExamplesDef) Render() r.Element {
+func (p ImmExamplesDef) Render() r.Element {
 	dc := jsx.HTML(`
 		<h3>Using immutable data structures</h3>
 
@@ -88,7 +86,7 @@ func (p *ImmExamplesDef) Render() r.Element {
 	)
 }
 
-func (p *ImmExamplesDef) renderExample(key exampleKey, title, msg r.Element, jsxSrc string, elem r.Element) r.Element {
+func (p ImmExamplesDef) renderExample(key exampleKey, title, msg r.Element, jsxSrc string, elem r.Element) r.Element {
 
 	var goSrc string
 	src, _ := p.State().examples.Get(key)
@@ -96,12 +94,12 @@ func (p *ImmExamplesDef) renderExample(key exampleKey, title, msg r.Element, jsx
 		goSrc = src.src()
 	}
 
-	var code *r.DangerousInnerHTMLDef
+	var code *r.DangerousInnerHTML
 	switch v, _ := p.State().selectedTabs.Get(key); v {
 	case tabGo:
-		code = r.DangerousInnerHTML(highlightjs.Highlight("go", goSrc, true).Value)
+		code = r.NewDangerousInnerHTML(highlightjs.Highlight("go", goSrc, true).Value)
 	case tabJsx:
-		code = r.DangerousInnerHTML(highlightjs.Highlight("javascript", jsxSrc, true).Value)
+		code = r.NewDangerousInnerHTML(highlightjs.Highlight("javascript", jsxSrc, true).Value)
 	}
 
 	return r.Div(nil,
@@ -135,7 +133,7 @@ func (p *ImmExamplesDef) renderExample(key exampleKey, title, msg r.Element, jsx
 	)
 }
 
-func (p *ImmExamplesDef) buildExampleNavTab(key exampleKey, t tab, title string) *r.LiDef {
+func (p ImmExamplesDef) buildExampleNavTab(key exampleKey, t tab, title string) *r.LiElem {
 	lip := &r.LiProps{Role: "presentation"}
 
 	if v, _ := p.State().selectedTabs.Get(key); v == t {
@@ -153,7 +151,7 @@ func (p *ImmExamplesDef) buildExampleNavTab(key exampleKey, t tab, title string)
 }
 
 type immTabChange struct {
-	e   *ImmExamplesDef
+	e   ImmExamplesDef
 	key exampleKey
 	t   tab
 }

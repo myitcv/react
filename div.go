@@ -3,11 +3,9 @@
 
 package react
 
-import "github.com/gopherjs/gopherjs/js"
-
-// DivDef is the React component definition corresponding to the HTML <div> element
-type DivDef struct {
-	underlying *js.Object
+// DivElem is the React element definition corresponding to the HTML <div> element
+type DivElem struct {
+	Element
 }
 
 // _DivProps are the props for a <div> component
@@ -15,10 +13,8 @@ type _DivProps struct {
 	*BasicHTMLElement
 }
 
-func (d *DivDef) reactElement() {}
-
 // Div creates a new instance of a <div> element with the provided props and children
-func Div(props *DivProps, children ...Element) *DivDef {
+func Div(props *DivProps, children ...Element) *DivElem {
 
 	rProps := &_DivProps{
 		BasicHTMLElement: newBasicHTMLElement(),
@@ -36,5 +32,5 @@ func Div(props *DivProps, children ...Element) *DivDef {
 
 	underlying := react.Call("createElement", args...)
 
-	return &DivDef{underlying: underlying}
+	return &DivElem{Element: elementHolder{elem: underlying}}
 }

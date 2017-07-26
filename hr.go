@@ -3,11 +3,9 @@
 
 package react
 
-import "github.com/gopherjs/gopherjs/js"
-
-// HRDef is the React component definition corresponding to the HTML <hr> element
-type HRDef struct {
-	underlying *js.Object
+// HRElem is the React element definition corresponding to the HTML <hr> element
+type HRElem struct {
+	Element
 }
 
 // _HRProps defines the properties for the <hr> element
@@ -15,10 +13,8 @@ type _HRProps struct {
 	*BasicHTMLElement
 }
 
-func (d *HRDef) reactElement() {}
-
 // HR creates a new instance of a <hr> element with the provided props
-func HR(props *HRProps) *HRDef {
+func HR(props *HRProps) *HRElem {
 
 	rProps := &_HRProps{
 		BasicHTMLElement: newBasicHTMLElement(),
@@ -30,5 +26,5 @@ func HR(props *HRProps) *HRDef {
 
 	underlying := react.Call("createElement", "hr", rProps)
 
-	return &HRDef{underlying: underlying}
+	return &HRElem{Element: elementHolder{elem: underlying}}
 }

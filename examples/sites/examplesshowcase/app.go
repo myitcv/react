@@ -21,15 +21,11 @@ type AppState struct {
 	tab
 }
 
-func App() *AppDef {
-	res := new(AppDef)
-
-	r.BlessElement(res, nil)
-
-	return res
+func App() *AppElem {
+	return &AppElem{Element: r.CreateElement(buildApp, nil)}
 }
 
-func (a *AppDef) Render() r.Element {
+func (a AppDef) Render() r.Element {
 	var view r.Element
 
 	switch a.State().tab {
@@ -67,7 +63,7 @@ func (a *AppDef) Render() r.Element {
 }
 
 type tabChange struct {
-	a *AppDef
+	a AppDef
 	t tab
 }
 
@@ -76,7 +72,7 @@ func (tc tabChange) OnClick(e *r.SyntheticMouseEvent) {
 	e.PreventDefault()
 }
 
-func (a *AppDef) buildLink(n string, t tab, tc tabChange) *r.LiDef {
+func (a AppDef) buildLink(n string, t tab, tc tabChange) *r.LiElem {
 	var lip *r.LiProps
 
 	if a.State().tab == t {

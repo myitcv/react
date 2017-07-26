@@ -3,11 +3,9 @@
 
 package react
 
-import "github.com/gopherjs/gopherjs/js"
-
-// ImgDef is the React component definition corresponding to the HTML <Img> element
-type ImgDef struct {
-	underlying *js.Object
+// ImgElem is the React element definition corresponding to the HTML <Img> element
+type ImgElem struct {
+	Element
 }
 
 // _ImgProps are the props for a <Img> component
@@ -17,10 +15,8 @@ type _ImgProps struct {
 	Src string `js:"src"`
 }
 
-func (d *ImgDef) reactElement() {}
-
 // Img creates a new instance of a <Img> element with the provided props and children
-func Img(props *ImgProps, children ...Element) *ImgDef {
+func Img(props *ImgProps, children ...Element) *ImgElem {
 
 	rProps := &_ImgProps{
 		BasicHTMLElement: newBasicHTMLElement(),
@@ -38,5 +34,5 @@ func Img(props *ImgProps, children ...Element) *ImgDef {
 
 	underlying := react.Call("createElement", args...)
 
-	return &ImgDef{underlying: underlying}
+	return &ImgElem{Element: elementHolder{elem: underlying}}
 }

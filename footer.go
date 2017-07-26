@@ -3,11 +3,9 @@
 
 package react
 
-import "github.com/gopherjs/gopherjs/js"
-
-// FooterDef is the React component definition corresponding to the HTML <footer> element
-type FooterDef struct {
-	underlying *js.Object
+// FooterElem is the React element definition corresponding to the HTML <footer> element
+type FooterElem struct {
+	Element
 }
 
 // _FooterProps are the props for a <footer> component
@@ -15,10 +13,8 @@ type _FooterProps struct {
 	*BasicHTMLElement
 }
 
-func (d *FooterDef) reactElement() {}
-
 // Footer creates a new instance of a <footer> element with the provided props and children
-func Footer(props *FooterProps, children ...Element) *FooterDef {
+func Footer(props *FooterProps, children ...Element) *FooterElem {
 
 	rProps := &_FooterProps{
 		BasicHTMLElement: newBasicHTMLElement(),
@@ -36,5 +32,5 @@ func Footer(props *FooterProps, children ...Element) *FooterDef {
 
 	underlying := react.Call("createElement", args...)
 
-	return &FooterDef{underlying: underlying}
+	return &FooterElem{Element: elementHolder{elem: underlying}}
 }

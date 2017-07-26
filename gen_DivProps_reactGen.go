@@ -5,7 +5,7 @@ package react
 // DivProps are the props for a <div> component
 type DivProps struct {
 	ClassName               string
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	DangerouslySetInnerHTML *DangerousInnerHTML
 	ID                      string
 	Key                     string
 

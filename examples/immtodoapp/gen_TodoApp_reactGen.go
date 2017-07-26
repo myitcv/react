@@ -4,7 +4,11 @@ package immtodoapp
 
 import "myitcv.io/react"
 
-func (t *TodoAppDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+type TodoAppElem struct {
+	react.Element
+}
+
+func (t TodoAppDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
 	res := false
 
 	v := prevState.(TodoAppState)
@@ -12,16 +16,20 @@ func (t *TodoAppDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState i
 	return res
 }
 
+func buildTodoApp(cd react.ComponentDef) react.Component {
+	return TodoAppDef{ComponentDef: cd}
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // TodoApp component.  SetState does not immediately mutate t.State()
 // but creates a pending state transition.
-func (t *TodoAppDef) SetState(state TodoAppState) {
+func (t TodoAppDef) SetState(state TodoAppState) {
 	t.ComponentDef.SetState(state)
 }
 
 // State is an auto-generated proxy to return the current state in use for the
 // render of the TodoApp component
-func (t *TodoAppDef) State() TodoAppState {
+func (t TodoAppDef) State() TodoAppState {
 	return t.ComponentDef.State().(TodoAppState)
 }
 
@@ -32,7 +40,7 @@ func (t TodoAppState) IsState() {}
 var _ react.State = TodoAppState{}
 
 // GetInitialStateIntf is an auto-generated proxy to GetInitialState
-func (t *TodoAppDef) GetInitialStateIntf() react.State {
+func (t TodoAppDef) GetInitialStateIntf() react.State {
 	return t.GetInitialState()
 }
 

@@ -13,15 +13,13 @@ type AppState struct {
 	hideViewer bool
 }
 
-func App() *AppDef {
-	res := new(AppDef)
-	r.BlessElement(res, nil)
-	return res
+func App() *AppElem {
+	return &AppElem{Element: r.CreateElement(buildApp, nil)}
 }
 
-func (a *AppDef) Render() r.Element {
-	var viewer *r.DivDef
-	var showHide *r.ButtonDef
+func (a AppDef) Render() r.Element {
+	var viewer *r.DivElem
+	var showHide *r.ButtonElem
 
 	if a.State().hideViewer {
 		showHide = r.Button(
@@ -51,7 +49,7 @@ func (a *AppDef) Render() r.Element {
 }
 
 type hideClick struct {
-	*AppDef
+	AppDef
 	showHide bool
 }
 

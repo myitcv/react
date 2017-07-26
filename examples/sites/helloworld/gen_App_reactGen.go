@@ -2,8 +2,18 @@
 
 package main
 
-func (a *AppDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+import "myitcv.io/react"
+
+type AppElem struct {
+	react.Element
+}
+
+func (a AppDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
 	res := false
 
 	return res
+}
+
+func buildApp(cd react.ComponentDef) react.Component {
+	return AppDef{ComponentDef: cd}
 }

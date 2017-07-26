@@ -22,14 +22,12 @@ type TimerState struct {
 }
 
 // Timer creates instances of the Timer component
-func Timer() *TimerDef {
-	res := new(TimerDef)
-	r.BlessElement(res, nil)
-	return res
+func Timer() *TimerElem {
+	return &TimerElem{Element: r.CreateElement(buildTimer, nil)}
 }
 
 // ComponentWillMount is a React lifecycle method for the Timer component
-func (t *TimerDef) ComponentWillMount() {
+func (t TimerDef) ComponentWillMount() {
 	tick := time.NewTicker(time.Second * 1)
 
 	s := t.State()
@@ -48,12 +46,12 @@ func (t *TimerDef) ComponentWillMount() {
 	}()
 }
 
-func (t *TimerDef) ComponentWillUnmount() {
+func (t TimerDef) ComponentWillUnmount() {
 	t.State().ticker.Stop()
 }
 
 // Render renders the Timer component
-func (t *TimerDef) Render() r.Element {
+func (t TimerDef) Render() r.Element {
 	return r.Div(nil,
 		r.Div(nil,
 			r.S(fmt.Sprintf("Seconds elapsed %.0f", t.State().secondsElapsed)),

@@ -4,7 +4,11 @@ package main
 
 import "myitcv.io/react"
 
-func (f *FooBarDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+type FooBarElem struct {
+	react.Element
+}
+
+func (f FooBarDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
 	res := false
 
 	{
@@ -15,16 +19,20 @@ func (f *FooBarDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState in
 	return res
 }
 
+func buildFooBar(cd react.ComponentDef) react.Component {
+	return FooBarDef{ComponentDef: cd}
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // FooBar component.  SetState does not immediately mutate f.State()
 // but creates a pending state transition.
-func (f *FooBarDef) SetState(state FooBarState) {
+func (f FooBarDef) SetState(state FooBarState) {
 	f.ComponentDef.SetState(state)
 }
 
 // State is an auto-generated proxy to return the current state in use for the
 // render of the FooBar component
-func (f *FooBarDef) State() FooBarState {
+func (f FooBarDef) State() FooBarState {
 	return f.ComponentDef.State().(FooBarState)
 }
 
@@ -35,7 +43,7 @@ func (f FooBarState) IsState() {}
 var _ react.State = FooBarState{}
 
 // GetInitialStateIntf is an auto-generated proxy to GetInitialState
-func (f *FooBarDef) GetInitialStateIntf() react.State {
+func (f FooBarDef) GetInitialStateIntf() react.State {
 	return FooBarState{}
 }
 
@@ -44,7 +52,7 @@ func (f FooBarState) EqualsIntf(val interface{}) bool {
 }
 
 // Props is an auto-generated proxy to the current props of FooBar
-func (f *FooBarDef) Props() FooBarProps {
+func (f FooBarDef) Props() FooBarProps {
 	uprops := f.ComponentDef.Props()
 	return uprops.(FooBarProps)
 }

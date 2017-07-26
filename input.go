@@ -3,11 +3,9 @@
 
 package react
 
-import "github.com/gopherjs/gopherjs/js"
-
-// InputDef is the React component definition corresponding to the HTML <input> element
-type InputDef struct {
-	underlying *js.Object
+// InputElem is the React element definition corresponding to the HTML <input> element
+type InputElem struct {
+	Element
 }
 
 // _InputProps defines the properties for the <input> element
@@ -20,10 +18,8 @@ type _InputProps struct {
 	DefaultValue string `js:"defaultValue" react:"omitempty"`
 }
 
-func (d *InputDef) reactElement() {}
-
 // Input creates a new instance of a <input> element with the provided props
-func Input(props *InputProps) *InputDef {
+func Input(props *InputProps) *InputElem {
 
 	rProps := &_InputProps{
 		BasicHTMLElement: newBasicHTMLElement(),
@@ -37,7 +33,5 @@ func Input(props *InputProps) *InputDef {
 
 	underlying := react.Call("createElement", args...)
 
-	return &InputDef{
-		underlying: underlying,
-	}
+	return &InputElem{Element: elementHolder{elem: underlying}}
 }

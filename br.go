@@ -3,11 +3,9 @@
 
 package react
 
-import "github.com/gopherjs/gopherjs/js"
-
-// BRDef is the React component definition corresponding to the HTML <br> element
-type BRDef struct {
-	underlying *js.Object
+// BRElem is the React element definition corresponding to the HTML <br> element
+type BRElem struct {
+	Element
 }
 
 // _BRProps defines the properties for the <br> element
@@ -15,10 +13,8 @@ type _BRProps struct {
 	*BasicHTMLElement
 }
 
-func (d *BRDef) reactElement() {}
-
 // BR creates a new instance of a <br> element with the provided props
-func BR(props *BRProps) *BRDef {
+func BR(props *BRProps) *BRElem {
 
 	rProps := &_BRProps{
 		BasicHTMLElement: newBasicHTMLElement(),
@@ -30,5 +26,5 @@ func BR(props *BRProps) *BRDef {
 
 	underlying := react.Call("createElement", "br", rProps)
 
-	return &BRDef{underlying: underlying}
+	return &BRElem{Element: elementHolder{elem: underlying}}
 }

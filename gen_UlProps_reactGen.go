@@ -5,7 +5,7 @@ package react
 // UlProps defines the properties for the <ul> element
 type UlProps struct {
 	ClassName               string
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	DangerouslySetInnerHTML *DangerousInnerHTML
 	ID                      string
 	Key                     string
 

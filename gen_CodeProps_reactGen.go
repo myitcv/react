@@ -5,7 +5,7 @@ package react
 // CodeProps defines the properties for the <code> element
 type CodeProps struct {
 	ClassName               string
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	DangerouslySetInnerHTML *DangerousInnerHTML
 	ID                      string
 	Key                     string
 

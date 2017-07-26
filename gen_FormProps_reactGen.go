@@ -5,7 +5,7 @@ package react
 // FormProps defines the properties for the <form> element
 type FormProps struct {
 	ClassName               string
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	DangerouslySetInnerHTML *DangerousInnerHTML
 	ID                      string
 	Key                     string
 

@@ -6,7 +6,7 @@ package react
 type TextAreaProps struct {
 	ClassName               string
 	Cols                    uint
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	DangerouslySetInnerHTML *DangerousInnerHTML
 	DefaultValue            string
 	ID                      string
 	Key                     string

@@ -60,21 +60,19 @@ type _Imm_entriesKeysSelect []entryKey
 
 // Select creates a new instance of the SelectDef component with the provided props
 //
-func Select(props SelectProps) *SelectDef {
-	res := new(SelectDef)
-	r.BlessElement(res, props)
-	return res
+func Select(props SelectProps) *SelectElem {
+	return &SelectElem{Element: r.CreateElement(buildSelect, props)}
 }
 
-func (p *SelectDef) ComponentWillMount() {
+func (p SelectDef) ComponentWillMount() {
 	p.updateMap(p.Props().Entries)
 }
 
-func (p *SelectDef) ComponentWillReceiveProps(props SelectProps) {
+func (p SelectDef) ComponentWillReceiveProps(props SelectProps) {
 	p.updateMap(props.Entries)
 }
 
-func (p *SelectDef) updateMap(es ImmSelectEntry) {
+func (p SelectDef) updateMap(es ImmSelectEntry) {
 	eks := newEntriesKeysSelect().AsMutable()
 	defer eks.AsImmutable(nil)
 
@@ -98,9 +96,9 @@ func (p *SelectDef) updateMap(es ImmSelectEntry) {
 	p.SetState(st)
 }
 
-func (p *SelectDef) Render() r.Element {
+func (p SelectDef) Render() r.Element {
 
-	var ps []*r.OptionDef
+	var ps []*r.OptionElem
 
 	for _, v := range p.State().entries.Range() {
 		p := r.Option(
@@ -120,7 +118,7 @@ func (p *SelectDef) Render() r.Element {
 	)
 }
 
-type changeEntry struct{ *SelectDef }
+type changeEntry struct{ SelectDef }
 
 func (c changeEntry) OnChange(e *r.SyntheticEvent) {
 	v := e.Target().(*dom.HTMLSelectElement).Value

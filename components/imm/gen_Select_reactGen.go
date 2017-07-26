@@ -4,7 +4,11 @@ package imm
 
 import "myitcv.io/react"
 
-func (s *SelectDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+type SelectElem struct {
+	react.Element
+}
+
+func (s SelectDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
 	res := false
 
 	{
@@ -15,16 +19,20 @@ func (s *SelectDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState in
 	return res
 }
 
+func buildSelect(cd react.ComponentDef) react.Component {
+	return SelectDef{ComponentDef: cd}
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // Select component.  SetState does not immediately mutate s.State()
 // but creates a pending state transition.
-func (s *SelectDef) SetState(state SelectState) {
+func (s SelectDef) SetState(state SelectState) {
 	s.ComponentDef.SetState(state)
 }
 
 // State is an auto-generated proxy to return the current state in use for the
 // render of the Select component
-func (s *SelectDef) State() SelectState {
+func (s SelectDef) State() SelectState {
 	return s.ComponentDef.State().(SelectState)
 }
 
@@ -35,7 +43,7 @@ func (s SelectState) IsState() {}
 var _ react.State = SelectState{}
 
 // GetInitialStateIntf is an auto-generated proxy to GetInitialState
-func (s *SelectDef) GetInitialStateIntf() react.State {
+func (s SelectDef) GetInitialStateIntf() react.State {
 	return SelectState{}
 }
 
@@ -44,14 +52,14 @@ func (s SelectState) EqualsIntf(val interface{}) bool {
 }
 
 // Props is an auto-generated proxy to the current props of Select
-func (s *SelectDef) Props() SelectProps {
+func (s SelectDef) Props() SelectProps {
 	uprops := s.ComponentDef.Props()
 	return uprops.(SelectProps)
 }
 
 // ComponentWillReceivePropsIntf is an auto-generated proxy to
 // ComponentWillReceiveProps
-func (s *SelectDef) ComponentWillReceivePropsIntf(val interface{}) {
+func (s SelectDef) ComponentWillReceivePropsIntf(val interface{}) {
 	ourProps := val.(SelectProps)
 	s.ComponentWillReceiveProps(ourProps)
 }

@@ -34,7 +34,7 @@ type BasicHTMLElement struct {
 	OnChange `js:"onChange"`
 	OnClick  `js:"onClick"`
 
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef `js:"dangerouslySetInnerHTML"`
+	DangerouslySetInnerHTML *DangerousInnerHTML `js:"dangerouslySetInnerHTML"`
 }
 
 func newBasicHTMLElement() *BasicHTMLElement {

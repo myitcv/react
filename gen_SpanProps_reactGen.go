@@ -5,7 +5,7 @@ package react
 // SpanProps defines the properties for the <p> element
 type SpanProps struct {
 	ClassName               string
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	DangerouslySetInnerHTML *DangerousInnerHTML
 	ID                      string
 	Key                     string
 

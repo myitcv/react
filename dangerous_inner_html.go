@@ -5,22 +5,23 @@ package react
 
 import "github.com/gopherjs/gopherjs/js"
 
-// DangerousInnerHTMLDef is convenience component definition that allows HTML to be directly
+// DangerousInnerHTML is convenience definition that allows HTML to be directly
 // set as the child of a DOM element. See
-// https://facebook.github.io/react/docs/dom-elements.html#dangerouslysetinnerhtml for more details
-type DangerousInnerHTMLDef struct {
+// https://facebook.github.io/react/docs/dom-elements.html#dangerouslysetinnerhtml
+// for more details
+type DangerousInnerHTML struct {
 	o *js.Object
 }
 
-// DangerousInnerHTML creates a new instance of a DangerousInnerHTMLDef component, using the
+// NewDangerousInnerHTML creates a new DangerousInnerHTML instance, using the
 // supplied string as the raw HTML
-func DangerousInnerHTML(s string) *DangerousInnerHTMLDef {
+func NewDangerousInnerHTML(s string) *DangerousInnerHTML {
 	o := object.New()
 	o.Set("__html", s)
 
-	res := &DangerousInnerHTMLDef{o: o}
+	res := &DangerousInnerHTML{o: o}
 
 	return res
 }
 
-func (d *DangerousInnerHTMLDef) reactElement() {}
+func (d *DangerousInnerHTML) reactElement() {}

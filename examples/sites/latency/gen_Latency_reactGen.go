@@ -4,7 +4,11 @@ package main
 
 import "myitcv.io/react"
 
-func (l *LatencyDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+type LatencyElem struct {
+	react.Element
+}
+
+func (l LatencyDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
 	res := false
 
 	v := prevState.(LatencyState)
@@ -12,16 +16,20 @@ func (l *LatencyDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState i
 	return res
 }
 
+func buildLatency(cd react.ComponentDef) react.Component {
+	return LatencyDef{ComponentDef: cd}
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // Latency component.  SetState does not immediately mutate l.State()
 // but creates a pending state transition.
-func (l *LatencyDef) SetState(state LatencyState) {
+func (l LatencyDef) SetState(state LatencyState) {
 	l.ComponentDef.SetState(state)
 }
 
 // State is an auto-generated proxy to return the current state in use for the
 // render of the Latency component
-func (l *LatencyDef) State() LatencyState {
+func (l LatencyDef) State() LatencyState {
 	return l.ComponentDef.State().(LatencyState)
 }
 
@@ -32,7 +40,7 @@ func (l LatencyState) IsState() {}
 var _ react.State = LatencyState{}
 
 // GetInitialStateIntf is an auto-generated proxy to GetInitialState
-func (l *LatencyDef) GetInitialStateIntf() react.State {
+func (l LatencyDef) GetInitialStateIntf() react.State {
 	return LatencyState{}
 }
 

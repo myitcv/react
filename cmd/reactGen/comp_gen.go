@@ -53,7 +53,7 @@ func (g *gen) genComp(defName string) {
 	cg.HasProps = hasProps
 
 	if hasState {
-		for _, ff := range g.pointMeths[defName] {
+		for _, ff := range g.nonPointMeths[defName] {
 			m := ff.fn
 
 			if m.Name.Name != getInitialState {
@@ -127,7 +127,7 @@ func (g *gen) genComp(defName string) {
 	}
 
 	if hasProps {
-		for _, ff := range g.pointMeths[defName] {
+		for _, ff := range g.nonPointMeths[defName] {
 			m := ff.fn
 
 			if m.Name.Name != componentWillReceiveProps {
@@ -204,13 +204,15 @@ func (g *gen) genComp(defName string) {
 	cg.pln()
 	cg.pf("package %v\n", cg.pkg)
 
-	if hasState || hasProps {
-		cg.pf("import \"%v\"\n", reactPkg)
-		cg.pln()
-	}
+	cg.pf("import \"%v\"\n", reactPkg)
+	cg.pln()
 
 	cg.pt(`
-func ({{.Recv}} *{{.Name}}Def) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+type {{.Name}}Elem struct {
+	react.Element
+}
+
+func ({{.Recv}} {{.Name}}Def) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
 	res := false
 
 	{{if .HasProps -}}
@@ -230,17 +232,21 @@ func ({{.Recv}} *{{.Name}}Def) ShouldComponentUpdateIntf(nextProps, prevState, n
 	return res
 }
 
+func build{{.Name}}(cd react.ComponentDef) react.Component {
+	return {{.Name}}Def{ComponentDef: cd}
+}
+
 {{if .HasState}}
 // SetState is an auto-generated proxy proxy to update the state for the
 // {{.Name}} component.  SetState does not immediately mutate {{.Recv}}.State()
 // but creates a pending state transition.
-func ({{.Recv}} *{{.Name}}Def) SetState(state {{.Name}}State) {
+func ({{.Recv}} {{.Name}}Def) SetState(state {{.Name}}State) {
 	{{.Recv}}.ComponentDef.SetState(state)
 }
 
 // State is an auto-generated proxy to return the current state in use for the
 // render of the {{.Name}} component
-func ({{.Recv}} *{{.Name}}Def) State() {{.Name}}State {
+func ({{.Recv}} {{.Name}}Def) State() {{.Name}}State {
 	return {{.Recv}}.ComponentDef.State().({{.Name}}State)
 }
 
@@ -251,7 +257,7 @@ func ({{.Recv}} {{.Name}}State) IsState() {}
 var _ react.State = {{.Name}}State{}
 
 // GetInitialStateIntf is an auto-generated proxy to GetInitialState
-func ({{.Recv}} *{{.Name}}Def) GetInitialStateIntf() react.State {
+func ({{.Recv}} {{.Name}}Def) GetInitialStateIntf() react.State {
 {{if .HasGetInitState -}}
 	return {{.Recv}}.GetInitialState()
 {{else -}}
@@ -271,7 +277,7 @@ func ({{.Recv}} {{.Name}}State) EqualsIntf(val interface{}) bool {
 
 {{if .HasProps}}
 // Props is an auto-generated proxy to the current props of {{.Name}}
-func ({{.Recv}} *{{.Name}}Def) Props() {{.Name}}Props {
+func ({{.Recv}} {{.Name}}Def) Props() {{.Name}}Props {
 	uprops := {{.Recv}}.ComponentDef.Props()
 	return uprops.({{.Name}}Props)
 }
@@ -279,7 +285,7 @@ func ({{.Recv}} *{{.Name}}Def) Props() {{.Name}}Props {
 {{if .HasComponentWillReceiveProps}}
 // ComponentWillReceivePropsIntf is an auto-generated proxy to
 // ComponentWillReceiveProps
-func ({{.Recv}} *{{.Name}}Def) ComponentWillReceivePropsIntf(val interface{}) {
+func ({{.Recv}} {{.Name}}Def) ComponentWillReceivePropsIntf(val interface{}) {
 	ourProps := val.({{.Name}}Props)
 	{{.Recv}}.ComponentWillReceiveProps(ourProps)
 }

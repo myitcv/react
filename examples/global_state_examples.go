@@ -11,10 +11,8 @@ type GlobalStateExamplesDef struct {
 }
 
 // GlobalStateExamples creates instances of the GlobalStateExamples component
-func GlobalStateExamples() *GlobalStateExamplesDef {
-	res := new(GlobalStateExamplesDef)
-	r.BlessElement(res, nil)
-	return res
+func GlobalStateExamples() *GlobalStateExamplesElem {
+	return &GlobalStateExamplesElem{Element: r.CreateElement(buildGlobalStateExamples, nil)}
 }
 
 // GlobalStateExamplesState is the state type for the GlobalStateExamples component
@@ -24,7 +22,7 @@ type GlobalStateExamplesState struct {
 }
 
 // ComponentWillMount is a React lifecycle method for the GlobalStateExamples component
-func (p *GlobalStateExamplesDef) ComponentWillMount() {
+func (p GlobalStateExamplesDef) ComponentWillMount() {
 	if !fetchStarted {
 		for i, e := range sources.Range() {
 			go func(i exampleKey, e *source) {
@@ -47,7 +45,7 @@ func (p *GlobalStateExamplesDef) ComponentWillMount() {
 }
 
 // GetInitialState returns in the initial state for the GlobalStateExamples component
-func (p *GlobalStateExamplesDef) GetInitialState() GlobalStateExamplesState {
+func (p GlobalStateExamplesDef) GetInitialState() GlobalStateExamplesState {
 	return GlobalStateExamplesState{
 		examples:     sources,
 		selectedTabs: newTabS(),
@@ -55,10 +53,10 @@ func (p *GlobalStateExamplesDef) GetInitialState() GlobalStateExamplesState {
 }
 
 // Render renders the GlobalStateExamples component
-func (p *GlobalStateExamplesDef) Render() r.Element {
+func (p GlobalStateExamplesDef) Render() r.Element {
 
 	return r.Div(&r.DivProps{ClassName: "container"},
-		r.Div(&r.DivProps{DangerouslySetInnerHTML: r.DangerousInnerHTML(`
+		r.Div(&r.DivProps{DangerouslySetInnerHTML: r.NewDangerousInnerHTML(`
 		<h3>Introduction</h3>
 
 		<p>State can be local to components; we can share that state with descendent components

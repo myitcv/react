@@ -5,7 +5,7 @@ package react
 // HRProps defines the properties for the <hr> element
 type HRProps struct {
 	ClassName               string
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	DangerouslySetInnerHTML *DangerousInnerHTML
 	ID                      string
 	Key                     string
 
