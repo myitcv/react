@@ -4,7 +4,11 @@ package examples
 
 import "myitcv.io/react"
 
-func (e *ExamplesDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+type ExamplesElem struct {
+	react.Element
+}
+
+func (e ExamplesDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
 	res := false
 
 	v := prevState.(ExamplesState)
@@ -12,16 +16,20 @@ func (e *ExamplesDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState 
 	return res
 }
 
+func buildExamples(cd react.ComponentDef) react.Component {
+	return ExamplesDef{ComponentDef: cd}
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // Examples component.  SetState does not immediately mutate e.State()
 // but creates a pending state transition.
-func (e *ExamplesDef) SetState(state ExamplesState) {
+func (e ExamplesDef) SetState(state ExamplesState) {
 	e.ComponentDef.SetState(state)
 }
 
 // State is an auto-generated proxy to return the current state in use for the
 // render of the Examples component
-func (e *ExamplesDef) State() ExamplesState {
+func (e ExamplesDef) State() ExamplesState {
 	return e.ComponentDef.State().(ExamplesState)
 }
 
@@ -32,7 +40,7 @@ func (e ExamplesState) IsState() {}
 var _ react.State = ExamplesState{}
 
 // GetInitialStateIntf is an auto-generated proxy to GetInitialState
-func (e *ExamplesDef) GetInitialStateIntf() react.State {
+func (e ExamplesDef) GetInitialStateIntf() react.State {
 	return e.GetInitialState()
 }
 

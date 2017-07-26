@@ -3,11 +3,9 @@
 
 package react
 
-import "github.com/gopherjs/gopherjs/js"
-
-// H1Def is the React component definition corresponding to the HTML <h1> element
-type H1Def struct {
-	underlying *js.Object
+// H1Elem is the React element definition corresponding to the HTML <h1> element
+type H1Elem struct {
+	Element
 }
 
 // _H1Props defines the properties for the <h1> element
@@ -15,11 +13,9 @@ type _H1Props struct {
 	*BasicHTMLElement
 }
 
-func (d *H1Def) reactElement() {}
-
 // H1 creates a new instance of a <h1> element with the provided props and
 // child
-func H1(props *H1Props, children ...Element) *H1Def {
+func H1(props *H1Props, children ...Element) *H1Elem {
 
 	rProps := &_H1Props{
 		BasicHTMLElement: newBasicHTMLElement(),
@@ -37,5 +33,5 @@ func H1(props *H1Props, children ...Element) *H1Def {
 
 	underlying := react.Call("createElement", args...)
 
-	return &H1Def{underlying: underlying}
+	return &H1Elem{Element: elementHolder{elem: underlying}}
 }

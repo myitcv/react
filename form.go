@@ -10,16 +10,18 @@ type FormDef struct {
 	underlying *js.Object
 }
 
+type FormElem struct {
+	Element
+}
+
 // _FormProps defines the properties for the <form> element
 type _FormProps struct {
 	*BasicHTMLElement
 }
 
-func (d *FormDef) reactElement() {}
-
 // Form creates a new instance of a <form> element with the provided props and
 // children
-func Form(props *FormProps, children ...Element) *FormDef {
+func Form(props *FormProps, children ...Element) *FormElem {
 
 	rProps := &_FormProps{
 		BasicHTMLElement: newBasicHTMLElement(),
@@ -37,5 +39,5 @@ func Form(props *FormProps, children ...Element) *FormDef {
 
 	underlying := react.Call("createElement", args...)
 
-	return &FormDef{underlying: underlying}
+	return &FormElem{Element: elementHolder{elem: underlying}}
 }

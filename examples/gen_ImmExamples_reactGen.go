@@ -4,7 +4,11 @@ package examples
 
 import "myitcv.io/react"
 
-func (i *ImmExamplesDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+type ImmExamplesElem struct {
+	react.Element
+}
+
+func (i ImmExamplesDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
 	res := false
 
 	v := prevState.(ImmExamplesState)
@@ -12,16 +16,20 @@ func (i *ImmExamplesDef) ShouldComponentUpdateIntf(nextProps, prevState, nextSta
 	return res
 }
 
+func buildImmExamples(cd react.ComponentDef) react.Component {
+	return ImmExamplesDef{ComponentDef: cd}
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // ImmExamples component.  SetState does not immediately mutate i.State()
 // but creates a pending state transition.
-func (i *ImmExamplesDef) SetState(state ImmExamplesState) {
+func (i ImmExamplesDef) SetState(state ImmExamplesState) {
 	i.ComponentDef.SetState(state)
 }
 
 // State is an auto-generated proxy to return the current state in use for the
 // render of the ImmExamples component
-func (i *ImmExamplesDef) State() ImmExamplesState {
+func (i ImmExamplesDef) State() ImmExamplesState {
 	return i.ComponentDef.State().(ImmExamplesState)
 }
 
@@ -32,7 +40,7 @@ func (i ImmExamplesState) IsState() {}
 var _ react.State = ImmExamplesState{}
 
 // GetInitialStateIntf is an auto-generated proxy to GetInitialState
-func (i *ImmExamplesDef) GetInitialStateIntf() react.State {
+func (i ImmExamplesDef) GetInitialStateIntf() react.State {
 	return i.GetInitialState()
 }
 

@@ -3,11 +3,9 @@
 
 package react
 
-import "github.com/gopherjs/gopherjs/js"
-
-// LabelDef is the React component definition corresponding to the HTML <label> element
-type LabelDef struct {
-	underlying *js.Object
+// LabelElem is the React element definition corresponding to the HTML <label> element
+type LabelElem struct {
+	Element
 }
 
 // _LabelProps defines the properties for the <label> element
@@ -17,11 +15,9 @@ type _LabelProps struct {
 	For string `js:"htmlFor"`
 }
 
-func (d *LabelDef) reactElement() {}
-
 // Label creates a new instance of a <label> element with the provided props and child
 // element
-func Label(props *LabelProps, child Element) *LabelDef {
+func Label(props *LabelProps, child Element) *LabelElem {
 
 	rProps := &_LabelProps{
 		BasicHTMLElement: newBasicHTMLElement(),
@@ -33,5 +29,5 @@ func Label(props *LabelProps, child Element) *LabelDef {
 
 	underlying := react.Call("createElement", "label", rProps, elementToReactObj(child))
 
-	return &LabelDef{underlying: underlying}
+	return &LabelElem{Element: elementHolder{elem: underlying}}
 }

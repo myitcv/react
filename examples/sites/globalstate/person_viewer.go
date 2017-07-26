@@ -18,13 +18,11 @@ type PersonViewerState struct {
 	curPersSub *state.Sub
 }
 
-func PersonViewer() *PersonViewerDef {
-	res := new(PersonViewerDef)
-	r.BlessElement(res, nil)
-	return res
+func PersonViewer() *PersonViewerElem {
+	return &PersonViewerElem{Element: r.CreateElement(buildPersonViewer, nil)}
 }
 
-func (p *PersonViewerDef) ComponentWillMount() {
+func (p PersonViewerDef) ComponentWillMount() {
 	curPersSub := state.State.CurrentPerson().Subscribe(p.currPersonUpdated)
 
 	p.SetState(PersonViewerState{
@@ -33,11 +31,11 @@ func (p *PersonViewerDef) ComponentWillMount() {
 	})
 }
 
-func (p *PersonViewerDef) ComponentWillUnmount() {
+func (p PersonViewerDef) ComponentWillUnmount() {
 	p.State().curPersSub.Clear()
 }
 
-func (p *PersonViewerDef) Render() r.Element {
+func (p PersonViewerDef) Render() r.Element {
 	st := p.State()
 
 	if st.p != nil {
@@ -47,7 +45,7 @@ func (p *PersonViewerDef) Render() r.Element {
 	return r.P(nil, r.S("(no person selected)"))
 }
 
-func (p *PersonViewerDef) currPersonUpdated() {
+func (p PersonViewerDef) currPersonUpdated() {
 	st := p.State()
 	st.p = state.State.CurrentPerson().Get()
 	p.SetState(st)

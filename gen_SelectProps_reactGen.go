@@ -5,7 +5,7 @@ package react
 // SelectProps are the props for a <select> component
 type SelectProps struct {
 	ClassName               string
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	DangerouslySetInnerHTML *DangerousInnerHTML
 	ID                      string
 	Key                     string
 

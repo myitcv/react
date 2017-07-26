@@ -4,7 +4,11 @@ package hellomessage
 
 import "myitcv.io/react"
 
-func (h *HelloMessageDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+type HelloMessageElem struct {
+	react.Element
+}
+
+func (h HelloMessageDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
 	res := false
 
 	{
@@ -13,8 +17,12 @@ func (h *HelloMessageDef) ShouldComponentUpdateIntf(nextProps, prevState, nextSt
 	return res
 }
 
+func buildHelloMessage(cd react.ComponentDef) react.Component {
+	return HelloMessageDef{ComponentDef: cd}
+}
+
 // Props is an auto-generated proxy to the current props of HelloMessage
-func (h *HelloMessageDef) Props() HelloMessageProps {
+func (h HelloMessageDef) Props() HelloMessageProps {
 	uprops := h.ComponentDef.Props()
 	return uprops.(HelloMessageProps)
 }

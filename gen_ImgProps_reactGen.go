@@ -5,7 +5,7 @@ package react
 // ImgProps are the props for a <Img> component
 type ImgProps struct {
 	ClassName               string
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	DangerouslySetInnerHTML *DangerousInnerHTML
 	ID                      string
 	Key                     string
 

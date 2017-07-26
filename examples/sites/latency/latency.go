@@ -58,13 +58,11 @@ type LatencyState struct {
 	*latencies
 }
 
-func Latency() *LatencyDef {
-	res := &LatencyDef{}
-	r.BlessElement(res, nil)
-	return res
+func Latency() *LatencyElem {
+	return &LatencyElem{Element: r.CreateElement(buildLatency, nil)}
 }
 
-func (l *LatencyDef) Render() r.Element {
+func (l LatencyDef) Render() r.Element {
 	var c r.Element
 
 	if l.State().output {
@@ -95,7 +93,7 @@ func (l *LatencyDef) Render() r.Element {
 	)
 }
 
-func (l *LatencyDef) renderInput() r.Element {
+func (l LatencyDef) renderInput() r.Element {
 	return r.Form(&r.FormProps{ClassName: "LatencyForm"},
 		r.Div(&r.DivProps{ClassName: "group"},
 			r.Input(&r.InputProps{
@@ -161,7 +159,7 @@ func (l *LatencyDef) renderOutput() r.Element {
 				regClass += " with-timings speed-fast"
 			}
 
-			genTiming := func(f time.Duration, n, l string) *r.SpanDef {
+			genTiming := func(f time.Duration, n, l string) *r.SpanElem {
 				w := fmt.Sprintf("%.3fpx", float64(f)/float64(maxTot)*resultWidth)
 				rs := fmt.Sprintf("%v (%v)", l, f)
 
@@ -208,9 +206,9 @@ func (l *LatencyDef) reset(e *r.SyntheticMouseEvent) {
 	e.PreventDefault()
 }
 
-type urlChange struct{ l *LatencyDef }
-type altUrlChange struct{ l *LatencyDef }
-type check struct{ l *LatencyDef }
+type urlChange struct{ l LatencyDef }
+type altUrlChange struct{ l LatencyDef }
+type check struct{ l LatencyDef }
 
 func (u urlChange) OnChange(se *r.SyntheticEvent) {
 	target := se.Target().(*dom.HTMLInputElement)

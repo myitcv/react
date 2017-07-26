@@ -5,7 +5,7 @@ package react
 // H4Props defines the properties for the <h4> element
 type H4Props struct {
 	ClassName               string
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	DangerouslySetInnerHTML *DangerousInnerHTML
 	ID                      string
 	Key                     string
 

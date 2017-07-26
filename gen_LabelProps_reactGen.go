@@ -5,7 +5,7 @@ package react
 // LabelProps defines the properties for the <label> element
 type LabelProps struct {
 	ClassName               string
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	DangerouslySetInnerHTML *DangerousInnerHTML
 	For                     string
 	ID                      string
 	Key                     string

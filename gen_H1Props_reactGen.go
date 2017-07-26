@@ -5,7 +5,7 @@ package react
 // H1Props defines the properties for the <h1> element
 type H1Props struct {
 	ClassName               string
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	DangerouslySetInnerHTML *DangerousInnerHTML
 	ID                      string
 	Key                     string
 

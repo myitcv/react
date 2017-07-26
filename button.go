@@ -3,11 +3,9 @@
 
 package react
 
-import "github.com/gopherjs/gopherjs/js"
-
-// ButtonDef is the React component definition corresponding to the HTML <button> element
-type ButtonDef struct {
-	underlying *js.Object
+// ButtonElem is the React element definition corresponding to the HTML <button> element
+type ButtonElem struct {
+	Element
 }
 
 // _ButtonProps defines the properties for the <button> element
@@ -17,11 +15,9 @@ type _ButtonProps struct {
 	Type string `js:"type"`
 }
 
-func (d *ButtonDef) reactElement() {}
-
 // Button creates a new instance of a <button> element with the provided props
 // and child
-func Button(props *ButtonProps, children ...Element) *ButtonDef {
+func Button(props *ButtonProps, children ...Element) *ButtonElem {
 
 	rProps := &_ButtonProps{
 		BasicHTMLElement: newBasicHTMLElement(),
@@ -39,7 +35,5 @@ func Button(props *ButtonProps, children ...Element) *ButtonDef {
 
 	underlying := react.Call("createElement", args...)
 
-	return &ButtonDef{
-		underlying: underlying,
-	}
+	return &ButtonElem{Element: elementHolder{elem: underlying}}
 }

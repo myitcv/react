@@ -4,7 +4,11 @@ package markdowneditor
 
 import "myitcv.io/react"
 
-func (m *MarkdownEditorDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+type MarkdownEditorElem struct {
+	react.Element
+}
+
+func (m MarkdownEditorDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
 	res := false
 
 	v := prevState.(MarkdownEditorState)
@@ -12,16 +16,20 @@ func (m *MarkdownEditorDef) ShouldComponentUpdateIntf(nextProps, prevState, next
 	return res
 }
 
+func buildMarkdownEditor(cd react.ComponentDef) react.Component {
+	return MarkdownEditorDef{ComponentDef: cd}
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // MarkdownEditor component.  SetState does not immediately mutate m.State()
 // but creates a pending state transition.
-func (m *MarkdownEditorDef) SetState(state MarkdownEditorState) {
+func (m MarkdownEditorDef) SetState(state MarkdownEditorState) {
 	m.ComponentDef.SetState(state)
 }
 
 // State is an auto-generated proxy to return the current state in use for the
 // render of the MarkdownEditor component
-func (m *MarkdownEditorDef) State() MarkdownEditorState {
+func (m MarkdownEditorDef) State() MarkdownEditorState {
 	return m.ComponentDef.State().(MarkdownEditorState)
 }
 
@@ -32,7 +40,7 @@ func (m MarkdownEditorState) IsState() {}
 var _ react.State = MarkdownEditorState{}
 
 // GetInitialStateIntf is an auto-generated proxy to GetInitialState
-func (m *MarkdownEditorDef) GetInitialStateIntf() react.State {
+func (m MarkdownEditorDef) GetInitialStateIntf() react.State {
 	return m.GetInitialState()
 }
 

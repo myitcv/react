@@ -17,14 +17,18 @@ type HelloMessageProps struct {
 }
 
 // HelloMessage creates instances of the HelloMessage component
-func HelloMessage(p HelloMessageProps) *HelloMessageDef {
-	res := &HelloMessageDef{}
-	r.BlessElement(res, p)
-	return res
+func HelloMessage(p HelloMessageProps) *HelloMessageElem {
+	return &HelloMessageElem{
+		Element: r.CreateElement(buildCmp, p),
+	}
+}
+
+func buildCmp(elem r.ComponentDef) r.Component {
+	return HelloMessageDef{ComponentDef: elem}
 }
 
 // Render renders the HelloMessage component
-func (h *HelloMessageDef) Render() r.Element {
+func (h HelloMessageDef) Render() r.Element {
 	return r.Div(nil,
 		r.S("Hello "+h.Props().Name),
 	)

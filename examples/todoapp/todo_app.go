@@ -21,10 +21,8 @@ type TodoAppState struct {
 }
 
 // TodoApp creates instances of the TodoApp component
-func TodoApp() *TodoAppDef {
-	res := &TodoAppDef{}
-	r.BlessElement(res, nil)
-	return res
+func TodoApp() *TodoAppElem {
+	return &TodoAppElem{Element: r.CreateElement(buildTodoApp, nil)}
 }
 
 // Equals must be defined because struct val instances of TodoAppState cannot
@@ -50,8 +48,8 @@ func (c TodoAppState) Equals(v TodoAppState) bool {
 }
 
 // Render renders the TodoApp component
-func (t *TodoAppDef) Render() r.Element {
-	var entries []*r.LiDef
+func (t TodoAppDef) Render() r.Element {
+	var entries []*r.LiElem
 
 	for _, v := range t.State().items {
 		entry := r.Li(nil, r.S(v))
@@ -83,8 +81,8 @@ func (t *TodoAppDef) Render() r.Element {
 	)
 }
 
-type inputChange struct{ t *TodoAppDef }
-type add struct{ t *TodoAppDef }
+type inputChange struct{ t TodoAppDef }
+type add struct{ t TodoAppDef }
 
 func (i inputChange) OnChange(se *r.SyntheticEvent) {
 	target := se.Target().(*dom.HTMLInputElement)

@@ -5,7 +5,7 @@ package react
 // ButtonProps defines the properties for the <button> element
 type ButtonProps struct {
 	ClassName               string
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	DangerouslySetInnerHTML *DangerousInnerHTML
 	ID                      string
 	Key                     string
 

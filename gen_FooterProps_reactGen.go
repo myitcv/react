@@ -5,7 +5,7 @@ package react
 // FooterProps are the props for a <footer> component
 type FooterProps struct {
 	ClassName               string
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	DangerouslySetInnerHTML *DangerousInnerHTML
 	ID                      string
 	Key                     string
 

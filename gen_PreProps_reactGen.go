@@ -5,7 +5,7 @@ package react
 // PreProps defines the properties for the <pre> element
 type PreProps struct {
 	ClassName               string
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	DangerouslySetInnerHTML *DangerousInnerHTML
 	ID                      string
 	Key                     string
 

@@ -15,12 +15,10 @@ type AppDef struct {
 	r.ComponentDef
 }
 
-func App() *AppDef {
-	res := new(AppDef)
-	r.BlessElement(res, nil)
-	return res
+func App() *AppElem {
+	return &AppElem{Element: r.CreateElement(buildApp, nil)}
 }
 
-func (a *AppDef) Render() r.Element {
+func (a AppDef) Render() r.Element {
 	return Latency()
 }

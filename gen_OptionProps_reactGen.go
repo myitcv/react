@@ -5,7 +5,7 @@ package react
 // OptionProps defines the properties for the <option> element
 type OptionProps struct {
 	ClassName               string
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	DangerouslySetInnerHTML *DangerousInnerHTML
 	ID                      string
 	Key                     string
 

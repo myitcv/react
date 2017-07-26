@@ -4,7 +4,11 @@ package examples
 
 import "myitcv.io/react"
 
-func (g *GlobalStateExamplesDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+type GlobalStateExamplesElem struct {
+	react.Element
+}
+
+func (g GlobalStateExamplesDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
 	res := false
 
 	v := prevState.(GlobalStateExamplesState)
@@ -12,16 +16,20 @@ func (g *GlobalStateExamplesDef) ShouldComponentUpdateIntf(nextProps, prevState,
 	return res
 }
 
+func buildGlobalStateExamples(cd react.ComponentDef) react.Component {
+	return GlobalStateExamplesDef{ComponentDef: cd}
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // GlobalStateExamples component.  SetState does not immediately mutate g.State()
 // but creates a pending state transition.
-func (g *GlobalStateExamplesDef) SetState(state GlobalStateExamplesState) {
+func (g GlobalStateExamplesDef) SetState(state GlobalStateExamplesState) {
 	g.ComponentDef.SetState(state)
 }
 
 // State is an auto-generated proxy to return the current state in use for the
 // render of the GlobalStateExamples component
-func (g *GlobalStateExamplesDef) State() GlobalStateExamplesState {
+func (g GlobalStateExamplesDef) State() GlobalStateExamplesState {
 	return g.ComponentDef.State().(GlobalStateExamplesState)
 }
 
@@ -32,7 +40,7 @@ func (g GlobalStateExamplesState) IsState() {}
 var _ react.State = GlobalStateExamplesState{}
 
 // GetInitialStateIntf is an auto-generated proxy to GetInitialState
-func (g *GlobalStateExamplesDef) GetInitialStateIntf() react.State {
+func (g GlobalStateExamplesDef) GetInitialStateIntf() react.State {
 	return g.GetInitialState()
 }
 

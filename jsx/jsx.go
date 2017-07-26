@@ -17,7 +17,7 @@ import (
 
 // TODO code generate these parse functions
 
-func parseP(n *html.Node) *r.PDef {
+func parseP(n *html.Node) *r.PElem {
 	var kids []r.Element
 
 	// TODO attributes
@@ -29,19 +29,19 @@ func parseP(n *html.Node) *r.PDef {
 	return r.P(nil, kids...)
 }
 
-func parseHR(n *html.Node) *r.HRDef {
+func parseHR(n *html.Node) *r.HRElem {
 	// TODO attributes
 
 	return r.HR(nil)
 }
 
-func parseBR(n *html.Node) *r.BRDef {
+func parseBR(n *html.Node) *r.BRElem {
 	// TODO attributes
 
 	return r.BR(nil)
 }
 
-func parseH1(n *html.Node) *r.H1Def {
+func parseH1(n *html.Node) *r.H1Elem {
 	var kids []r.Element
 
 	// TODO attributes
@@ -53,7 +53,7 @@ func parseH1(n *html.Node) *r.H1Def {
 	return r.H1(nil, kids...)
 }
 
-func parseSpan(n *html.Node) *r.SpanDef {
+func parseSpan(n *html.Node) *r.SpanElem {
 	var kids []r.Element
 
 	var vp *r.SpanProps
@@ -80,7 +80,7 @@ func parseSpan(n *html.Node) *r.SpanDef {
 	return r.Span(vp, kids...)
 }
 
-func parseI(n *html.Node) *r.IDef {
+func parseI(n *html.Node) *r.IElem {
 	var kids []r.Element
 
 	var vp *r.IProps
@@ -107,7 +107,7 @@ func parseI(n *html.Node) *r.IDef {
 	return r.I(vp, kids...)
 }
 
-func parseFooter(n *html.Node) *r.FooterDef {
+func parseFooter(n *html.Node) *r.FooterElem {
 	var kids []r.Element
 
 	var vp *r.FooterProps
@@ -134,7 +134,7 @@ func parseFooter(n *html.Node) *r.FooterDef {
 	return r.Footer(vp, kids...)
 }
 
-func parseDiv(n *html.Node) *r.DivDef {
+func parseDiv(n *html.Node) *r.DivElem {
 	var kids []r.Element
 
 	var vp *r.DivProps
@@ -163,7 +163,7 @@ func parseDiv(n *html.Node) *r.DivDef {
 	return r.Div(vp, kids...)
 }
 
-func parseButton(n *html.Node) *r.ButtonDef {
+func parseButton(n *html.Node) *r.ButtonElem {
 	var kids []r.Element
 
 	var vp *r.ButtonProps
@@ -190,7 +190,7 @@ func parseButton(n *html.Node) *r.ButtonDef {
 	return r.Button(vp, kids...)
 }
 
-func parseCode(n *html.Node) *r.CodeDef {
+func parseCode(n *html.Node) *r.CodeElem {
 	var kids []r.Element
 
 	// TODO attributes
@@ -202,7 +202,7 @@ func parseCode(n *html.Node) *r.CodeDef {
 	return r.Code(nil, kids...)
 }
 
-func parseH3(n *html.Node) *r.H3Def {
+func parseH3(n *html.Node) *r.H3Elem {
 	var kids []r.Element
 
 	// TODO attributes
@@ -214,7 +214,7 @@ func parseH3(n *html.Node) *r.H3Def {
 	return r.H3(nil, kids...)
 }
 
-func parseImg(n *html.Node) *r.ImgDef {
+func parseImg(n *html.Node) *r.ImgElem {
 	var kids []r.Element
 
 	var vp *r.ImgProps
@@ -241,7 +241,7 @@ func parseImg(n *html.Node) *r.ImgDef {
 	return r.Img(vp, kids...)
 }
 
-func parseA(n *html.Node) *r.ADef {
+func parseA(n *html.Node) *r.AElem {
 	var kids []r.Element
 
 	var vp *r.AProps

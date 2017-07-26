@@ -5,7 +5,7 @@ package react
 // LiProps defines the properties for the <li> element
 type LiProps struct {
 	ClassName               string
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	DangerouslySetInnerHTML *DangerousInnerHTML
 	ID                      string
 	Key                     string
 

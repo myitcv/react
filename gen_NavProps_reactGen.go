@@ -5,7 +5,7 @@ package react
 // NavProps defines the properties for the <nav> element
 type NavProps struct {
 	ClassName               string
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	DangerouslySetInnerHTML *DangerousInnerHTML
 	ID                      string
 	Key                     string
 

@@ -5,7 +5,7 @@ package react
 // H3Props defines the properties for the <h3> element
 type H3Props struct {
 	ClassName               string
-	DangerouslySetInnerHTML *DangerousInnerHTMLDef
+	DangerouslySetInnerHTML *DangerousInnerHTML
 	ID                      string
 	Key                     string
 

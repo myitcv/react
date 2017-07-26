@@ -30,10 +30,8 @@ const (
 )
 
 // Examples creates instances of the Examples component
-func Examples() *ExamplesDef {
-	res := new(ExamplesDef)
-	r.BlessElement(res, nil)
-	return res
+func Examples() *ExamplesElem {
+	return &ExamplesElem{Element: r.CreateElement(buildExamples, nil)}
 }
 
 type (
@@ -47,7 +45,7 @@ type ExamplesState struct {
 }
 
 // ComponentWillMount is a React lifecycle method for the Examples component
-func (p *ExamplesDef) ComponentWillMount() {
+func (p ExamplesDef) ComponentWillMount() {
 	if !fetchStarted {
 		for i, e := range sources.Range() {
 			go func(i exampleKey, e *source) {
@@ -70,7 +68,7 @@ func (p *ExamplesDef) ComponentWillMount() {
 }
 
 // GetInitialState returns in the initial state for the Examples component
-func (p *ExamplesDef) GetInitialState() ExamplesState {
+func (p ExamplesDef) GetInitialState() ExamplesState {
 	return ExamplesState{
 		examples:     sources,
 		selectedTabs: newTabS(),
@@ -78,7 +76,7 @@ func (p *ExamplesDef) GetInitialState() ExamplesState {
 }
 
 // Render renders the Examples component
-func (p *ExamplesDef) Render() r.Element {
+func (p ExamplesDef) Render() r.Element {
 	dc := jsx.HTML(`
 		<h3>Introduction</h3>
 
@@ -151,7 +149,7 @@ func (p *ExamplesDef) Render() r.Element {
 	)
 }
 
-func (p *ExamplesDef) renderExample(key exampleKey, title, msg r.Element, jsxSrc string, elem r.Element) r.Element {
+func (p ExamplesDef) renderExample(key exampleKey, title, msg r.Element, jsxSrc string, elem r.Element) r.Element {
 
 	var goSrc string
 	src, _ := p.State().examples.Get(key)
@@ -159,12 +157,12 @@ func (p *ExamplesDef) renderExample(key exampleKey, title, msg r.Element, jsxSrc
 		goSrc = src.src()
 	}
 
-	var code *r.DangerousInnerHTMLDef
+	var code *r.DangerousInnerHTML
 	switch v, _ := p.State().selectedTabs.Get(key); v {
 	case tabGo:
-		code = r.DangerousInnerHTML(highlightjs.Highlight("go", goSrc, true).Value)
+		code = r.NewDangerousInnerHTML(highlightjs.Highlight("go", goSrc, true).Value)
 	case tabJsx:
-		code = r.DangerousInnerHTML(highlightjs.Highlight("javascript", jsxSrc, true).Value)
+		code = r.NewDangerousInnerHTML(highlightjs.Highlight("javascript", jsxSrc, true).Value)
 	}
 
 	return r.Div(nil,
@@ -198,7 +196,7 @@ func (p *ExamplesDef) renderExample(key exampleKey, title, msg r.Element, jsxSrc
 	)
 }
 
-func (p *ExamplesDef) buildExampleNavTab(key exampleKey, t tab, title string) *r.LiDef {
+func (p ExamplesDef) buildExampleNavTab(key exampleKey, t tab, title string) *r.LiElem {
 	lip := &r.LiProps{Role: "presentation"}
 
 	if v, _ := p.State().selectedTabs.Get(key); v == t {
@@ -216,7 +214,7 @@ func (p *ExamplesDef) buildExampleNavTab(key exampleKey, t tab, title string) *r
 }
 
 type tabChange struct {
-	e   *ExamplesDef
+	e   ExamplesDef
 	key exampleKey
 	t   tab
 }

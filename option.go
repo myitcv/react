@@ -3,11 +3,9 @@
 
 package react
 
-import "github.com/gopherjs/gopherjs/js"
-
-// OptionDef is the React component definition corresponding to the HTML <option> element
-type OptionDef struct {
-	underlying *js.Object
+// OptionElem is the React element definition corresponding to the HTML <option> element
+type OptionElem struct {
+	Element
 }
 
 // _OptionProps defines the properties for the <option> element
@@ -17,10 +15,8 @@ type _OptionProps struct {
 	Value string `js:"value"`
 }
 
-func (d *OptionDef) reactElement() {}
-
 // Option creates a new instance of a <option> element with the provided props
-func Option(props *OptionProps, child Element) *OptionDef {
+func Option(props *OptionProps, child Element) *OptionElem {
 
 	rProps := &_OptionProps{
 		BasicHTMLElement: newBasicHTMLElement(),
@@ -34,7 +30,5 @@ func Option(props *OptionProps, child Element) *OptionDef {
 
 	underlying := react.Call("createElement", args...)
 
-	return &OptionDef{
-		underlying: underlying,
-	}
+	return &OptionElem{Element: elementHolder{elem: underlying}}
 }

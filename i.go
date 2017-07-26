@@ -3,11 +3,9 @@
 
 package react
 
-import "github.com/gopherjs/gopherjs/js"
-
-// IDef is the React component definition corresponding to the HTML <i> element
-type IDef struct {
-	underlying *js.Object
+// IElem is the React element definition corresponding to the HTML <i> element
+type IElem struct {
+	Element
 }
 
 // _IProps are the props for a <i> component
@@ -17,10 +15,8 @@ type _IProps struct {
 	Src string `js:"src"`
 }
 
-func (d *IDef) reactElement() {}
-
 // I creates a new instance of a <i> element with the provided props and children
-func I(props *IProps, children ...Element) *IDef {
+func I(props *IProps, children ...Element) *IElem {
 
 	rProps := &_IProps{
 		BasicHTMLElement: newBasicHTMLElement(),
@@ -38,5 +34,5 @@ func I(props *IProps, children ...Element) *IDef {
 
 	underlying := react.Call("createElement", args...)
 
-	return &IDef{underlying: underlying}
+	return &IElem{Element: elementHolder{elem: underlying}}
 }

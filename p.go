@@ -3,13 +3,11 @@
 
 package react
 
-import "github.com/gopherjs/gopherjs/js"
-
 //go:generate reactGen
 
-// PDef is the React component definition corresponding to the HTML <p> element
-type PDef struct {
-	underlying *js.Object
+// PElem is the React element definition corresponding to the HTML <p> element
+type PElem struct {
+	Element
 }
 
 // _PProps are the props for a <div> component
@@ -17,11 +15,9 @@ type _PProps struct {
 	*BasicHTMLElement
 }
 
-func (d *PDef) reactElement() {}
-
 // P creates a new instance of a <p> element with the provided props and
 // children
-func P(props *PProps, children ...Element) *PDef {
+func P(props *PProps, children ...Element) *PElem {
 
 	rProps := &_PProps{
 		BasicHTMLElement: newBasicHTMLElement(),
@@ -39,5 +35,5 @@ func P(props *PProps, children ...Element) *PDef {
 
 	underlying := react.Call("createElement", args...)
 
-	return &PDef{underlying: underlying}
+	return &PElem{Element: elementHolder{elem: underlying}}
 }

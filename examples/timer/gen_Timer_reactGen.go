@@ -4,7 +4,11 @@ package timer
 
 import "myitcv.io/react"
 
-func (t *TimerDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+type TimerElem struct {
+	react.Element
+}
+
+func (t TimerDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
 	res := false
 
 	v := prevState.(TimerState)
@@ -12,16 +16,20 @@ func (t *TimerDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState int
 	return res
 }
 
+func buildTimer(cd react.ComponentDef) react.Component {
+	return TimerDef{ComponentDef: cd}
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // Timer component.  SetState does not immediately mutate t.State()
 // but creates a pending state transition.
-func (t *TimerDef) SetState(state TimerState) {
+func (t TimerDef) SetState(state TimerState) {
 	t.ComponentDef.SetState(state)
 }
 
 // State is an auto-generated proxy to return the current state in use for the
 // render of the Timer component
-func (t *TimerDef) State() TimerState {
+func (t TimerDef) State() TimerState {
 	return t.ComponentDef.State().(TimerState)
 }
 
@@ -32,7 +40,7 @@ func (t TimerState) IsState() {}
 var _ react.State = TimerState{}
 
 // GetInitialStateIntf is an auto-generated proxy to GetInitialState
-func (t *TimerDef) GetInitialStateIntf() react.State {
+func (t TimerDef) GetInitialStateIntf() react.State {
 	return TimerState{}
 }
 

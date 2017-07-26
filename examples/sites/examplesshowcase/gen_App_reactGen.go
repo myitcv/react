@@ -4,7 +4,11 @@ package main
 
 import "myitcv.io/react"
 
-func (a *AppDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+type AppElem struct {
+	react.Element
+}
+
+func (a AppDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
 	res := false
 
 	v := prevState.(AppState)
@@ -12,16 +16,20 @@ func (a *AppDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState inter
 	return res
 }
 
+func buildApp(cd react.ComponentDef) react.Component {
+	return AppDef{ComponentDef: cd}
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // App component.  SetState does not immediately mutate a.State()
 // but creates a pending state transition.
-func (a *AppDef) SetState(state AppState) {
+func (a AppDef) SetState(state AppState) {
 	a.ComponentDef.SetState(state)
 }
 
 // State is an auto-generated proxy to return the current state in use for the
 // render of the App component
-func (a *AppDef) State() AppState {
+func (a AppDef) State() AppState {
 	return a.ComponentDef.State().(AppState)
 }
 
@@ -32,7 +40,7 @@ func (a AppState) IsState() {}
 var _ react.State = AppState{}
 
 // GetInitialStateIntf is an auto-generated proxy to GetInitialState
-func (a *AppDef) GetInitialStateIntf() react.State {
+func (a AppDef) GetInitialStateIntf() react.State {
 	return AppState{}
 }
 
