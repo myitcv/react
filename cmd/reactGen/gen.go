@@ -84,7 +84,7 @@ func dogen(dir, license string) {
 		fatalf("unable to import pkg in dir %v: %v", dir, err)
 	}
 
-	isReactCore := bpkg.ImportPath == reactPkg
+	isReactCore := bpkg.ImportPath == reactPkg || strings.HasPrefix(bpkg.ImportPath, reactPkg+"/")
 
 	pkgs, err := parser.ParseDir(fset, dir, nil, parser.ParseComments)
 	if err != nil {
