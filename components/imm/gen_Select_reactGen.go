@@ -23,6 +23,12 @@ func buildSelect(cd react.ComponentDef) react.Component {
 	return SelectDef{ComponentDef: cd}
 }
 
+func buildSelectElem(props SelectProps, children ...react.Element) *SelectElem {
+	return &SelectElem{
+		Element: react.CreateElement(buildSelect, props),
+	}
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // Select component.  SetState does not immediately mutate s.State()
 // but creates a pending state transition.

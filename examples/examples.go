@@ -31,7 +31,7 @@ const (
 
 // Examples creates instances of the Examples component
 func Examples() *ExamplesElem {
-	return &ExamplesElem{Element: r.CreateElement(buildExamples, nil)}
+	return buildExamplesElem()
 }
 
 type (

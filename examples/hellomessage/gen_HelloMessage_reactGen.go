@@ -21,6 +21,12 @@ func buildHelloMessage(cd react.ComponentDef) react.Component {
 	return HelloMessageDef{ComponentDef: cd}
 }
 
+func buildHelloMessageElem(props HelloMessageProps, children ...react.Element) *HelloMessageElem {
+	return &HelloMessageElem{
+		Element: react.CreateElement(buildHelloMessage, props),
+	}
+}
+
 // Props is an auto-generated proxy to the current props of HelloMessage
 func (h HelloMessageDef) Props() HelloMessageProps {
 	uprops := h.ComponentDef.Props()

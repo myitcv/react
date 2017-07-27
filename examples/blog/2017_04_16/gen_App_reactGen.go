@@ -17,3 +17,9 @@ func (a AppDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interf
 func buildApp(cd react.ComponentDef) react.Component {
 	return AppDef{ComponentDef: cd}
 }
+
+func buildAppElem(children ...react.Element) *AppElem {
+	return &AppElem{
+		Element: react.CreateElement(buildApp, nil),
+	}
+}

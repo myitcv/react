@@ -23,6 +23,12 @@ func buildPersonChooser(cd react.ComponentDef) react.Component {
 	return PersonChooserDef{ComponentDef: cd}
 }
 
+func buildPersonChooserElem(props PersonChooserProps, children ...react.Element) *PersonChooserElem {
+	return &PersonChooserElem{
+		Element: react.CreateElement(buildPersonChooser, props),
+	}
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // PersonChooser component.  SetState does not immediately mutate p.State()
 // but creates a pending state transition.

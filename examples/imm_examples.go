@@ -15,7 +15,7 @@ type ImmExamplesDef struct {
 
 // ImmExamples creates instances of the ImmExamples component
 func ImmExamples() *ImmExamplesElem {
-	return &ImmExamplesElem{Element: r.CreateElement(buildImmExamples, nil)}
+	return buildImmExamplesElem()
 }
 
 // ImmExamplesState is the state type for the ImmExamples component

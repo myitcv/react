@@ -20,6 +20,12 @@ func buildExamples(cd react.ComponentDef) react.Component {
 	return ExamplesDef{ComponentDef: cd}
 }
 
+func buildExamplesElem(children ...react.Element) *ExamplesElem {
+	return &ExamplesElem{
+		Element: react.CreateElement(buildExamples, nil),
+	}
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // Examples component.  SetState does not immediately mutate e.State()
 // but creates a pending state transition.

@@ -59,7 +59,7 @@ type LatencyState struct {
 }
 
 func Latency() *LatencyElem {
-	return &LatencyElem{Element: r.CreateElement(buildLatency, nil)}
+	return buildLatencyElem()
 }
 
 func (l LatencyDef) Render() r.Element {

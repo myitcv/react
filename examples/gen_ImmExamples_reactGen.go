@@ -20,6 +20,12 @@ func buildImmExamples(cd react.ComponentDef) react.Component {
 	return ImmExamplesDef{ComponentDef: cd}
 }
 
+func buildImmExamplesElem(children ...react.Element) *ImmExamplesElem {
+	return &ImmExamplesElem{
+		Element: react.CreateElement(buildImmExamples, nil),
+	}
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // ImmExamples component.  SetState does not immediately mutate i.State()
 // but creates a pending state transition.

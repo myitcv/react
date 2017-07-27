@@ -23,6 +23,12 @@ func buildFooBar(cd react.ComponentDef) react.Component {
 	return FooBarDef{ComponentDef: cd}
 }
 
+func buildFooBarElem(props FooBarProps, children ...react.Element) *FooBarElem {
+	return &FooBarElem{
+		Element: react.CreateElement(buildFooBar, props),
+	}
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // FooBar component.  SetState does not immediately mutate f.State()
 // but creates a pending state transition.

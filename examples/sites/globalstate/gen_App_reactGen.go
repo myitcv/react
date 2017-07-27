@@ -20,6 +20,12 @@ func buildApp(cd react.ComponentDef) react.Component {
 	return AppDef{ComponentDef: cd}
 }
 
+func buildAppElem(children ...react.Element) *AppElem {
+	return &AppElem{
+		Element: react.CreateElement(buildApp, nil),
+	}
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // App component.  SetState does not immediately mutate a.State()
 // but creates a pending state transition.

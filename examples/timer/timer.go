@@ -23,7 +23,7 @@ type TimerState struct {
 
 // Timer creates instances of the Timer component
 func Timer() *TimerElem {
-	return &TimerElem{Element: r.CreateElement(buildTimer, nil)}
+	return buildTimerElem()
 }
 
 // ComponentWillMount is a React lifecycle method for the Timer component

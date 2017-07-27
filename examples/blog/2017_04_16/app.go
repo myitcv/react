@@ -11,7 +11,7 @@ type AppDef struct {
 }
 
 func App() *AppElem {
-	return &AppElem{Element: r.CreateElement(buildApp, nil)}
+	return buildAppElem()
 }
 
 func (a AppDef) Render() r.Element {

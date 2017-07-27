@@ -21,7 +21,7 @@ type MarkdownEditorState struct {
 
 // MarkdownEditor creates instances of the MarkdownEditor component
 func MarkdownEditor() *MarkdownEditorElem {
-	return &MarkdownEditorElem{Element: r.CreateElement(buildMarkdownEditor, nil)}
+	return buildMarkdownEditorElem()
 }
 
 // GetInitialState returns the initial state for a MarkdownEditor component
