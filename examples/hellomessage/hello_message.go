@@ -18,13 +18,7 @@ type HelloMessageProps struct {
 
 // HelloMessage creates instances of the HelloMessage component
 func HelloMessage(p HelloMessageProps) *HelloMessageElem {
-	return &HelloMessageElem{
-		Element: r.CreateElement(buildCmp, p),
-	}
-}
-
-func buildCmp(elem r.ComponentDef) r.Component {
-	return HelloMessageDef{ComponentDef: elem}
+	return buildHelloMessageElem(p)
 }
 
 // Render renders the HelloMessage component
