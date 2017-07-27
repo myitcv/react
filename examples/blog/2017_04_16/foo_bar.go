@@ -41,7 +41,7 @@ type FooBarState struct {
 //
 func FooBar(p FooBarProps) *FooBarElem {
 	// every component constructor must call this function
-	return &FooBarElem{Element: r.CreateElement(buildFooBar, p)}
+	return buildFooBarElem(p)
 }
 
 // Render is a required method on all React components. Notice that the method

@@ -20,6 +20,12 @@ func buildPersonViewer(cd react.ComponentDef) react.Component {
 	return PersonViewerDef{ComponentDef: cd}
 }
 
+func buildPersonViewerElem(children ...react.Element) *PersonViewerElem {
+	return &PersonViewerElem{
+		Element: react.CreateElement(buildPersonViewer, nil),
+	}
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // PersonViewer component.  SetState does not immediately mutate p.State()
 // but creates a pending state transition.

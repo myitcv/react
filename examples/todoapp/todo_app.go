@@ -22,7 +22,7 @@ type TodoAppState struct {
 
 // TodoApp creates instances of the TodoApp component
 func TodoApp() *TodoAppElem {
-	return &TodoAppElem{Element: r.CreateElement(buildTodoApp, nil)}
+	return buildTodoAppElem()
 }
 
 // Equals must be defined because struct val instances of TodoAppState cannot

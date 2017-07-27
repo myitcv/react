@@ -20,6 +20,12 @@ func buildGlobalStateExamples(cd react.ComponentDef) react.Component {
 	return GlobalStateExamplesDef{ComponentDef: cd}
 }
 
+func buildGlobalStateExamplesElem(children ...react.Element) *GlobalStateExamplesElem {
+	return &GlobalStateExamplesElem{
+		Element: react.CreateElement(buildGlobalStateExamples, nil),
+	}
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // GlobalStateExamples component.  SetState does not immediately mutate g.State()
 // but creates a pending state transition.

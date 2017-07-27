@@ -12,7 +12,7 @@ type GlobalStateExamplesDef struct {
 
 // GlobalStateExamples creates instances of the GlobalStateExamples component
 func GlobalStateExamples() *GlobalStateExamplesElem {
-	return &GlobalStateExamplesElem{Element: r.CreateElement(buildGlobalStateExamples, nil)}
+	return buildGlobalStateExamplesElem()
 }
 
 // GlobalStateExamplesState is the state type for the GlobalStateExamples component

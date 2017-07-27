@@ -19,7 +19,7 @@ type PersonViewerState struct {
 }
 
 func PersonViewer() *PersonViewerElem {
-	return &PersonViewerElem{Element: r.CreateElement(buildPersonViewer, nil)}
+	return buildPersonViewerElem()
 }
 
 func (p PersonViewerDef) ComponentWillMount() {

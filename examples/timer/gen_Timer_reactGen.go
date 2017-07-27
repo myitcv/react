@@ -20,6 +20,12 @@ func buildTimer(cd react.ComponentDef) react.Component {
 	return TimerDef{ComponentDef: cd}
 }
 
+func buildTimerElem(children ...react.Element) *TimerElem {
+	return &TimerElem{
+		Element: react.CreateElement(buildTimer, nil),
+	}
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // Timer component.  SetState does not immediately mutate t.State()
 // but creates a pending state transition.

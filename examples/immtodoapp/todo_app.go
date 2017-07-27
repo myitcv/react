@@ -29,7 +29,7 @@ type TodoAppState struct {
 
 // TodoApp creates instances of the TodoApp component
 func TodoApp() *TodoAppElem {
-	return &TodoAppElem{Element: r.CreateElement(buildTodoApp, nil)}
+	return buildTodoAppElem()
 }
 
 func (t TodoAppDef) GetInitialState() TodoAppState {

@@ -20,6 +20,12 @@ func buildLatency(cd react.ComponentDef) react.Component {
 	return LatencyDef{ComponentDef: cd}
 }
 
+func buildLatencyElem(children ...react.Element) *LatencyElem {
+	return &LatencyElem{
+		Element: react.CreateElement(buildLatency, nil),
+	}
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // Latency component.  SetState does not immediately mutate l.State()
 // but creates a pending state transition.

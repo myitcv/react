@@ -30,7 +30,7 @@ type PersonChooserState struct {
 }
 
 func PersonChooser(props PersonChooserProps) *PersonChooserElem {
-	return &PersonChooserElem{Element: r.CreateElement(buildPersonChooser, props)}
+	return buildPersonChooserElem(props)
 }
 
 func (p PersonChooserDef) ComponentWillMount() {

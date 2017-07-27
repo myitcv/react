@@ -61,7 +61,7 @@ type _Imm_entriesKeysSelect []entryKey
 // Select creates a new instance of the SelectDef component with the provided props
 //
 func Select(props SelectProps) *SelectElem {
-	return &SelectElem{Element: r.CreateElement(buildSelect, props)}
+	return buildSelectElem(props)
 }
 
 func (p SelectDef) ComponentWillMount() {

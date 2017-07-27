@@ -236,6 +236,12 @@ func build{{.Name}}(cd react.ComponentDef) react.Component {
 	return {{.Name}}Def{ComponentDef: cd}
 }
 
+func build{{.Name}}Elem({{if .HasProps}}props {{.Name}}Props,{{end}} children ...react.Element) *{{.Name}}Elem {
+	return &{{.Name}}Elem{
+		Element: react.CreateElement(build{{.Name}}, {{if .HasProps}}props{{else}}nil{{end}}),
+	}
+}
+
 {{if .HasState}}
 // SetState is an auto-generated proxy proxy to update the state for the
 // {{.Name}} component.  SetState does not immediately mutate {{.Recv}}.State()
