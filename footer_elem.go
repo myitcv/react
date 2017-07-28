@@ -24,13 +24,7 @@ func Footer(props *FooterProps, children ...Element) *FooterElem {
 		props.assign(rProps)
 	}
 
-	args := []interface{}{"footer", rProps}
-
-	for _, v := range children {
-		args = append(args, elementToReactObj(v))
+	return &FooterElem{
+		Element: createElement("footer", rProps, children...),
 	}
-
-	underlying := react.Call("createElement", args...)
-
-	return &FooterElem{Element: elementHolder{elem: underlying}}
 }

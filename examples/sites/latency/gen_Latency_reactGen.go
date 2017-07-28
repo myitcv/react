@@ -8,7 +8,7 @@ type LatencyElem struct {
 	react.Element
 }
 
-func (l LatencyDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+func (l LatencyDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
 	res := false
 
 	v := prevState.(LatencyState)
@@ -50,6 +50,6 @@ func (l LatencyDef) GetInitialStateIntf() react.State {
 	return LatencyState{}
 }
 
-func (l LatencyState) EqualsIntf(val interface{}) bool {
+func (l LatencyState) EqualsIntf(val react.State) bool {
 	return l == val.(LatencyState)
 }

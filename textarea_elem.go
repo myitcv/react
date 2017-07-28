@@ -31,13 +31,7 @@ func TextArea(props *TextAreaProps, children ...Element) *TextAreaElem {
 		props.assign(rProps)
 	}
 
-	args := []interface{}{"textarea", rProps}
-
-	for _, v := range children {
-		args = append(args, elementToReactObj(v))
+	return &TextAreaElem{
+		Element: createElement("textarea", rProps, children...),
 	}
-
-	underlying := react.Call("createElement", args...)
-
-	return &TextAreaElem{Element: elementHolder{elem: underlying}}
 }

@@ -212,7 +212,7 @@ type {{.Name}}Elem struct {
 	react.Element
 }
 
-func ({{.Recv}} {{.Name}}Def) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+func ({{.Recv}} {{.Name}}Def) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
 	res := false
 
 	{{if .HasProps -}}
@@ -271,7 +271,7 @@ func ({{.Recv}} {{.Name}}Def) GetInitialStateIntf() react.State {
 {{end -}}
 }
 
-func ({{.Recv}} {{.Name}}State) EqualsIntf(val interface{}) bool {
+func ({{.Recv}} {{.Name}}State) EqualsIntf(val react.State) bool {
 	{{if .StateHasEquals -}}
 	return {{.Recv}}.Equals(val.({{.Name}}State))
 	{{else -}}
@@ -282,6 +282,10 @@ func ({{.Recv}} {{.Name}}State) EqualsIntf(val interface{}) bool {
 
 
 {{if .HasProps}}
+// IsProps is an auto-generated definition so that {{.Name}}Props implements
+// the myitcv.io/react.Props interface.
+func ({{.Recv}} {{.Name}}Props) IsProps() {}
+
 // Props is an auto-generated proxy to the current props of {{.Name}}
 func ({{.Recv}} {{.Name}}Def) Props() {{.Name}}Props {
 	uprops := {{.Recv}}.ComponentDef.Props()
@@ -297,7 +301,7 @@ func ({{.Recv}} {{.Name}}Def) ComponentWillReceivePropsIntf(val interface{}) {
 }
 {{end}}
 
-func ({{.Recv}} {{.Name}}Props) EqualsIntf(val interface{}) bool {
+func ({{.Recv}} {{.Name}}Props) EqualsIntf(val react.Props) bool {
 	{{if .PropsHasEquals -}}
 	return {{.Recv}}.Equals(val.({{.Name}}Props))
 	{{else -}}
@@ -305,7 +309,7 @@ func ({{.Recv}} {{.Name}}Props) EqualsIntf(val interface{}) bool {
 	{{end -}}
 }
 
-var _ react.Equals = {{.Name}}Props{}
+var _ react.Props = {{.Name}}Props{}
 {{end}}
 	`, cg)
 

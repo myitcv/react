@@ -23,7 +23,6 @@ type propsGen struct {
 }
 
 func (g *gen) genProps(defName string, t typeFile) {
-
 	name := strings.TrimPrefix(defName, propsTypeTmplPrefix)
 
 	r, _ := utf8.DecodeRuneInString(name)

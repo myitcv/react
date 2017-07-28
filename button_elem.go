@@ -27,13 +27,7 @@ func Button(props *ButtonProps, children ...Element) *ButtonElem {
 		props.assign(rProps)
 	}
 
-	args := []interface{}{"button", rProps}
-
-	for _, v := range children {
-		args = append(args, elementToReactObj(v))
+	return &ButtonElem{
+		Element: createElement("button", rProps, children...),
 	}
-
-	underlying := react.Call("createElement", args...)
-
-	return &ButtonElem{Element: elementHolder{elem: underlying}}
 }

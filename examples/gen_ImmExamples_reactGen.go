@@ -8,7 +8,7 @@ type ImmExamplesElem struct {
 	react.Element
 }
 
-func (i ImmExamplesDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+func (i ImmExamplesDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
 	res := false
 
 	v := prevState.(ImmExamplesState)
@@ -50,6 +50,6 @@ func (i ImmExamplesDef) GetInitialStateIntf() react.State {
 	return i.GetInitialState()
 }
 
-func (i ImmExamplesState) EqualsIntf(val interface{}) bool {
+func (i ImmExamplesState) EqualsIntf(val react.State) bool {
 	return i == val.(ImmExamplesState)
 }

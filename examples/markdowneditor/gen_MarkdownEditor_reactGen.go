@@ -8,7 +8,7 @@ type MarkdownEditorElem struct {
 	react.Element
 }
 
-func (m MarkdownEditorDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+func (m MarkdownEditorDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
 	res := false
 
 	v := prevState.(MarkdownEditorState)
@@ -50,6 +50,6 @@ func (m MarkdownEditorDef) GetInitialStateIntf() react.State {
 	return m.GetInitialState()
 }
 
-func (m MarkdownEditorState) EqualsIntf(val interface{}) bool {
+func (m MarkdownEditorState) EqualsIntf(val react.State) bool {
 	return m == val.(MarkdownEditorState)
 }

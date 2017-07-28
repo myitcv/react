@@ -8,7 +8,7 @@ type TodoAppElem struct {
 	react.Element
 }
 
-func (t TodoAppDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+func (t TodoAppDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
 	res := false
 
 	v := prevState.(TodoAppState)
@@ -50,6 +50,6 @@ func (t TodoAppDef) GetInitialStateIntf() react.State {
 	return t.GetInitialState()
 }
 
-func (t TodoAppState) EqualsIntf(val interface{}) bool {
+func (t TodoAppState) EqualsIntf(val react.State) bool {
 	return t == val.(TodoAppState)
 }

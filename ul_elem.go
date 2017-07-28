@@ -25,13 +25,12 @@ func Ul(props *UlProps, children ...*LiElem) *UlElem {
 		props.assign(rProps)
 	}
 
-	args := []interface{}{"ul", rProps}
-
+	var elems []Element
 	for _, v := range children {
-		args = append(args, elementToReactObj(v))
+		elems = append(elems, v)
 	}
 
-	underlying := react.Call("createElement", args...)
-
-	return &UlElem{Element: elementHolder{elem: underlying}}
+	return &UlElem{
+		Element: createElement("ul", rProps, elems...),
+	}
 }

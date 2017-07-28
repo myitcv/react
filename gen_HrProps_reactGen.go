@@ -2,8 +2,8 @@
 
 package react
 
-// HRProps defines the properties for the <hr> element
-type HRProps struct {
+// HrProps defines the properties for the <hr> element
+type HrProps struct {
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	ID                      string
@@ -16,7 +16,7 @@ type HRProps struct {
 	Style *CSS
 }
 
-func (h *HRProps) assign(v *_HRProps) {
+func (h *HrProps) assign(v *_HrProps) {
 
 	v.ClassName = h.ClassName
 

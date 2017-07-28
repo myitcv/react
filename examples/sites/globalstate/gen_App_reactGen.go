@@ -8,7 +8,7 @@ type AppElem struct {
 	react.Element
 }
 
-func (a AppDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+func (a AppDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
 	res := false
 
 	v := prevState.(AppState)
@@ -50,6 +50,6 @@ func (a AppDef) GetInitialStateIntf() react.State {
 	return AppState{}
 }
 
-func (a AppState) EqualsIntf(val interface{}) bool {
+func (a AppState) EqualsIntf(val react.State) bool {
 	return a == val.(AppState)
 }

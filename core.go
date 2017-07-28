@@ -43,7 +43,6 @@ func newBasicHTMLElement() *BasicHTMLElement {
 	}
 }
 
-// TODO complete the definition
 type SyntheticEvent struct {
 	o *js.Object
 

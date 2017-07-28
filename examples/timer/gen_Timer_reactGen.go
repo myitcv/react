@@ -8,7 +8,7 @@ type TimerElem struct {
 	react.Element
 }
 
-func (t TimerDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+func (t TimerDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
 	res := false
 
 	v := prevState.(TimerState)
@@ -50,6 +50,6 @@ func (t TimerDef) GetInitialStateIntf() react.State {
 	return TimerState{}
 }
 
-func (t TimerState) EqualsIntf(val interface{}) bool {
+func (t TimerState) EqualsIntf(val react.State) bool {
 	return t == val.(TimerState)
 }

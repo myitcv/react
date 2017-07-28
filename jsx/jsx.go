@@ -29,16 +29,16 @@ func parseP(n *html.Node) *r.PElem {
 	return r.P(nil, kids...)
 }
 
-func parseHR(n *html.Node) *r.HRElem {
+func parseHr(n *html.Node) *r.HrElem {
 	// TODO attributes
 
-	return r.HR(nil)
+	return r.Hr(nil)
 }
 
-func parseBR(n *html.Node) *r.BRElem {
+func parseBr(n *html.Node) *r.BrElem {
 	// TODO attributes
 
-	return r.BR(nil)
+	return r.Br(nil)
 }
 
 func parseH1(n *html.Node) *r.H1Elem {
@@ -333,9 +333,9 @@ func parse(n *html.Node) r.Element {
 	case "span":
 		return parseSpan(n)
 	case "hr":
-		return parseHR(n)
+		return parseHr(n)
 	case "br":
-		return parseBR(n)
+		return parseBr(n)
 	case "button":
 		return parseButton(n)
 	case "i":

@@ -26,9 +26,7 @@ func Option(props *OptionProps, child Element) *OptionElem {
 		props.assign(rProps)
 	}
 
-	args := []interface{}{"option", rProps, child}
-
-	underlying := react.Call("createElement", args...)
-
-	return &OptionElem{Element: elementHolder{elem: underlying}}
+	return &OptionElem{
+		Element: createElement("option", rProps, child),
+	}
 }

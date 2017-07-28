@@ -25,13 +25,7 @@ func Li(props *LiProps, children ...Element) *LiElem {
 		props.assign(rProps)
 	}
 
-	args := []interface{}{"li", rProps}
-
-	for _, v := range children {
-		args = append(args, elementToReactObj(v))
+	return &LiElem{
+		Element: createElement("li", rProps, children...),
 	}
-
-	underlying := react.Call("createElement", args...)
-
-	return &LiElem{Element: elementHolder{elem: underlying}}
 }

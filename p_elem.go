@@ -3,8 +3,6 @@
 
 package react
 
-//go:generate reactGen
-
 // PElem is the React element definition corresponding to the HTML <p> element
 type PElem struct {
 	Element
@@ -27,13 +25,7 @@ func P(props *PProps, children ...Element) *PElem {
 		props.assign(rProps)
 	}
 
-	args := []interface{}{"p", rProps}
-
-	for _, v := range children {
-		args = append(args, elementToReactObj(v))
+	return &PElem{
+		Element: createElement("p", rProps, children...),
 	}
-
-	underlying := react.Call("createElement", args...)
-
-	return &PElem{Element: elementHolder{elem: underlying}}
 }

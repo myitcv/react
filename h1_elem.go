@@ -25,13 +25,7 @@ func H1(props *H1Props, children ...Element) *H1Elem {
 		props.assign(rProps)
 	}
 
-	args := []interface{}{"h1", rProps}
-
-	for _, v := range children {
-		args = append(args, elementToReactObj(v))
+	return &H1Elem{
+		Element: createElement("h1", rProps, children...),
 	}
-
-	underlying := react.Call("createElement", args...)
-
-	return &H1Elem{Element: elementHolder{elem: underlying}}
 }

@@ -8,7 +8,7 @@ type HelloMessageElem struct {
 	react.Element
 }
 
-func (h HelloMessageDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+func (h HelloMessageDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
 	res := false
 
 	{
@@ -27,14 +27,18 @@ func buildHelloMessageElem(props HelloMessageProps, children ...react.Element) *
 	}
 }
 
+// IsProps is an auto-generated definition so that HelloMessageProps implements
+// the myitcv.io/react.Props interface.
+func (h HelloMessageProps) IsProps() {}
+
 // Props is an auto-generated proxy to the current props of HelloMessage
 func (h HelloMessageDef) Props() HelloMessageProps {
 	uprops := h.ComponentDef.Props()
 	return uprops.(HelloMessageProps)
 }
 
-func (h HelloMessageProps) EqualsIntf(val interface{}) bool {
+func (h HelloMessageProps) EqualsIntf(val react.Props) bool {
 	return h == val.(HelloMessageProps)
 }
 
-var _ react.Equals = HelloMessageProps{}
+var _ react.Props = HelloMessageProps{}

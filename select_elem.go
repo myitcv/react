@@ -26,13 +26,12 @@ func Select(props *SelectProps, children ...*OptionElem) *SelectElem {
 		props.assign(rProps)
 	}
 
-	args := []interface{}{"select", rProps}
-
+	var elems []Element
 	for _, v := range children {
-		args = append(args, elementToReactObj(v))
+		elems = append(elems, v)
 	}
 
-	underlying := react.Call("createElement", args...)
-
-	return &SelectElem{Element: elementHolder{elem: underlying}}
+	return &SelectElem{
+		Element: createElement("select", rProps, elems...),
+	}
 }

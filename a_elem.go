@@ -8,7 +8,7 @@ type AElem struct {
 	Element
 }
 
-// _APropsDef defines the properties for the <a> element
+// _AProps defines the properties for the <a> element
 type _AProps struct {
 	*BasicHTMLElement
 
@@ -28,13 +28,7 @@ func A(props *AProps, children ...Element) *AElem {
 		props.assign(rProps)
 	}
 
-	args := []interface{}{"a", rProps}
-
-	for _, v := range children {
-		args = append(args, elementToReactObj(v))
+	return &AElem{
+		Element: createElement("a", rProps, children...),
 	}
-
-	underlying := react.Call("createElement", args...)
-
-	return &AElem{Element: elementHolder{elem: underlying}}
 }
