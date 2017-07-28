@@ -29,9 +29,7 @@ func Input(props *InputProps) *InputElem {
 		props.assign(rProps)
 	}
 
-	args := []interface{}{"input", rProps}
-
-	underlying := react.Call("createElement", args...)
-
-	return &InputElem{Element: elementHolder{elem: underlying}}
+	return &InputElem{
+		Element: createElement("input", rProps),
+	}
 }

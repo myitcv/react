@@ -25,13 +25,7 @@ func Pre(props *PreProps, children ...Element) *PreElem {
 		props.assign(rProps)
 	}
 
-	args := []interface{}{"pre", rProps}
-
-	for _, v := range children {
-		args = append(args, elementToReactObj(v))
+	return &PreElem{
+		Element: createElement("pre", rProps, children...),
 	}
-
-	underlying := react.Call("createElement", args...)
-
-	return &PreElem{Element: elementHolder{elem: underlying}}
 }

@@ -98,7 +98,7 @@ func (p ExamplesDef) Render() r.Element {
 			hellomessage.HelloMessage(hellomessage.HelloMessageProps{Name: "Jane"}),
 		),
 
-		r.HR(nil),
+		r.Hr(nil),
 
 		p.renderExample(
 			exampleTimer,
@@ -108,7 +108,7 @@ func (p ExamplesDef) Render() r.Element {
 			timer.Timer(),
 		),
 
-		r.HR(nil),
+		r.Hr(nil),
 
 		p.renderExample(
 			exampleTodo,
@@ -119,7 +119,7 @@ func (p ExamplesDef) Render() r.Element {
 			todoapp.TodoApp(),
 		),
 
-		r.HR(nil),
+		r.Hr(nil),
 
 		p.renderExample(
 			exampleMarkdown,
@@ -129,7 +129,7 @@ func (p ExamplesDef) Render() r.Element {
 			markdowneditor.MarkdownEditor(),
 		),
 
-		r.HR(nil),
+		r.Hr(nil),
 
 		p.renderExample(
 			exampleLatency,

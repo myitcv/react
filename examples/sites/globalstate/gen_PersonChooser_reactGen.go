@@ -8,7 +8,7 @@ type PersonChooserElem struct {
 	react.Element
 }
 
-func (p PersonChooserDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+func (p PersonChooserDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
 	res := false
 
 	{
@@ -53,9 +53,13 @@ func (p PersonChooserDef) GetInitialStateIntf() react.State {
 	return PersonChooserState{}
 }
 
-func (p PersonChooserState) EqualsIntf(val interface{}) bool {
+func (p PersonChooserState) EqualsIntf(val react.State) bool {
 	return p == val.(PersonChooserState)
 }
+
+// IsProps is an auto-generated definition so that PersonChooserProps implements
+// the myitcv.io/react.Props interface.
+func (p PersonChooserProps) IsProps() {}
 
 // Props is an auto-generated proxy to the current props of PersonChooser
 func (p PersonChooserDef) Props() PersonChooserProps {
@@ -63,8 +67,8 @@ func (p PersonChooserDef) Props() PersonChooserProps {
 	return uprops.(PersonChooserProps)
 }
 
-func (p PersonChooserProps) EqualsIntf(val interface{}) bool {
+func (p PersonChooserProps) EqualsIntf(val react.Props) bool {
 	return p == val.(PersonChooserProps)
 }
 
-var _ react.Equals = PersonChooserProps{}
+var _ react.Props = PersonChooserProps{}

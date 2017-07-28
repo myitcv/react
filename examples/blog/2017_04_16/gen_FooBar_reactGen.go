@@ -8,7 +8,7 @@ type FooBarElem struct {
 	react.Element
 }
 
-func (f FooBarDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+func (f FooBarDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
 	res := false
 
 	{
@@ -53,9 +53,13 @@ func (f FooBarDef) GetInitialStateIntf() react.State {
 	return FooBarState{}
 }
 
-func (f FooBarState) EqualsIntf(val interface{}) bool {
+func (f FooBarState) EqualsIntf(val react.State) bool {
 	return f == val.(FooBarState)
 }
+
+// IsProps is an auto-generated definition so that FooBarProps implements
+// the myitcv.io/react.Props interface.
+func (f FooBarProps) IsProps() {}
 
 // Props is an auto-generated proxy to the current props of FooBar
 func (f FooBarDef) Props() FooBarProps {
@@ -63,8 +67,8 @@ func (f FooBarDef) Props() FooBarProps {
 	return uprops.(FooBarProps)
 }
 
-func (f FooBarProps) EqualsIntf(val interface{}) bool {
+func (f FooBarProps) EqualsIntf(val react.Props) bool {
 	return f == val.(FooBarProps)
 }
 
-var _ react.Equals = FooBarProps{}
+var _ react.Props = FooBarProps{}

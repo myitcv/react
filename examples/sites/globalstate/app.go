@@ -42,7 +42,7 @@ func (a AppDef) Render() r.Element {
 		PersonChooser(PersonChooserProps{
 			PersonState: state.State.CurrentPerson(),
 		}),
-		r.HR(nil),
+		r.Hr(nil),
 		showHide,
 		viewer,
 	)

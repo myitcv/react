@@ -24,13 +24,7 @@ func Div(props *DivProps, children ...Element) *DivElem {
 		props.assign(rProps)
 	}
 
-	args := []interface{}{"div", rProps}
-
-	for _, v := range children {
-		args = append(args, elementToReactObj(v))
+	return &DivElem{
+		Element: createElement("div", rProps, children...),
 	}
-
-	underlying := react.Call("createElement", args...)
-
-	return &DivElem{Element: elementHolder{elem: underlying}}
 }

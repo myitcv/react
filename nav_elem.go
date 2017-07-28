@@ -24,13 +24,7 @@ func Nav(props *NavProps, children ...Element) *NavElem {
 		props.assign(rProps)
 	}
 
-	args := []interface{}{"nav", rProps}
-
-	for _, v := range children {
-		args = append(args, elementToReactObj(v))
+	return &NavElem{
+		Element: createElement("nav", rProps, children...),
 	}
-
-	underlying := react.Call("createElement", args...)
-
-	return &NavElem{Element: elementHolder{elem: underlying}}
 }

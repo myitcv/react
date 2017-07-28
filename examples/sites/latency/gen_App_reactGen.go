@@ -8,7 +8,7 @@ type AppElem struct {
 	react.Element
 }
 
-func (a AppDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+func (a AppDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
 	res := false
 
 	return res

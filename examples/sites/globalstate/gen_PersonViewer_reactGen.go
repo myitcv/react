@@ -8,7 +8,7 @@ type PersonViewerElem struct {
 	react.Element
 }
 
-func (p PersonViewerDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+func (p PersonViewerDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
 	res := false
 
 	v := prevState.(PersonViewerState)
@@ -50,6 +50,6 @@ func (p PersonViewerDef) GetInitialStateIntf() react.State {
 	return PersonViewerState{}
 }
 
-func (p PersonViewerState) EqualsIntf(val interface{}) bool {
+func (p PersonViewerState) EqualsIntf(val react.State) bool {
 	return p == val.(PersonViewerState)
 }

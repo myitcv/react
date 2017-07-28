@@ -8,7 +8,7 @@ type GlobalStateExamplesElem struct {
 	react.Element
 }
 
-func (g GlobalStateExamplesDef) ShouldComponentUpdateIntf(nextProps, prevState, nextState interface{}) bool {
+func (g GlobalStateExamplesDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
 	res := false
 
 	v := prevState.(GlobalStateExamplesState)
@@ -50,6 +50,6 @@ func (g GlobalStateExamplesDef) GetInitialStateIntf() react.State {
 	return g.GetInitialState()
 }
 
-func (g GlobalStateExamplesState) EqualsIntf(val interface{}) bool {
+func (g GlobalStateExamplesState) EqualsIntf(val react.State) bool {
 	return g == val.(GlobalStateExamplesState)
 }
