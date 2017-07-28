@@ -19,6 +19,8 @@ import (
 
 const (
 	reactPkg      = "myitcv.io/react"
+	htmlPkg       = reactPkg + "/html"
+	domPkg        = reactPkg + "/dom"
 	compDefName   = "ComponentDef"
 	compDefSuffix = "Def"
 
@@ -84,7 +86,9 @@ func dogen(dir, license string) {
 		fatalf("unable to import pkg in dir %v: %v", dir, err)
 	}
 
-	isReactCore := bpkg.ImportPath == reactPkg || strings.HasPrefix(bpkg.ImportPath, reactPkg+"/")
+	isReactCore := bpkg.ImportPath == reactPkg ||
+		bpkg.ImportPath == htmlPkg ||
+		bpkg.ImportPath == domPkg
 
 	pkgs, err := parser.ParseDir(fset, dir, nil, parser.ParseComments)
 	if err != nil {

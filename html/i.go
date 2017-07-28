@@ -30,13 +30,7 @@ func I(props *IProps, children ...react.Element) *IElem {
 		props.assign(rProps)
 	}
 
-	args := []interface{}{"i", rProps}
-
-	for _, v := range children {
-		args = append(args, elementToReactObj(v))
+	return &IElem{
+		Element: react.InternalCreateElement("i", rProps, children...),
 	}
-
-	underlying := react.Call("createElement", args...)
-
-	return &IElem{Element: elementHolder{elem: underlying}}
 }

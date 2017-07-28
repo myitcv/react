@@ -2,15 +2,44 @@
 
 package html
 
+import "myitcv.io/react/dom"
+
 // ButtonProps defines the properties for the <button> element
 type ButtonProps struct {
-	*BasicHTMLElement
-	Type string
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	ID                      string
+	Key                     string
+	OnChange                dom.OnChange
+	OnClick                 dom.OnClick
+	Role                    string
+	Style                   *CSS
+	Type                    string
 }
 
 func (b *ButtonProps) assign(v *_ButtonProps) {
 
-	v.BasicHTMLElement = b.BasicHTMLElement
+	v.ClassName = b.ClassName
+
+	v.DangerouslySetInnerHTML = b.DangerouslySetInnerHTML
+
+	if b.ID != "" {
+		v.ID = b.ID
+	}
+
+	if b.Key != "" {
+		v.Key = b.Key
+	}
+
+	v.OnChange = b.OnChange
+
+	v.OnClick = b.OnClick
+
+	v.Role = b.Role
+
+	// TODO: until we have a resolution on
+	// https://github.com/gopherjs/gopherjs/issues/236
+	v.Style = b.Style.hack()
 
 	v.Type = b.Type
 

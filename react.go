@@ -159,6 +159,18 @@ func (c ComponentDef) State() interface{} {
 
 type ComponentBuilder func(elem ComponentDef) Component
 
+func InternalCreateElement(cmp string, props interface{}, children ...Element) Element {
+	args := []interface{}{cmp, props}
+
+	for _, v := range children {
+		args = append(args, elementToReactObj(v))
+	}
+
+	return elementHolder{
+		elem: react.Call("createElement", args...),
+	}
+}
+
 func CreateElement(buildCmp ComponentBuilder, newprops interface{}, children ...Element) Element {
 	cmp := buildCmp(ComponentDef{})
 	typ := reflect.TypeOf(cmp)

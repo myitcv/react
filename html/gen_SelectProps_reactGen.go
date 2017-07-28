@@ -2,15 +2,44 @@
 
 package html
 
+import "myitcv.io/react/dom"
+
 // SelectProps are the props for a <select> component
 type SelectProps struct {
-	*BasicHTMLElement
-	Value string
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	ID                      string
+	Key                     string
+	OnChange                dom.OnChange
+	OnClick                 dom.OnClick
+	Role                    string
+	Style                   *CSS
+	Value                   string
 }
 
 func (s *SelectProps) assign(v *_SelectProps) {
 
-	v.BasicHTMLElement = s.BasicHTMLElement
+	v.ClassName = s.ClassName
+
+	v.DangerouslySetInnerHTML = s.DangerouslySetInnerHTML
+
+	if s.ID != "" {
+		v.ID = s.ID
+	}
+
+	if s.Key != "" {
+		v.Key = s.Key
+	}
+
+	v.OnChange = s.OnChange
+
+	v.OnClick = s.OnClick
+
+	v.Role = s.Role
+
+	// TODO: until we have a resolution on
+	// https://github.com/gopherjs/gopherjs/issues/236
+	v.Style = s.Style.hack()
 
 	v.Value = s.Value
 

@@ -2,13 +2,42 @@
 
 package html
 
+import "myitcv.io/react/dom"
+
 // SpanProps defines the properties for the <p> element
 type SpanProps struct {
-	*BasicHTMLElement
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	ID                      string
+	Key                     string
+	OnChange                dom.OnChange
+	OnClick                 dom.OnClick
+	Role                    string
+	Style                   *CSS
 }
 
 func (s *SpanProps) assign(v *_SpanProps) {
 
-	v.BasicHTMLElement = s.BasicHTMLElement
+	v.ClassName = s.ClassName
+
+	v.DangerouslySetInnerHTML = s.DangerouslySetInnerHTML
+
+	if s.ID != "" {
+		v.ID = s.ID
+	}
+
+	if s.Key != "" {
+		v.Key = s.Key
+	}
+
+	v.OnChange = s.OnChange
+
+	v.OnClick = s.OnClick
+
+	v.Role = s.Role
+
+	// TODO: until we have a resolution on
+	// https://github.com/gopherjs/gopherjs/issues/236
+	v.Style = s.Style.hack()
 
 }

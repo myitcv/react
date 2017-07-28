@@ -2,13 +2,42 @@
 
 package html
 
+import "myitcv.io/react/dom"
+
 // CodeProps defines the properties for the <code> element
 type CodeProps struct {
-	*BasicHTMLElement
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	ID                      string
+	Key                     string
+	OnChange                dom.OnChange
+	OnClick                 dom.OnClick
+	Role                    string
+	Style                   *CSS
 }
 
 func (c *CodeProps) assign(v *_CodeProps) {
 
-	v.BasicHTMLElement = c.BasicHTMLElement
+	v.ClassName = c.ClassName
+
+	v.DangerouslySetInnerHTML = c.DangerouslySetInnerHTML
+
+	if c.ID != "" {
+		v.ID = c.ID
+	}
+
+	if c.Key != "" {
+		v.Key = c.Key
+	}
+
+	v.OnChange = c.OnChange
+
+	v.OnClick = c.OnClick
+
+	v.Role = c.Role
+
+	// TODO: until we have a resolution on
+	// https://github.com/gopherjs/gopherjs/issues/236
+	v.Style = c.Style.hack()
 
 }

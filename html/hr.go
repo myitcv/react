@@ -7,20 +7,20 @@ import (
 	"myitcv.io/react"
 )
 
-// HRElem is the React element definition corresponding to the HTML <hr> element
-type HRElem struct {
+// HrElem is the React element definition corresponding to the HTML <hr> element
+type HrElem struct {
 	react.Element
 }
 
-// _HRProps defines the properties for the <hr> element
-type _HRProps struct {
+// _HrProps defines the properties for the <hr> element
+type _HrProps struct {
 	*BasicHTMLElement
 }
 
-// HR creates a new instance of a <hr> element with the provided props
-func HR(props *HRProps) *HRElem {
+// Hr creates a new instance of a <hr> element with the provided props
+func Hr(props *HrProps) *HrElem {
 
-	rProps := &_HRProps{
+	rProps := &_HrProps{
 		BasicHTMLElement: newBasicHTMLElement(),
 	}
 
@@ -28,7 +28,7 @@ func HR(props *HRProps) *HRElem {
 		props.assign(rProps)
 	}
 
-	underlying := react.Call("createElement", "hr", rProps)
-
-	return &HRElem{Element: elementHolder{elem: underlying}}
+	return &HrElem{
+		Element: react.InternalCreateElement("hr", rProps),
+	}
 }

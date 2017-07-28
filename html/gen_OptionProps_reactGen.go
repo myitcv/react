@@ -2,15 +2,44 @@
 
 package html
 
+import "myitcv.io/react/dom"
+
 // OptionProps defines the properties for the <option> element
 type OptionProps struct {
-	*BasicHTMLElement
-	Value string
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	ID                      string
+	Key                     string
+	OnChange                dom.OnChange
+	OnClick                 dom.OnClick
+	Role                    string
+	Style                   *CSS
+	Value                   string
 }
 
 func (o *OptionProps) assign(v *_OptionProps) {
 
-	v.BasicHTMLElement = o.BasicHTMLElement
+	v.ClassName = o.ClassName
+
+	v.DangerouslySetInnerHTML = o.DangerouslySetInnerHTML
+
+	if o.ID != "" {
+		v.ID = o.ID
+	}
+
+	if o.Key != "" {
+		v.Key = o.Key
+	}
+
+	v.OnChange = o.OnChange
+
+	v.OnClick = o.OnClick
+
+	v.Role = o.Role
+
+	// TODO: until we have a resolution on
+	// https://github.com/gopherjs/gopherjs/issues/236
+	v.Style = o.Style.hack()
 
 	v.Value = o.Value
 

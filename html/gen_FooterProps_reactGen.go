@@ -2,13 +2,42 @@
 
 package html
 
+import "myitcv.io/react/dom"
+
 // FooterProps are the props for a <footer> component
 type FooterProps struct {
-	*BasicHTMLElement
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	ID                      string
+	Key                     string
+	OnChange                dom.OnChange
+	OnClick                 dom.OnClick
+	Role                    string
+	Style                   *CSS
 }
 
 func (f *FooterProps) assign(v *_FooterProps) {
 
-	v.BasicHTMLElement = f.BasicHTMLElement
+	v.ClassName = f.ClassName
+
+	v.DangerouslySetInnerHTML = f.DangerouslySetInnerHTML
+
+	if f.ID != "" {
+		v.ID = f.ID
+	}
+
+	if f.Key != "" {
+		v.Key = f.Key
+	}
+
+	v.OnChange = f.OnChange
+
+	v.OnClick = f.OnClick
+
+	v.Role = f.Role
+
+	// TODO: until we have a resolution on
+	// https://github.com/gopherjs/gopherjs/issues/236
+	v.Style = f.Style.hack()
 
 }

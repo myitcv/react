@@ -32,13 +32,7 @@ func Form(props *FormProps, children ...react.Element) *FormElem {
 		props.assign(rProps)
 	}
 
-	args := []interface{}{"form", rProps}
-
-	for _, v := range children {
-		args = append(args, elementToReactObj(v))
+	return &FormElem{
+		Element: react.InternalCreateElement("form", rProps, children...),
 	}
-
-	underlying := react.Call("createElement", args...)
-
-	return &FormElem{Element: elementHolder{elem: underlying}}
 }

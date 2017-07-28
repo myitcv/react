@@ -2,13 +2,42 @@
 
 package html
 
+import "myitcv.io/react/dom"
+
 // H1Props defines the properties for the <h1> element
 type H1Props struct {
-	*BasicHTMLElement
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	ID                      string
+	Key                     string
+	OnChange                dom.OnChange
+	OnClick                 dom.OnClick
+	Role                    string
+	Style                   *CSS
 }
 
 func (h *H1Props) assign(v *_H1Props) {
 
-	v.BasicHTMLElement = h.BasicHTMLElement
+	v.ClassName = h.ClassName
+
+	v.DangerouslySetInnerHTML = h.DangerouslySetInnerHTML
+
+	if h.ID != "" {
+		v.ID = h.ID
+	}
+
+	if h.Key != "" {
+		v.Key = h.Key
+	}
+
+	v.OnChange = h.OnChange
+
+	v.OnClick = h.OnClick
+
+	v.Role = h.Role
+
+	// TODO: until we have a resolution on
+	// https://github.com/gopherjs/gopherjs/issues/236
+	v.Style = h.Style.hack()
 
 }

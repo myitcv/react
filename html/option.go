@@ -20,7 +20,7 @@ type _OptionProps struct {
 }
 
 // Option creates a new instance of a <option> element with the provided props
-func Option(props *OptionProps, child Element) *OptionElem {
+func Option(props *OptionProps, child react.Element) *OptionElem {
 
 	rProps := &_OptionProps{
 		BasicHTMLElement: newBasicHTMLElement(),
@@ -30,9 +30,7 @@ func Option(props *OptionProps, child Element) *OptionElem {
 		props.assign(rProps)
 	}
 
-	args := []interface{}{"option", rProps, child}
-
-	underlying := react.Call("createElement", args...)
-
-	return &OptionElem{Element: elementHolder{elem: underlying}}
+	return &OptionElem{
+		Element: react.InternalCreateElement("option", rProps, child),
+	}
 }

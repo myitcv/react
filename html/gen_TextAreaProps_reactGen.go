@@ -2,29 +2,58 @@
 
 package html
 
+import "myitcv.io/react/dom"
+
 // TextAreaProps defines the properties for the <textarea> element
 type TextAreaProps struct {
-	*BasicHTMLElement
-	Cols         uint
-	DefaultValue string
-	Placeholder  string
-	Rows         uint
-	Value        string
+	ClassName               string
+	Cols                    uint
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	DefaultValue            string
+	ID                      string
+	Key                     string
+	OnChange                dom.OnChange
+	OnClick                 dom.OnClick
+	Placeholder             string
+	Role                    string
+	Rows                    uint
+	Style                   *CSS
+	Value                   string
 }
 
 func (t *TextAreaProps) assign(v *_TextAreaProps) {
 
-	v.BasicHTMLElement = t.BasicHTMLElement
+	v.ClassName = t.ClassName
 
 	v.Cols = t.Cols
+
+	v.DangerouslySetInnerHTML = t.DangerouslySetInnerHTML
 
 	if t.DefaultValue != "" {
 		v.DefaultValue = t.DefaultValue
 	}
 
+	if t.ID != "" {
+		v.ID = t.ID
+	}
+
+	if t.Key != "" {
+		v.Key = t.Key
+	}
+
+	v.OnChange = t.OnChange
+
+	v.OnClick = t.OnClick
+
 	v.Placeholder = t.Placeholder
 
+	v.Role = t.Role
+
 	v.Rows = t.Rows
+
+	// TODO: until we have a resolution on
+	// https://github.com/gopherjs/gopherjs/issues/236
+	v.Style = t.Style.hack()
 
 	v.Value = t.Value
 

@@ -4,8 +4,8 @@ package html
 
 import "myitcv.io/react/dom"
 
-// LiProps defines the properties for the <li> element
-type LiProps struct {
+// HrProps defines the properties for the <hr> element
+type HrProps struct {
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	ID                      string
@@ -16,28 +16,28 @@ type LiProps struct {
 	Style                   *CSS
 }
 
-func (l *LiProps) assign(v *_LiProps) {
+func (h *HrProps) assign(v *_HrProps) {
 
-	v.ClassName = l.ClassName
+	v.ClassName = h.ClassName
 
-	v.DangerouslySetInnerHTML = l.DangerouslySetInnerHTML
+	v.DangerouslySetInnerHTML = h.DangerouslySetInnerHTML
 
-	if l.ID != "" {
-		v.ID = l.ID
+	if h.ID != "" {
+		v.ID = h.ID
 	}
 
-	if l.Key != "" {
-		v.Key = l.Key
+	if h.Key != "" {
+		v.Key = h.Key
 	}
 
-	v.OnChange = l.OnChange
+	v.OnChange = h.OnChange
 
-	v.OnClick = l.OnClick
+	v.OnClick = h.OnClick
 
-	v.Role = l.Role
+	v.Role = h.Role
 
 	// TODO: until we have a resolution on
 	// https://github.com/gopherjs/gopherjs/issues/236
-	v.Style = l.Style.hack()
+	v.Style = h.Style.hack()
 
 }

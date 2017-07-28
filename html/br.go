@@ -7,20 +7,20 @@ import (
 	"myitcv.io/react"
 )
 
-// BRElem is the React element definition corresponding to the HTML <br> element
-type BRElem struct {
+// BrElem is the React element definition corresponding to the HTML <br> element
+type BrElem struct {
 	react.Element
 }
 
-// _BRProps defines the properties for the <br> element
-type _BRProps struct {
+// _BrProps defines the properties for the <br> element
+type _BrProps struct {
 	*BasicHTMLElement
 }
 
-// BR creates a new instance of a <br> element with the provided props
-func BR(props *BRProps) *BRElem {
+// Br creates a new instance of a <br> element with the provided props
+func Br(props *BrProps) *BrElem {
 
-	rProps := &_BRProps{
+	rProps := &_BrProps{
 		BasicHTMLElement: newBasicHTMLElement(),
 	}
 
@@ -28,7 +28,7 @@ func BR(props *BRProps) *BRElem {
 		props.assign(rProps)
 	}
 
-	underlying := react.Call("createElement", "br", rProps)
-
-	return &BRElem{Element: elementHolder{elem: underlying}}
+	return &BrElem{
+		Element: react.InternalCreateElement("br", rProps),
+	}
 }

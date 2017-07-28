@@ -2,18 +2,47 @@
 
 package html
 
+import "myitcv.io/react/dom"
+
 // APropsDef defines the properties for the <a> element
 type AProps struct {
-	*BasicHTMLElement
-	Href   string
-	Target string
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	Href                    string
+	ID                      string
+	Key                     string
+	OnChange                dom.OnChange
+	OnClick                 dom.OnClick
+	Role                    string
+	Style                   *CSS
+	Target                  string
 }
 
 func (a *AProps) assign(v *_AProps) {
 
-	v.BasicHTMLElement = a.BasicHTMLElement
+	v.ClassName = a.ClassName
+
+	v.DangerouslySetInnerHTML = a.DangerouslySetInnerHTML
 
 	v.Href = a.Href
+
+	if a.ID != "" {
+		v.ID = a.ID
+	}
+
+	if a.Key != "" {
+		v.Key = a.Key
+	}
+
+	v.OnChange = a.OnChange
+
+	v.OnClick = a.OnClick
+
+	v.Role = a.Role
+
+	// TODO: until we have a resolution on
+	// https://github.com/gopherjs/gopherjs/issues/236
+	v.Style = a.Style.hack()
 
 	v.Target = a.Target
 

@@ -8,6 +8,7 @@ import (
 
 	"honnef.co/go/js/dom"
 	r "myitcv.io/react"
+	"myitcv.io/react/html"
 	"myitcv.io/react/jsx"
 )
 
@@ -71,8 +72,8 @@ func (l LatencyDef) Render() r.Element {
 		c = l.renderInput()
 	}
 
-	return r.Div(&r.DivProps{ClassName: "App"},
-		r.Div(&r.DivProps{ClassName: "Content center full column"},
+	return html.Div(&html.DivProps{ClassName: "App"},
+		html.Div(&html.DivProps{ClassName: "Content center full column"},
 			jsx.HTMLElem(`
 			<div className="Title margin center">
 				<span className="text">Latency</span>
@@ -94,16 +95,16 @@ func (l LatencyDef) Render() r.Element {
 }
 
 func (l LatencyDef) renderInput() r.Element {
-	return r.Form(&r.FormProps{ClassName: "LatencyForm"},
-		r.Div(&r.DivProps{ClassName: "group"},
-			r.Input(&r.InputProps{
+	return html.Form(&html.FormProps{ClassName: "LatencyForm"},
+		html.Div(&html.DivProps{ClassName: "group"},
+			html.Input(&html.InputProps{
 				Type:        "text",
 				ID:          "url",
 				Placeholder: "url to test (can be anything)",
 				Value:       l.State().url,
 				OnChange:    urlChange{l},
 			}),
-			r.Input(&r.InputProps{
+			html.Input(&html.InputProps{
 				Type:        "text",
 				ID:          "altUrl",
 				Placeholder: "comparison url (not used)",
@@ -111,8 +112,8 @@ func (l LatencyDef) renderInput() r.Element {
 				OnChange:    altUrlChange{l},
 			}),
 		),
-		r.Button(
-			&r.ButtonProps{
+		html.Button(
+			&html.ButtonProps{
 				ClassName: "Button small",
 				OnClick:   check{l},
 			},
@@ -146,7 +147,7 @@ func (l *LatencyDef) renderOutput() r.Element {
 		regClass := "Region"
 
 		timings := []r.Element{
-			r.Span(&r.SpanProps{ClassName: "total"}, r.S("0ms")),
+			html.Span(&html.SpanProps{ClassName: "total"}, r.S("0ms")),
 		}
 
 		res, ok := ls.Get(v)
@@ -159,14 +160,14 @@ func (l *LatencyDef) renderOutput() r.Element {
 				regClass += " with-timings speed-fast"
 			}
 
-			genTiming := func(f time.Duration, n, l string) *r.SpanElem {
+			genTiming := func(f time.Duration, n, l string) *html.SpanElem {
 				w := fmt.Sprintf("%.3fpx", float64(f)/float64(maxTot)*resultWidth)
 				rs := fmt.Sprintf("%v (%v)", l, f)
 
-				return r.Span(
-					&r.SpanProps{
+				return html.Span(
+					&html.SpanProps{
 						ClassName: "timing " + n,
-						Style:     &r.CSS{Width: w},
+						Style:     &html.CSS{Width: w},
 					},
 					r.S(rs),
 				)
@@ -178,26 +179,26 @@ func (l *LatencyDef) renderOutput() r.Element {
 				genTiming(res.tls, "tls", "TLS"),
 				genTiming(res.wait, "wait", "Wait"),
 				genTiming(res.download, "download", "Download"),
-				r.Span(&r.SpanProps{ClassName: "total"}, r.S(fmt.Sprintf("%v", res.total))),
+				html.Span(&html.SpanProps{ClassName: "total"}, r.S(fmt.Sprintf("%v", res.total))),
 			}
 		}
 
-		rd := r.Div(&r.DivProps{ClassName: regClass},
-			r.Span(&r.SpanProps{ClassName: "name"}, r.S(v)),
-			r.Div(&r.DivProps{ClassName: "Results"},
-				r.Div(&r.DivProps{ClassName: "Timings"}, timings...),
+		rd := html.Div(&html.DivProps{ClassName: regClass},
+			html.Span(&html.SpanProps{ClassName: "name"}, r.S(v)),
+			html.Div(&html.DivProps{ClassName: "Results"},
+				html.Div(&html.DivProps{ClassName: "Timings"}, timings...),
 			),
 		)
 
 		regions = append(regions, rd)
 	}
 
-	return r.Div(&r.DivProps{ClassName: "Regions"},
+	return html.Div(&html.DivProps{ClassName: "Regions"},
 		regions...,
 	)
 }
 
-func (l *LatencyDef) reset(e *r.SyntheticMouseEvent) {
+func (l *LatencyDef) reset(e *html.SyntheticMouseEvent) {
 	s := l.State()
 	s.output = false
 	s.reqId++

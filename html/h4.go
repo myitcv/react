@@ -29,13 +29,7 @@ func H4(props *H4Props, children ...react.Element) *H4Elem {
 		props.assign(rProps)
 	}
 
-	args := []interface{}{"h4", rProps}
-
-	for _, v := range children {
-		args = append(args, elementToReactObj(v))
+	return &H4Elem{
+		Element: react.InternalCreateElement("h4", rProps, children...),
 	}
-
-	underlying := react.Call("createElement", args...)
-
-	return &H4Elem{Element: elementHolder{elem: underlying}}
 }

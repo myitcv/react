@@ -2,13 +2,42 @@
 
 package html
 
+import "myitcv.io/react/dom"
+
 // PreProps defines the properties for the <pre> element
 type PreProps struct {
-	*BasicHTMLElement
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	ID                      string
+	Key                     string
+	OnChange                dom.OnChange
+	OnClick                 dom.OnClick
+	Role                    string
+	Style                   *CSS
 }
 
 func (p *PreProps) assign(v *_PreProps) {
 
-	v.BasicHTMLElement = p.BasicHTMLElement
+	v.ClassName = p.ClassName
+
+	v.DangerouslySetInnerHTML = p.DangerouslySetInnerHTML
+
+	if p.ID != "" {
+		v.ID = p.ID
+	}
+
+	if p.Key != "" {
+		v.Key = p.Key
+	}
+
+	v.OnChange = p.OnChange
+
+	v.OnClick = p.OnClick
+
+	v.Role = p.Role
+
+	// TODO: until we have a resolution on
+	// https://github.com/gopherjs/gopherjs/issues/236
+	v.Style = p.Style.hack()
 
 }

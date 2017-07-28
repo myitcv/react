@@ -7,8 +7,6 @@ import (
 	"myitcv.io/react"
 )
 
-//go:generate reactGen
-
 // PElem is the React element definition corresponding to the HTML <p> element
 type PElem struct {
 	react.Element
@@ -31,13 +29,7 @@ func P(props *PProps, children ...react.Element) *PElem {
 		props.assign(rProps)
 	}
 
-	args := []interface{}{"p", rProps}
-
-	for _, v := range children {
-		args = append(args, elementToReactObj(v))
+	return &PElem{
+		Element: react.InternalCreateElement("p", rProps, children...),
 	}
-
-	underlying := react.Call("createElement", args...)
-
-	return &PElem{Element: elementHolder{elem: underlying}}
 }

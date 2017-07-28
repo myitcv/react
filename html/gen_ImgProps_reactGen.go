@@ -2,16 +2,45 @@
 
 package html
 
+import "myitcv.io/react/dom"
+
 // ImgProps are the props for a <Img> component
 type ImgProps struct {
-	*BasicHTMLElement
-	Src string
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	ID                      string
+	Key                     string
+	OnChange                dom.OnChange
+	OnClick                 dom.OnClick
+	Role                    string
+	Src                     string
+	Style                   *CSS
 }
 
 func (i *ImgProps) assign(v *_ImgProps) {
 
-	v.BasicHTMLElement = i.BasicHTMLElement
+	v.ClassName = i.ClassName
+
+	v.DangerouslySetInnerHTML = i.DangerouslySetInnerHTML
+
+	if i.ID != "" {
+		v.ID = i.ID
+	}
+
+	if i.Key != "" {
+		v.Key = i.Key
+	}
+
+	v.OnChange = i.OnChange
+
+	v.OnClick = i.OnClick
+
+	v.Role = i.Role
 
 	v.Src = i.Src
+
+	// TODO: until we have a resolution on
+	// https://github.com/gopherjs/gopherjs/issues/236
+	v.Style = i.Style.hack()
 
 }

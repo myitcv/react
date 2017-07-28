@@ -9,6 +9,7 @@ import (
 	"golang.org/x/net/html"
 	"golang.org/x/net/html/atom"
 	r "myitcv.io/react"
+	rhtml "myitcv.io/react/html"
 )
 
 // each of the parse* functions does zero validation
@@ -17,7 +18,7 @@ import (
 
 // TODO code generate these parse functions
 
-func parseP(n *html.Node) *r.PElem {
+func parseP(n *html.Node) *rhtml.PElem {
 	var kids []r.Element
 
 	// TODO attributes
@@ -26,22 +27,22 @@ func parseP(n *html.Node) *r.PElem {
 		kids = append(kids, parse(c))
 	}
 
-	return r.P(nil, kids...)
+	return rhtml.P(nil, kids...)
 }
 
-func parseHR(n *html.Node) *r.HRElem {
+func parseHR(n *html.Node) *rhtml.HrElem {
 	// TODO attributes
 
-	return r.HR(nil)
+	return rhtml.Hr(nil)
 }
 
-func parseBR(n *html.Node) *r.BRElem {
+func parseBR(n *html.Node) *rhtml.BrElem {
 	// TODO attributes
 
-	return r.BR(nil)
+	return rhtml.Br(nil)
 }
 
-func parseH1(n *html.Node) *r.H1Elem {
+func parseH1(n *html.Node) *rhtml.H1Elem {
 	var kids []r.Element
 
 	// TODO attributes
@@ -50,16 +51,16 @@ func parseH1(n *html.Node) *r.H1Elem {
 		kids = append(kids, parse(c))
 	}
 
-	return r.H1(nil, kids...)
+	return rhtml.H1(nil, kids...)
 }
 
-func parseSpan(n *html.Node) *r.SpanElem {
+func parseSpan(n *html.Node) *rhtml.SpanElem {
 	var kids []r.Element
 
-	var vp *r.SpanProps
+	var vp *rhtml.SpanProps
 
 	if len(n.Attr) > 0 {
-		vp = new(r.SpanProps)
+		vp = new(rhtml.SpanProps)
 
 		for _, a := range n.Attr {
 			switch a.Key {
@@ -77,16 +78,16 @@ func parseSpan(n *html.Node) *r.SpanElem {
 		kids = append(kids, parse(c))
 	}
 
-	return r.Span(vp, kids...)
+	return rhtml.Span(vp, kids...)
 }
 
-func parseI(n *html.Node) *r.IElem {
+func parseI(n *html.Node) *rhtml.IElem {
 	var kids []r.Element
 
-	var vp *r.IProps
+	var vp *rhtml.IProps
 
 	if len(n.Attr) > 0 {
-		vp = new(r.IProps)
+		vp = new(rhtml.IProps)
 
 		for _, a := range n.Attr {
 			switch a.Key {
@@ -104,16 +105,16 @@ func parseI(n *html.Node) *r.IElem {
 		kids = append(kids, parse(c))
 	}
 
-	return r.I(vp, kids...)
+	return rhtml.I(vp, kids...)
 }
 
-func parseFooter(n *html.Node) *r.FooterElem {
+func parseFooter(n *html.Node) *rhtml.FooterElem {
 	var kids []r.Element
 
-	var vp *r.FooterProps
+	var vp *rhtml.FooterProps
 
 	if len(n.Attr) > 0 {
-		vp = new(r.FooterProps)
+		vp = new(rhtml.FooterProps)
 
 		for _, a := range n.Attr {
 			switch a.Key {
@@ -131,16 +132,16 @@ func parseFooter(n *html.Node) *r.FooterElem {
 		kids = append(kids, parse(c))
 	}
 
-	return r.Footer(vp, kids...)
+	return rhtml.Footer(vp, kids...)
 }
 
-func parseDiv(n *html.Node) *r.DivElem {
+func parseDiv(n *html.Node) *rhtml.DivElem {
 	var kids []r.Element
 
-	var vp *r.DivProps
+	var vp *rhtml.DivProps
 
 	if len(n.Attr) > 0 {
-		vp = new(r.DivProps)
+		vp = new(rhtml.DivProps)
 
 		for _, a := range n.Attr {
 			switch a.Key {
@@ -160,16 +161,16 @@ func parseDiv(n *html.Node) *r.DivElem {
 		kids = append(kids, parse(c))
 	}
 
-	return r.Div(vp, kids...)
+	return rhtml.Div(vp, kids...)
 }
 
-func parseButton(n *html.Node) *r.ButtonElem {
+func parseButton(n *html.Node) *rhtml.ButtonElem {
 	var kids []r.Element
 
-	var vp *r.ButtonProps
+	var vp *rhtml.ButtonProps
 
 	if len(n.Attr) > 0 {
-		vp = new(r.ButtonProps)
+		vp = new(rhtml.ButtonProps)
 
 		for _, a := range n.Attr {
 			switch a.Key {
@@ -187,10 +188,10 @@ func parseButton(n *html.Node) *r.ButtonElem {
 		kids = append(kids, parse(c))
 	}
 
-	return r.Button(vp, kids...)
+	return rhtml.Button(vp, kids...)
 }
 
-func parseCode(n *html.Node) *r.CodeElem {
+func parseCode(n *html.Node) *rhtml.CodeElem {
 	var kids []r.Element
 
 	// TODO attributes
@@ -199,10 +200,10 @@ func parseCode(n *html.Node) *r.CodeElem {
 		kids = append(kids, parse(c))
 	}
 
-	return r.Code(nil, kids...)
+	return rhtml.Code(nil, kids...)
 }
 
-func parseH3(n *html.Node) *r.H3Elem {
+func parseH3(n *html.Node) *rhtml.H3Elem {
 	var kids []r.Element
 
 	// TODO attributes
@@ -211,16 +212,16 @@ func parseH3(n *html.Node) *r.H3Elem {
 		kids = append(kids, parse(c))
 	}
 
-	return r.H3(nil, kids...)
+	return rhtml.H3(nil, kids...)
 }
 
-func parseImg(n *html.Node) *r.ImgElem {
+func parseImg(n *html.Node) *rhtml.ImgElem {
 	var kids []r.Element
 
-	var vp *r.ImgProps
+	var vp *rhtml.ImgProps
 
 	if len(n.Attr) > 0 {
-		vp = new(r.ImgProps)
+		vp = new(rhtml.ImgProps)
 
 		for _, a := range n.Attr {
 			switch a.Key {
@@ -238,16 +239,16 @@ func parseImg(n *html.Node) *r.ImgElem {
 		kids = append(kids, parse(c))
 	}
 
-	return r.Img(vp, kids...)
+	return rhtml.Img(vp, kids...)
 }
 
-func parseA(n *html.Node) *r.AElem {
+func parseA(n *html.Node) *rhtml.AElem {
 	var kids []r.Element
 
-	var vp *r.AProps
+	var vp *rhtml.AProps
 
 	if len(n.Attr) > 0 {
-		vp = new(r.AProps)
+		vp = new(rhtml.AProps)
 
 		for _, a := range n.Attr {
 			switch a.Key {
@@ -265,12 +266,12 @@ func parseA(n *html.Node) *r.AElem {
 		kids = append(kids, parse(c))
 	}
 
-	return r.A(vp, kids...)
+	return rhtml.A(vp, kids...)
 }
 
 // TODO replace with proper parser
-func parseCSS(s string) *r.CSS {
-	res := new(r.CSS)
+func parseCSS(s string) *rhtml.CSS {
+	res := new(rhtml.CSS)
 
 	parts := strings.Split(s, ";")
 
@@ -347,9 +348,9 @@ func parse(n *html.Node) r.Element {
 
 var htmlCache = make(map[string][]r.Element)
 
-// HTML is a runtime JSX-like parser. It parses the supplied HTML string into
+// HTML is a runtime JSX-like parserhtml. It parses the supplied HTML string into
 // myitcv.io/react element values. It exists as a stop-gap runtime solution to
-// full JSX-like support within the GopherJS compiler. It should only be used
+// full JSX-like support within the GopherJS compilerhtml. It should only be used
 // where the argument is a compile-time constant string (TODO enforce this
 // within reactVet). HTML will panic in case s cannot be parsed as a valid HTML
 // fragment
@@ -401,7 +402,7 @@ func HTMLElem(s string) r.Element {
 // Markdown is a runtime JSX-like parser for markdown. It parses the supplied
 // markdown string into an HTML string and then hands off to the HTML function.
 // Like the HTML function, it exists as a stop-gap runtime solution to full
-// JSX-like support within the GopherJS compiler. It should only be used where
+// JSX-like support within the GopherJS compilerhtml. It should only be used where
 // the argument is a compile-time constant string (TODO enforce this within
 // reactVet). Markdown will panic in case the markdown string s results in an
 // invalid HTML string

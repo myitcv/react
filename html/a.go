@@ -32,13 +32,7 @@ func A(props *AProps, children ...react.Element) *AElem {
 		props.assign(rProps)
 	}
 
-	args := []interface{}{"a", rProps}
-
-	for _, v := range children {
-		args = append(args, elementToReactObj(v))
+	return &AElem{
+		Element: react.InternalCreateElement("a", rProps, children...),
 	}
-
-	underlying := react.Call("createElement", args...)
-
-	return &AElem{Element: elementHolder{elem: underlying}}
 }

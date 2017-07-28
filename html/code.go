@@ -28,13 +28,7 @@ func Code(props *CodeProps, children ...react.Element) *CodeElem {
 		props.assign(rProps)
 	}
 
-	args := []interface{}{"code", rProps}
-
-	for _, v := range children {
-		args = append(args, elementToReactObj(v))
+	return &CodeElem{
+		Element: react.InternalCreateElement("code", rProps, children...),
 	}
-
-	underlying := react.Call("createElement", args...)
-
-	return &CodeElem{Element: elementHolder{elem: underlying}}
 }

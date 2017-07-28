@@ -2,13 +2,42 @@
 
 package html
 
+import "myitcv.io/react/dom"
+
 // UlProps defines the properties for the <ul> element
 type UlProps struct {
-	*BasicHTMLElement
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	ID                      string
+	Key                     string
+	OnChange                dom.OnChange
+	OnClick                 dom.OnClick
+	Role                    string
+	Style                   *CSS
 }
 
 func (u *UlProps) assign(v *_UlProps) {
 
-	v.BasicHTMLElement = u.BasicHTMLElement
+	v.ClassName = u.ClassName
+
+	v.DangerouslySetInnerHTML = u.DangerouslySetInnerHTML
+
+	if u.ID != "" {
+		v.ID = u.ID
+	}
+
+	if u.Key != "" {
+		v.Key = u.Key
+	}
+
+	v.OnChange = u.OnChange
+
+	v.OnClick = u.OnClick
+
+	v.Role = u.Role
+
+	// TODO: until we have a resolution on
+	// https://github.com/gopherjs/gopherjs/issues/236
+	v.Style = u.Style.hack()
 
 }

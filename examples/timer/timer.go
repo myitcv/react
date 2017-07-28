@@ -5,6 +5,7 @@ import (
 	"time"
 
 	r "myitcv.io/react"
+	"myitcv.io/react/html"
 )
 
 //go:generate reactGen
@@ -52,8 +53,8 @@ func (t TimerDef) ComponentWillUnmount() {
 
 // Render renders the Timer component
 func (t TimerDef) Render() r.Element {
-	return r.Div(nil,
-		r.Div(nil,
+	return html.Div(nil,
+		html.Div(nil,
 			r.S(fmt.Sprintf("Seconds elapsed %.0f", t.State().secondsElapsed)),
 		),
 	)

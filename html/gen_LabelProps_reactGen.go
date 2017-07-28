@@ -2,16 +2,45 @@
 
 package html
 
+import "myitcv.io/react/dom"
+
 // LabelProps defines the properties for the <label> element
 type LabelProps struct {
-	*BasicHTMLElement
-	For string
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	For                     string
+	ID                      string
+	Key                     string
+	OnChange                dom.OnChange
+	OnClick                 dom.OnClick
+	Role                    string
+	Style                   *CSS
 }
 
 func (l *LabelProps) assign(v *_LabelProps) {
 
-	v.BasicHTMLElement = l.BasicHTMLElement
+	v.ClassName = l.ClassName
+
+	v.DangerouslySetInnerHTML = l.DangerouslySetInnerHTML
 
 	v.For = l.For
+
+	if l.ID != "" {
+		v.ID = l.ID
+	}
+
+	if l.Key != "" {
+		v.Key = l.Key
+	}
+
+	v.OnChange = l.OnChange
+
+	v.OnClick = l.OnClick
+
+	v.Role = l.Role
+
+	// TODO: until we have a resolution on
+	// https://github.com/gopherjs/gopherjs/issues/236
+	v.Style = l.Style.hack()
 
 }

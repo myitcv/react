@@ -2,6 +2,7 @@ package hellomessage // import "myitcv.io/react/examples/hellomessage"
 
 import (
 	r "myitcv.io/react"
+	"myitcv.io/react/html"
 )
 
 //go:generate reactGen
@@ -23,7 +24,7 @@ func HelloMessage(p HelloMessageProps) *HelloMessageElem {
 
 // Render renders the HelloMessage component
 func (h HelloMessageDef) Render() r.Element {
-	return r.Div(nil,
+	return html.Div(nil,
 		r.S("Hello "+h.Props().Name),
 	)
 }

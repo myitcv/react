@@ -29,13 +29,7 @@ func Span(props *SpanProps, children ...react.Element) *SpanElem {
 		props.assign(rProps)
 	}
 
-	args := []interface{}{"span", rProps}
-
-	for _, v := range children {
-		args = append(args, elementToReactObj(v))
+	return &SpanElem{
+		Element: react.InternalCreateElement("span", rProps, children...),
 	}
-
-	underlying := react.Call("createElement", args...)
-
-	return &SpanElem{Element: elementHolder{elem: underlying}}
 }

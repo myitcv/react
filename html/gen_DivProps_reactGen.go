@@ -2,13 +2,42 @@
 
 package html
 
+import "myitcv.io/react/dom"
+
 // DivProps are the props for a <div> component
 type DivProps struct {
-	*BasicHTMLElement
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	ID                      string
+	Key                     string
+	OnChange                dom.OnChange
+	OnClick                 dom.OnClick
+	Role                    string
+	Style                   *CSS
 }
 
 func (d *DivProps) assign(v *_DivProps) {
 
-	v.BasicHTMLElement = d.BasicHTMLElement
+	v.ClassName = d.ClassName
+
+	v.DangerouslySetInnerHTML = d.DangerouslySetInnerHTML
+
+	if d.ID != "" {
+		v.ID = d.ID
+	}
+
+	if d.Key != "" {
+		v.Key = d.Key
+	}
+
+	v.OnChange = d.OnChange
+
+	v.OnClick = d.OnClick
+
+	v.Role = d.Role
+
+	// TODO: until we have a resolution on
+	// https://github.com/gopherjs/gopherjs/issues/236
+	v.Style = d.Style.hack()
 
 }

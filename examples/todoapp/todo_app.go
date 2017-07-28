@@ -3,15 +3,16 @@ package todoapp // import "myitcv.io/react/examples/todoapp"
 import (
 	"fmt"
 
-	"honnef.co/go/js/dom"
-	r "myitcv.io/react"
+	"myitcv.io/react"
+	"myitcv.io/react/dom"
+	"myitcv.io/react/html"
 )
 
 //go:generate reactGen
 
 // TodoAppDef is the definition fo the TodoApp component
 type TodoAppDef struct {
-	r.ComponentDef
+	react.ComponentDef
 }
 
 // TodoAppState is the state type for the TodoApp component
@@ -48,22 +49,22 @@ func (c TodoAppState) Equals(v TodoAppState) bool {
 }
 
 // Render renders the TodoApp component
-func (t TodoAppDef) Render() r.Element {
-	var entries []*r.LiElem
+func (t TodoAppDef) Render() react.Element {
+	var entries []*html.LiElem
 
 	for _, v := range t.State().items {
-		entry := r.Li(nil, r.S(v))
+		entry := html.Li(nil, react.S(v))
 		entries = append(entries, entry)
 	}
 
-	return r.Div(nil,
-		r.H3(nil, r.S("TODO")),
-		r.Ul(nil, entries...),
-		r.Form(&r.FormProps{ClassName: "form-inline"},
-			r.Div(
-				&r.DivProps{ClassName: "form-group"},
-				r.Label(&r.LabelProps{ClassName: "sr-only", For: "todoText"}, r.S("Todo Item")),
-				r.Input(&r.InputProps{
+	return html.Div(nil,
+		html.H3(nil, react.S("TODO")),
+		html.Ul(nil, entries...),
+		html.Form(&html.FormProps{ClassName: "form-inline"},
+			html.Div(
+				&html.DivProps{ClassName: "form-group"},
+				html.Label(&html.LabelProps{ClassName: "sr-only", For: "todoText"}, react.S("Todo Item")),
+				html.Input(&html.InputProps{
 					Type:        "text",
 					ClassName:   "form-control",
 					ID:          "todoText",
@@ -71,11 +72,11 @@ func (t TodoAppDef) Render() r.Element {
 					Value:       t.State().currItem,
 					OnChange:    inputChange{t},
 				}),
-				r.Button(&r.ButtonProps{
+				html.Button(&html.ButtonProps{
 					Type:      "submit",
 					ClassName: "btn btn-default",
 					OnClick:   add{t},
-				}, r.S(fmt.Sprintf("Add #%v", len(t.State().items)+1))),
+				}, react.S(fmt.Sprintf("Add #%v", len(t.State().items)+1))),
 			),
 		),
 	)
@@ -84,7 +85,7 @@ func (t TodoAppDef) Render() r.Element {
 type inputChange struct{ t TodoAppDef }
 type add struct{ t TodoAppDef }
 
-func (i inputChange) OnChange(se *r.SyntheticEvent) {
+func (i inputChange) OnChange(se *dom.SyntheticEvent) {
 	target := se.Target().(*dom.HTMLInputElement)
 
 	ns := i.t.State()
@@ -93,7 +94,7 @@ func (i inputChange) OnChange(se *r.SyntheticEvent) {
 	i.t.SetState(ns)
 }
 
-func (a add) OnClick(se *r.SyntheticMouseEvent) {
+func (a add) OnClick(se *dom.SyntheticMouseEvent) {
 	ns := a.t.State()
 	ns.items = append(ns.items, ns.currItem)
 	ns.currItem = ""

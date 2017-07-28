@@ -30,13 +30,7 @@ func Img(props *ImgProps, children ...react.Element) *ImgElem {
 		props.assign(rProps)
 	}
 
-	args := []interface{}{"Img", rProps}
-
-	for _, v := range children {
-		args = append(args, elementToReactObj(v))
+	return &ImgElem{
+		Element: react.InternalCreateElement("img", rProps, children...),
 	}
-
-	underlying := react.Call("createElement", args...)
-
-	return &ImgElem{Element: elementHolder{elem: underlying}}
 }

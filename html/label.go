@@ -31,7 +31,7 @@ func Label(props *LabelProps, child react.Element) *LabelElem {
 		props.assign(rProps)
 	}
 
-	underlying := react.Call("createElement", "label", rProps, elementToReactObj(child))
-
-	return &LabelElem{Element: elementHolder{elem: underlying}}
+	return &LabelElem{
+		Element: react.InternalCreateElement("label", rProps, child),
+	}
 }

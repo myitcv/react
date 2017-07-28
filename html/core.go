@@ -5,7 +5,7 @@ package html
 
 import (
 	"github.com/gopherjs/gopherjs/js"
-	"honnef.co/go/js/dom"
+	"myitcv.io/react/dom"
 )
 
 type BasicNode struct {
@@ -31,8 +31,8 @@ type BasicHTMLElement struct {
 	Role      string `js:"role"`
 	Style     *CSS   `js:"style"`
 
-	OnChange `js:"onChange"`
-	OnClick  `js:"onClick"`
+	OnChange dom.OnChange `js:"onChange"`
+	OnClick  dom.OnClick  `js:"onClick"`
 
 	DangerouslySetInnerHTML *DangerousInnerHTML `js:"dangerouslySetInnerHTML"`
 }
@@ -41,22 +41,4 @@ func newBasicHTMLElement() *BasicHTMLElement {
 	return &BasicHTMLElement{
 		BasicElement: newBasicElement(),
 	}
-}
-
-// TODO complete the definition
-type SyntheticEvent struct {
-	o *js.Object
-
-	PreventDefault  func() `js:"preventDefault"`
-	StopPropagation func() `js:"stopPropagation"`
-}
-
-func (s *SyntheticEvent) Target() dom.HTMLElement {
-	return dom.WrapHTMLElement(s.o.Get("target"))
-}
-
-type SyntheticMouseEvent struct {
-	*SyntheticEvent
-
-	ClientX int `js:"clientX"`
 }
