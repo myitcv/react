@@ -16,7 +16,7 @@ do
 	go install $i
 done
 
-rm -f !(_vendor)/**/gen_*.go
+find -path ./_vendor -prune -o -name "gen_*.go" -exec rm '{}' \;
 
 {
 	pushd examples/sites/helloworld
