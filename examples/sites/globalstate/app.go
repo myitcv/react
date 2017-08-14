@@ -1,12 +1,12 @@
 package main
 
 import (
-	r "myitcv.io/react"
+	"myitcv.io/react"
 	"myitcv.io/react/examples/sites/globalstate/state"
 )
 
 type AppDef struct {
-	r.ComponentDef
+	react.ComponentDef
 }
 
 type AppState struct {
@@ -17,32 +17,32 @@ func App() *AppElem {
 	return buildAppElem()
 }
 
-func (a AppDef) Render() r.Element {
-	var viewer *r.DivElem
-	var showHide *r.ButtonElem
+func (a AppDef) Render() react.Element {
+	var viewer *react.DivElem
+	var showHide *react.ButtonElem
 
 	if a.State().hideViewer {
-		showHide = r.Button(
-			&r.ButtonProps{OnClick: hideClick{a, false}},
-			r.S("Show viewer"),
+		showHide = react.Button(
+			&react.ButtonProps{OnClick: hideClick{a, false}},
+			react.S("Show viewer"),
 		)
 	} else {
-		viewer = r.Div(nil,
-			r.H3(nil, r.S("Person Viewer")),
+		viewer = react.Div(nil,
+			react.H3(nil, react.S("Person Viewer")),
 			PersonViewer(),
 		)
-		showHide = r.Button(
-			&r.ButtonProps{OnClick: hideClick{a, true}},
-			r.S("Hide viewer"),
+		showHide = react.Button(
+			&react.ButtonProps{OnClick: hideClick{a, true}},
+			react.S("Hide viewer"),
 		)
 	}
 
-	return r.Div(&r.DivProps{ClassName: "container"},
-		r.H3(nil, r.S("Person Chooser")),
+	return react.Div(&react.DivProps{ClassName: "container"},
+		react.H3(nil, react.S("Person Chooser")),
 		PersonChooser(PersonChooserProps{
 			PersonState: state.State.CurrentPerson(),
 		}),
-		r.Hr(nil),
+		react.Hr(nil),
 		showHide,
 		viewer,
 	)
@@ -53,7 +53,7 @@ type hideClick struct {
 	showHide bool
 }
 
-func (h hideClick) OnClick(e *r.SyntheticMouseEvent) {
+func (h hideClick) OnClick(e *react.SyntheticMouseEvent) {
 	h.AppDef.SetState(AppState{
 		hideViewer: h.showHide,
 	})

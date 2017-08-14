@@ -2,12 +2,12 @@ package examples
 
 import (
 	"honnef.co/go/js/xhr"
-	r "myitcv.io/react"
+	"myitcv.io/react"
 )
 
 // GlobalStateExamplesDef is the definition of the GlobalStateExamples component
 type GlobalStateExamplesDef struct {
-	r.ComponentDef
+	react.ComponentDef
 }
 
 // GlobalStateExamples creates instances of the GlobalStateExamples component
@@ -53,10 +53,10 @@ func (p GlobalStateExamplesDef) GetInitialState() GlobalStateExamplesState {
 }
 
 // Render renders the GlobalStateExamples component
-func (p GlobalStateExamplesDef) Render() r.Element {
+func (p GlobalStateExamplesDef) Render() react.Element {
 
-	return r.Div(&r.DivProps{ClassName: "container"},
-		r.Div(&r.DivProps{DangerouslySetInnerHTML: r.NewDangerousInnerHTML(`
+	return react.Div(&react.DivProps{ClassName: "container"},
+		react.Div(&react.DivProps{DangerouslySetInnerHTML: react.NewDangerousInnerHTML(`
 		<h3>Introduction</h3>
 
 		<p>State can be local to components; we can share that state with descendent components

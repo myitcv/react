@@ -2,7 +2,7 @@ package markdowneditor // import "myitcv.io/react/examples/markdowneditor"
 
 import (
 	"honnef.co/go/js/dom"
-	r "myitcv.io/react"
+	"myitcv.io/react"
 	"myitcv.io/remarkable"
 )
 
@@ -10,7 +10,7 @@ import (
 
 // MarkdownEditorDef is the definition of the MarkdownEditor component
 type MarkdownEditorDef struct {
-	r.ComponentDef
+	react.ComponentDef
 }
 
 // MarkdownEditorState is the state type for the MarkdownEditor component
@@ -34,21 +34,21 @@ func (m MarkdownEditorDef) GetInitialState() MarkdownEditorState {
 }
 
 // Render renders the MarkdownEditor component
-func (m MarkdownEditorDef) Render() r.Element {
+func (m MarkdownEditorDef) Render() react.Element {
 	val := m.State().value
 
-	return r.Div(nil,
-		r.H3(nil, r.S("Input")),
-		r.TextArea(
-			&r.TextAreaProps{
+	return react.Div(nil,
+		react.H3(nil, react.S("Input")),
+		react.TextArea(
+			&react.TextAreaProps{
 				ClassName: "form-control",
 				Value:     val,
 				OnChange:  inputChange{m},
 			},
 		),
-		r.H3(nil, r.S("Output")),
-		r.Div(
-			&r.DivProps{
+		react.H3(nil, react.S("Output")),
+		react.Div(
+			&react.DivProps{
 				ClassName:               "well",
 				DangerouslySetInnerHTML: m.getRawMarkup(),
 			},
@@ -56,15 +56,15 @@ func (m MarkdownEditorDef) Render() r.Element {
 	)
 }
 
-func (m MarkdownEditorDef) getRawMarkup() *r.DangerousInnerHTML {
+func (m MarkdownEditorDef) getRawMarkup() *react.DangerousInnerHTML {
 	st := m.State()
 	md := st.remark.Render(st.value)
-	return r.NewDangerousInnerHTML(md)
+	return react.NewDangerousInnerHTML(md)
 }
 
 type inputChange struct{ m MarkdownEditorDef }
 
-func (i inputChange) OnChange(se *r.SyntheticEvent) {
+func (i inputChange) OnChange(se *react.SyntheticEvent) {
 	st := i.m.State()
 
 	target := se.Target().(*dom.HTMLTextAreaElement)

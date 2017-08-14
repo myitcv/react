@@ -76,24 +76,24 @@ var minimal = map[string]string{
 package main
 
 import (
-	r "myitcv.io/react"
+	"myitcv.io/react"
 )
 
 type AppDef struct {
-	r.ComponentDef
+	react.ComponentDef
 }
 
 func App() *AppElem {
 	return buildAppElem()
 }
 
-func (a AppDef) Render() r.Element {
-	return r.Div(nil,
-		r.H1(nil,
-			r.S("Hello World"),
+func (a AppDef) Render() react.Element {
+	return react.Div(nil,
+		react.H1(nil,
+			react.S("Hello World"),
 		),
-		r.P(nil,
-			r.S("This is my first GopherJS React App."),
+		react.P(nil,
+			react.S("This is my first GopherJS React App."),
 		),
 	)
 }
@@ -105,7 +105,7 @@ func (a AppDef) Render() r.Element {
 package main
 
 import (
-	r "myitcv.io/react"
+	"myitcv.io/react"
 
 	"honnef.co/go/js/dom"
 )
@@ -117,7 +117,7 @@ var document = dom.GetWindow().Document()
 func main() {
 	domTarget := document.GetElementByID("app")
 
-	r.Render(App(), domTarget)
+	react.Render(App(), domTarget)
 }
 `,
 

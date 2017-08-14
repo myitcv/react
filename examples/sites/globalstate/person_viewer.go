@@ -3,13 +3,13 @@ package main
 import (
 	"fmt"
 
-	r "myitcv.io/react"
+	"myitcv.io/react"
 	"myitcv.io/react/examples/sites/globalstate/model"
 	"myitcv.io/react/examples/sites/globalstate/state"
 )
 
 type PersonViewerDef struct {
-	r.ComponentDef
+	react.ComponentDef
 }
 
 type PersonViewerState struct {
@@ -35,14 +35,14 @@ func (p PersonViewerDef) ComponentWillUnmount() {
 	p.State().curPersSub.Clear()
 }
 
-func (p PersonViewerDef) Render() r.Element {
+func (p PersonViewerDef) Render() react.Element {
 	st := p.State()
 
 	if st.p != nil {
-		return r.P(nil, r.S(fmt.Sprintf("You have selected %v, age %v", st.p.Name(), st.p.Age())))
+		return react.P(nil, react.S(fmt.Sprintf("You have selected %v, age %v", st.p.Name(), st.p.Age())))
 	}
 
-	return r.P(nil, r.S("(no person selected)"))
+	return react.P(nil, react.S("(no person selected)"))
 }
 
 func (p PersonViewerDef) currPersonUpdated() {

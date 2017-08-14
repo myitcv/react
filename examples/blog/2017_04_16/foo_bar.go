@@ -5,11 +5,11 @@ package main
 import (
 	"fmt"
 
-	// it's normal to name the import of myitcv.io/react with something like
-	// "r" because it's used repeatedly. Dot imports are strongly discouraged
-	// per the core Go team's advice on this subject.
+	// It's also normal to name the import of myitcv.io/react with something
+	// like "r" because it's used repeatedly. Dot imports are strongly
+	// discouraged per the core Go team's advice on this subject.
 	//
-	r "myitcv.io/react"
+	"myitcv.io/react"
 )
 
 //go:generate reactGen
@@ -19,7 +19,7 @@ import (
 // field
 //
 type FooBarDef struct {
-	r.ComponentDef
+	react.ComponentDef
 }
 
 // FooBarProps is the props type for the FooBar component. All props types are
@@ -47,20 +47,20 @@ func FooBar(p FooBarProps) *FooBarElem {
 // Render is a required method on all React components. Notice that the method
 // is declared on the type FooBarDef.
 //
-func (f FooBarDef) Render() r.Element {
+func (f FooBarDef) Render() react.Element {
 
 	// all React components must render under a single root. This is typically achieved
 	// by rendering everything within a <div> elememt
 	//
-	return r.Div(nil,
-		r.P(nil,
-			r.S(fmt.Sprintf("My name is %v. My age is %v", f.Props().Name, f.State().Age)),
+	return react.Div(nil,
+		react.P(nil,
+			react.S(fmt.Sprintf("My name is %v. My age is %v", f.Props().Name, f.State().Age)),
 		),
-		r.Button(
-			&r.ButtonProps{
+		react.Button(
+			&react.ButtonProps{
 				OnClick: ageClick{f},
 			},
-			r.S("Bump age"),
+			react.S("Bump age"),
 		),
 	)
 }
@@ -72,7 +72,7 @@ type ageClick struct{ FooBarDef }
 
 // OnClick is the ageClick implementation of the react.OnClick interface
 //
-func (a ageClick) OnClick(e *r.SyntheticMouseEvent) {
+func (a ageClick) OnClick(e *react.SyntheticMouseEvent) {
 	f := a.FooBarDef
 
 	s := f.State()

@@ -4,7 +4,7 @@
 package main
 
 import (
-	r "myitcv.io/react"
+	"myitcv.io/react"
 	"myitcv.io/react/examples/markdowneditor"
 
 	"honnef.co/go/js/dom"
@@ -17,5 +17,5 @@ func main() {
 
 	examples := markdowneditor.MarkdownEditor()
 
-	r.Render(examples, domTarget)
+	react.Render(examples, domTarget)
 }

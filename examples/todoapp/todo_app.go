@@ -4,14 +4,14 @@ import (
 	"fmt"
 
 	"honnef.co/go/js/dom"
-	r "myitcv.io/react"
+	"myitcv.io/react"
 )
 
 //go:generate reactGen
 
 // TodoAppDef is the definition fo the TodoApp component
 type TodoAppDef struct {
-	r.ComponentDef
+	react.ComponentDef
 }
 
 // TodoAppState is the state type for the TodoApp component
@@ -48,22 +48,22 @@ func (c TodoAppState) Equals(v TodoAppState) bool {
 }
 
 // Render renders the TodoApp component
-func (t TodoAppDef) Render() r.Element {
-	var entries []*r.LiElem
+func (t TodoAppDef) Render() react.Element {
+	var entries []*react.LiElem
 
 	for _, v := range t.State().items {
-		entry := r.Li(nil, r.S(v))
+		entry := react.Li(nil, react.S(v))
 		entries = append(entries, entry)
 	}
 
-	return r.Div(nil,
-		r.H3(nil, r.S("TODO")),
-		r.Ul(nil, entries...),
-		r.Form(&r.FormProps{ClassName: "form-inline"},
-			r.Div(
-				&r.DivProps{ClassName: "form-group"},
-				r.Label(&r.LabelProps{ClassName: "sr-only", For: "todoText"}, r.S("Todo Item")),
-				r.Input(&r.InputProps{
+	return react.Div(nil,
+		react.H3(nil, react.S("TODO")),
+		react.Ul(nil, entries...),
+		react.Form(&react.FormProps{ClassName: "form-inline"},
+			react.Div(
+				&react.DivProps{ClassName: "form-group"},
+				react.Label(&react.LabelProps{ClassName: "sr-only", For: "todoText"}, react.S("Todo Item")),
+				react.Input(&react.InputProps{
 					Type:        "text",
 					ClassName:   "form-control",
 					ID:          "todoText",
@@ -71,11 +71,11 @@ func (t TodoAppDef) Render() r.Element {
 					Value:       t.State().currItem,
 					OnChange:    inputChange{t},
 				}),
-				r.Button(&r.ButtonProps{
+				react.Button(&react.ButtonProps{
 					Type:      "submit",
 					ClassName: "btn btn-default",
 					OnClick:   add{t},
-				}, r.S(fmt.Sprintf("Add #%v", len(t.State().items)+1))),
+				}, react.S(fmt.Sprintf("Add #%v", len(t.State().items)+1))),
 			),
 		),
 	)
@@ -84,7 +84,7 @@ func (t TodoAppDef) Render() r.Element {
 type inputChange struct{ t TodoAppDef }
 type add struct{ t TodoAppDef }
 
-func (i inputChange) OnChange(se *r.SyntheticEvent) {
+func (i inputChange) OnChange(se *react.SyntheticEvent) {
 	target := se.Target().(*dom.HTMLInputElement)
 
 	ns := i.t.State()
@@ -93,7 +93,7 @@ func (i inputChange) OnChange(se *r.SyntheticEvent) {
 	i.t.SetState(ns)
 }
 
-func (a add) OnClick(se *r.SyntheticMouseEvent) {
+func (a add) OnClick(se *react.SyntheticMouseEvent) {
 	ns := a.t.State()
 	ns.items = append(ns.items, ns.currItem)
 	ns.currItem = ""

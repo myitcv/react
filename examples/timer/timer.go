@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"time"
 
-	r "myitcv.io/react"
+	"myitcv.io/react"
 )
 
 //go:generate reactGen
 
 // TimerDef is the definition of the Timer component
 type TimerDef struct {
-	r.ComponentDef
+	react.ComponentDef
 }
 
 // TimerState is the state type for the Timer component
@@ -51,10 +51,10 @@ func (t TimerDef) ComponentWillUnmount() {
 }
 
 // Render renders the Timer component
-func (t TimerDef) Render() r.Element {
-	return r.Div(nil,
-		r.Div(nil,
-			r.S(fmt.Sprintf("Seconds elapsed %.0f", t.State().secondsElapsed)),
+func (t TimerDef) Render() react.Element {
+	return react.Div(nil,
+		react.Div(nil,
+			react.S(fmt.Sprintf("Seconds elapsed %.0f", t.State().secondsElapsed)),
 		),
 	)
 }
