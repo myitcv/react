@@ -3,14 +3,14 @@ package examples
 import (
 	"honnef.co/go/js/xhr"
 	"myitcv.io/highlightjs"
-	r "myitcv.io/react"
+	"myitcv.io/react"
 	"myitcv.io/react/examples/immtodoapp"
 	"myitcv.io/react/jsx"
 )
 
 // ImmExamplesDef is the definition of the ImmExamples component
 type ImmExamplesDef struct {
-	r.ComponentDef
+	react.ComponentDef
 }
 
 // ImmExamples creates instances of the ImmExamples component
@@ -56,7 +56,7 @@ func (p ImmExamplesDef) GetInitialState() ImmExamplesState {
 }
 
 // Render renders the ImmExamples component
-func (p ImmExamplesDef) Render() r.Element {
+func (p ImmExamplesDef) Render() react.Element {
 	dc := jsx.HTML(`
 		<h3>Using immutable data structures</h3>
 
@@ -74,19 +74,19 @@ func (p ImmExamplesDef) Render() r.Element {
 	dc = append(dc,
 		p.renderExample(
 			exampleImmTodo,
-			r.Span(nil, r.S("A simple TODO app")),
-			r.P(nil, r.S("The immtodoapp.TodoApp component is a reimplementation of todoapp.TodoApp using immutable data structures.")),
+			react.Span(nil, react.S("A simple TODO app")),
+			react.P(nil, react.S("The immtodoapp.TodoApp component is a reimplementation of todoapp.TodoApp using immutable data structures.")),
 			"n/a",
 			immtodoapp.TodoApp(),
 		),
 	)
 
-	return r.Div(&r.DivProps{ClassName: "container"},
+	return react.Div(&react.DivProps{ClassName: "container"},
 		dc...,
 	)
 }
 
-func (p ImmExamplesDef) renderExample(key exampleKey, title, msg r.Element, jsxSrc string, elem r.Element) r.Element {
+func (p ImmExamplesDef) renderExample(key exampleKey, title, msg react.Element, jsxSrc string, elem react.Element) react.Element {
 
 	var goSrc string
 	src, _ := p.State().examples.Get(key)
@@ -94,31 +94,31 @@ func (p ImmExamplesDef) renderExample(key exampleKey, title, msg r.Element, jsxS
 		goSrc = src.src()
 	}
 
-	var code *r.DangerousInnerHTML
+	var code *react.DangerousInnerHTML
 	switch v, _ := p.State().selectedTabs.Get(key); v {
 	case tabGo:
-		code = r.NewDangerousInnerHTML(highlightjs.Highlight("go", goSrc, true).Value)
+		code = react.NewDangerousInnerHTML(highlightjs.Highlight("go", goSrc, true).Value)
 	case tabJsx:
-		code = r.NewDangerousInnerHTML(highlightjs.Highlight("javascript", jsxSrc, true).Value)
+		code = react.NewDangerousInnerHTML(highlightjs.Highlight("javascript", jsxSrc, true).Value)
 	}
 
-	return r.Div(nil,
-		r.H3(nil, title),
+	return react.Div(nil,
+		react.H3(nil, title),
 		msg,
-		r.Div(&r.DivProps{ClassName: "row"},
-			r.Div(&r.DivProps{ClassName: "col-md-8"},
-				r.Div(&r.DivProps{ClassName: "panel panel-default with-nav-tabs"},
-					r.Div(&r.DivProps{ClassName: "panel-heading"},
-						r.Ul(
-							&r.UlProps{ClassName: "nav nav-tabs"},
+		react.Div(&react.DivProps{ClassName: "row"},
+			react.Div(&react.DivProps{ClassName: "col-md-8"},
+				react.Div(&react.DivProps{ClassName: "panel panel-default with-nav-tabs"},
+					react.Div(&react.DivProps{ClassName: "panel-heading"},
+						react.Ul(
+							&react.UlProps{ClassName: "nav nav-tabs"},
 
 							p.buildExampleNavTab(key, tabGo, "GopherJS"),
 							p.buildExampleNavTab(key, tabJsx, "JSX"),
 						),
 					),
-					r.Div(&r.DivProps{ClassName: "panel-body"},
-						r.Pre(&r.PreProps{
-							Style: &r.CSS{
+					react.Div(&react.DivProps{ClassName: "panel-body"},
+						react.Pre(&react.PreProps{
+							Style: &react.CSS{
 								MaxHeight: "400px",
 							},
 							DangerouslySetInnerHTML: code,
@@ -126,25 +126,25 @@ func (p ImmExamplesDef) renderExample(key exampleKey, title, msg r.Element, jsxS
 					),
 				),
 			),
-			r.Div(&r.DivProps{ClassName: "col-md-4"},
+			react.Div(&react.DivProps{ClassName: "col-md-4"},
 				plainPanel(elem),
 			),
 		),
 	)
 }
 
-func (p ImmExamplesDef) buildExampleNavTab(key exampleKey, t tab, title string) *r.LiElem {
-	lip := &r.LiProps{Role: "presentation"}
+func (p ImmExamplesDef) buildExampleNavTab(key exampleKey, t tab, title string) *react.LiElem {
+	lip := &react.LiProps{Role: "presentation"}
 
 	if v, _ := p.State().selectedTabs.Get(key); v == t {
 		lip.ClassName = "active"
 	}
 
-	return r.Li(
+	return react.Li(
 		lip,
-		r.A(
-			&r.AProps{Href: "#", OnClick: immTabChange{p, key, t}},
-			r.S(title),
+		react.A(
+			&react.AProps{Href: "#", OnClick: immTabChange{p, key, t}},
+			react.S(title),
 		),
 	)
 
@@ -156,7 +156,7 @@ type immTabChange struct {
 	t   tab
 }
 
-func (tc immTabChange) OnClick(e *r.SyntheticMouseEvent) {
+func (tc immTabChange) OnClick(e *react.SyntheticMouseEvent) {
 	p := tc.e
 	key := tc.key
 	t := tc.t
@@ -170,8 +170,8 @@ func (tc immTabChange) OnClick(e *r.SyntheticMouseEvent) {
 	e.PreventDefault()
 }
 
-func (p *ImmExamplesDef) handleTabChange(key exampleKey, t tab) func(*r.SyntheticMouseEvent) {
-	return func(e *r.SyntheticMouseEvent) {
+func (p *ImmExamplesDef) handleTabChange(key exampleKey, t tab) func(*react.SyntheticMouseEvent) {
+	return func(e *react.SyntheticMouseEvent) {
 		cts := p.State().selectedTabs
 		newSt := p.State()
 

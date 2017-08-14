@@ -4,7 +4,7 @@ import (
 	"math/rand"
 	"time"
 
-	r "myitcv.io/react"
+	"myitcv.io/react"
 )
 
 func init() {
@@ -12,13 +12,13 @@ func init() {
 }
 
 type AppDef struct {
-	r.ComponentDef
+	react.ComponentDef
 }
 
 func App() *AppElem {
 	return buildAppElem()
 }
 
-func (a AppDef) Render() r.Element {
+func (a AppDef) Render() react.Element {
 	return Latency()
 }

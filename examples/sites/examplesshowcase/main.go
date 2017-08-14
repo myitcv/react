@@ -4,7 +4,7 @@
 package main
 
 import (
-	r "myitcv.io/react"
+	"myitcv.io/react"
 
 	"honnef.co/go/js/dom"
 )
@@ -16,5 +16,5 @@ var document = dom.GetWindow().Document()
 func main() {
 	domTarget := document.GetElementByID("app")
 
-	r.Render(App(), domTarget)
+	react.Render(App(), domTarget)
 }

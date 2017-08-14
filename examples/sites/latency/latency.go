@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"honnef.co/go/js/dom"
-	r "myitcv.io/react"
+	"myitcv.io/react"
 	"myitcv.io/react/jsx"
 )
 
@@ -45,7 +45,7 @@ type latency struct {
 }
 
 type LatencyDef struct {
-	r.ComponentDef
+	react.ComponentDef
 }
 
 type LatencyState struct {
@@ -62,8 +62,8 @@ func Latency() *LatencyElem {
 	return buildLatencyElem()
 }
 
-func (l LatencyDef) Render() r.Element {
-	var c r.Element
+func (l LatencyDef) Render() react.Element {
+	var c react.Element
 
 	if l.State().output {
 		c = l.renderOutput()
@@ -71,8 +71,8 @@ func (l LatencyDef) Render() r.Element {
 		c = l.renderInput()
 	}
 
-	return r.Div(&r.DivProps{ClassName: "App"},
-		r.Div(&r.DivProps{ClassName: "Content center full column"},
+	return react.Div(&react.DivProps{ClassName: "App"},
+		react.Div(&react.DivProps{ClassName: "Content center full column"},
 			jsx.HTMLElem(`
 			<div className="Title margin center">
 				<span className="text">Latency</span>
@@ -93,17 +93,17 @@ func (l LatencyDef) Render() r.Element {
 	)
 }
 
-func (l LatencyDef) renderInput() r.Element {
-	return r.Form(&r.FormProps{ClassName: "LatencyForm"},
-		r.Div(&r.DivProps{ClassName: "group"},
-			r.Input(&r.InputProps{
+func (l LatencyDef) renderInput() react.Element {
+	return react.Form(&react.FormProps{ClassName: "LatencyForm"},
+		react.Div(&react.DivProps{ClassName: "group"},
+			react.Input(&react.InputProps{
 				Type:        "text",
 				ID:          "url",
 				Placeholder: "url to test (can be anything)",
 				Value:       l.State().url,
 				OnChange:    urlChange{l},
 			}),
-			r.Input(&r.InputProps{
+			react.Input(&react.InputProps{
 				Type:        "text",
 				ID:          "altUrl",
 				Placeholder: "comparison url (not used)",
@@ -111,12 +111,12 @@ func (l LatencyDef) renderInput() r.Element {
 				OnChange:    altUrlChange{l},
 			}),
 		),
-		r.Button(
-			&r.ButtonProps{
+		react.Button(
+			&react.ButtonProps{
 				ClassName: "Button small",
 				OnClick:   check{l},
 			},
-			r.S("Start"),
+			react.S("Start"),
 		),
 	)
 }
@@ -126,8 +126,8 @@ const (
 	resultWidth = 500.0
 )
 
-func (l *LatencyDef) renderOutput() r.Element {
-	var regions []r.Element
+func (l *LatencyDef) renderOutput() react.Element {
+	var regions []react.Element
 
 	ls := l.State().latencies
 
@@ -145,8 +145,8 @@ func (l *LatencyDef) renderOutput() r.Element {
 	for _, v := range locations {
 		regClass := "Region"
 
-		timings := []r.Element{
-			r.Span(&r.SpanProps{ClassName: "total"}, r.S("0ms")),
+		timings := []react.Element{
+			react.Span(&react.SpanProps{ClassName: "total"}, react.S("0ms")),
 		}
 
 		res, ok := ls.Get(v)
@@ -159,45 +159,45 @@ func (l *LatencyDef) renderOutput() r.Element {
 				regClass += " with-timings speed-fast"
 			}
 
-			genTiming := func(f time.Duration, n, l string) *r.SpanElem {
+			genTiming := func(f time.Duration, n, l string) *react.SpanElem {
 				w := fmt.Sprintf("%.3fpx", float64(f)/float64(maxTot)*resultWidth)
 				rs := fmt.Sprintf("%v (%v)", l, f)
 
-				return r.Span(
-					&r.SpanProps{
+				return react.Span(
+					&react.SpanProps{
 						ClassName: "timing " + n,
-						Style:     &r.CSS{Width: w},
+						Style:     &react.CSS{Width: w},
 					},
-					r.S(rs),
+					react.S(rs),
 				)
 			}
 
-			timings = []r.Element{
+			timings = []react.Element{
 				genTiming(res.dns, "dns", "DNS"),
 				genTiming(res.tcp, "tcp", "TCP"),
 				genTiming(res.tls, "tls", "TLS"),
 				genTiming(res.wait, "wait", "Wait"),
 				genTiming(res.download, "download", "Download"),
-				r.Span(&r.SpanProps{ClassName: "total"}, r.S(fmt.Sprintf("%v", res.total))),
+				react.Span(&react.SpanProps{ClassName: "total"}, react.S(fmt.Sprintf("%v", res.total))),
 			}
 		}
 
-		rd := r.Div(&r.DivProps{ClassName: regClass},
-			r.Span(&r.SpanProps{ClassName: "name"}, r.S(v)),
-			r.Div(&r.DivProps{ClassName: "Results"},
-				r.Div(&r.DivProps{ClassName: "Timings"}, timings...),
+		rd := react.Div(&react.DivProps{ClassName: regClass},
+			react.Span(&react.SpanProps{ClassName: "name"}, react.S(v)),
+			react.Div(&react.DivProps{ClassName: "Results"},
+				react.Div(&react.DivProps{ClassName: "Timings"}, timings...),
 			),
 		)
 
 		regions = append(regions, rd)
 	}
 
-	return r.Div(&r.DivProps{ClassName: "Regions"},
+	return react.Div(&react.DivProps{ClassName: "Regions"},
 		regions...,
 	)
 }
 
-func (l *LatencyDef) reset(e *r.SyntheticMouseEvent) {
+func (l *LatencyDef) reset(e *react.SyntheticMouseEvent) {
 	s := l.State()
 	s.output = false
 	s.reqId++
@@ -210,14 +210,14 @@ type urlChange struct{ l LatencyDef }
 type altUrlChange struct{ l LatencyDef }
 type check struct{ l LatencyDef }
 
-func (u urlChange) OnChange(se *r.SyntheticEvent) {
+func (u urlChange) OnChange(se *react.SyntheticEvent) {
 	target := se.Target().(*dom.HTMLInputElement)
 	s := u.l.State()
 	s.url = target.Value
 	u.l.SetState(s)
 }
 
-func (a altUrlChange) OnChange(se *r.SyntheticEvent) {
+func (a altUrlChange) OnChange(se *react.SyntheticEvent) {
 	target := se.Target().(*dom.HTMLInputElement)
 	s := a.l.State()
 	s.altUrl = target.Value
@@ -226,7 +226,7 @@ func (a altUrlChange) OnChange(se *r.SyntheticEvent) {
 
 // this could clearly be replace by something that actually checks
 // the realy latencies instead of randomly generating them
-func (c check) OnClick(e *r.SyntheticMouseEvent) {
+func (c check) OnClick(e *react.SyntheticMouseEvent) {
 	l := c.l
 
 	reqId := l.State().reqId

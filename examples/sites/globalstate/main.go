@@ -4,7 +4,7 @@
 package main
 
 import (
-	r "myitcv.io/react"
+	"myitcv.io/react"
 	"myitcv.io/react/examples/sites/globalstate/model"
 	"myitcv.io/react/examples/sites/globalstate/state"
 
@@ -24,5 +24,5 @@ func main() {
 		model.NewPerson("Mary", 52),
 	))
 
-	r.Render(App(), domTarget)
+	react.Render(App(), domTarget)
 }

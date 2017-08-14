@@ -1,8 +1,8 @@
 package main
 
 import (
-	r "myitcv.io/react"
-	c "myitcv.io/react/components/imm"
+	"myitcv.io/react"
+	"myitcv.io/react/components/imm"
 	"myitcv.io/react/examples/sites/globalstate/model"
 	"myitcv.io/react/examples/sites/globalstate/state"
 	"myitcv.io/sorter"
@@ -17,7 +17,7 @@ type PersonState interface {
 }
 
 type PersonChooserDef struct {
-	r.ComponentDef
+	react.ComponentDef
 }
 
 type PersonChooserProps struct {
@@ -45,20 +45,20 @@ func (p PersonChooserDef) ComponentWillUnmount() {
 	p.State().currPersonSub.Clear()
 }
 
-func (p PersonChooserDef) Render() r.Element {
+func (p PersonChooserDef) Render() react.Element {
 
 	ppl := sortPeopleKeysByName(state.State.Root().People().Get())
 
-	ps := []c.Label{personLabel{nil}}
+	ps := []imm.Label{personLabel{nil}}
 
 	for _, v := range ppl.Range() {
 		ps = append(ps, personLabel{v})
 	}
 
-	return c.Select(
-		c.SelectProps{
+	return imm.Select(
+		imm.SelectProps{
 			Entry:    personLabel{p.State().currPerson},
-			Entries:  c.NewLabelEntries(ps...),
+			Entries:  imm.NewLabelEntries(ps...),
 			OnSelect: personSelected{p},
 		},
 	)
@@ -89,7 +89,7 @@ func (p personLabel) Label() string {
 
 type personSelected struct{ PersonChooserDef }
 
-func (p personSelected) OnSelect(l c.Label) {
+func (p personSelected) OnSelect(l imm.Label) {
 	pl := l.(personLabel)
 	s := p.PersonChooserDef.State()
 	s.currPerson = pl.Person

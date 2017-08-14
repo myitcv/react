@@ -6,7 +6,7 @@ package examples // import "myitcv.io/react/examples"
 import (
 	"honnef.co/go/js/xhr"
 	"myitcv.io/highlightjs"
-	r "myitcv.io/react"
+	"myitcv.io/react"
 	"myitcv.io/react/examples/hellomessage"
 	"myitcv.io/react/examples/markdowneditor"
 	"myitcv.io/react/examples/timer"
@@ -19,7 +19,7 @@ import (
 
 // ExamplesDef is the definition of the Examples component
 type ExamplesDef struct {
-	r.ComponentDef
+	react.ComponentDef
 }
 
 type tab int
@@ -76,7 +76,7 @@ func (p ExamplesDef) GetInitialState() ExamplesState {
 }
 
 // Render renders the Examples component
-func (p ExamplesDef) Render() r.Element {
+func (p ExamplesDef) Render() react.Element {
 	dc := jsx.HTML(`
 		<h3>Introduction</h3>
 
@@ -92,64 +92,64 @@ func (p ExamplesDef) Render() r.Element {
 	dc = append(dc,
 		p.renderExample(
 			exampleHello,
-			r.S("A Simple Example"),
-			r.P(nil, r.S("The hellomessage.HelloMessage component demonstrates the simple use of a Props type.")),
+			react.S("A Simple Example"),
+			react.P(nil, react.S("The hellomessage.HelloMessage component demonstrates the simple use of a Props type.")),
 			helloMessageJsx,
 			hellomessage.HelloMessage(hellomessage.HelloMessageProps{Name: "Jane"}),
 		),
 
-		r.Hr(nil),
+		react.Hr(nil),
 
 		p.renderExample(
 			exampleTimer,
-			r.S("A Stateful Component"),
-			r.P(nil, r.S("The timer.Timer component demonstrates the use of a State type.")),
+			react.S("A Stateful Component"),
+			react.P(nil, react.S("The timer.Timer component demonstrates the use of a State type.")),
 			timerJsx,
 			timer.Timer(),
 		),
 
-		r.Hr(nil),
+		react.Hr(nil),
 
 		p.renderExample(
 			exampleTodo,
-			r.S("An Application"),
-			r.P(nil, r.S("The todoapp.TodoApp component demonstrates the use of state and event handling, but also the "+
+			react.S("An Application"),
+			react.P(nil, react.S("The todoapp.TodoApp component demonstrates the use of state and event handling, but also the "+
 				"problems of having a non-comparable state struct type.")),
 			applicationJsx,
 			todoapp.TodoApp(),
 		),
 
-		r.Hr(nil),
+		react.Hr(nil),
 
 		p.renderExample(
 			exampleMarkdown,
-			r.S("A Component Using External Plugins"),
-			r.P(nil, r.S("The markdowneditor.MarkdownEditor component demonstrates the use of an external Javascript library.")),
+			react.S("A Component Using External Plugins"),
+			react.P(nil, react.S("The markdowneditor.MarkdownEditor component demonstrates the use of an external Javascript library.")),
 			markdownEditorJsx,
 			markdowneditor.MarkdownEditor(),
 		),
 
-		r.Hr(nil),
+		react.Hr(nil),
 
 		p.renderExample(
 			exampleLatency,
-			r.S("Latency Checker"),
-			r.P(nil,
-				r.S("By kind permission of "), r.A(&r.AProps{Href: "http://tjholowaychuk.com/"}, r.S("TJ Holowaychuk")),
-				r.S(", a basic, component-based version of the beautiful APEX "), r.A(&r.AProps{Href: "https://latency.apex.sh/"}, r.S("Latency Tool")),
-				r.S(" that uses randomly generated latency values."),
+			react.S("Latency Checker"),
+			react.P(nil,
+				react.S("By kind permission of "), react.A(&react.AProps{Href: "http://tjholowaychuk.com/"}, react.S("TJ Holowaychuk")),
+				react.S(", a basic, component-based version of the beautiful APEX "), react.A(&react.AProps{Href: "https://latency.apex.sh/"}, react.S("Latency Tool")),
+				react.S(" that uses randomly generated latency values."),
 			),
 			latencyJsx,
-			r.A(&r.AProps{Href: "../latency", Target: "_blank"}, r.S("Launch in new tab")),
+			react.A(&react.AProps{Href: "../latency", Target: "_blank"}, react.S("Launch in new tab")),
 		),
 	)
 
-	return r.Div(&r.DivProps{ClassName: "container"},
+	return react.Div(&react.DivProps{ClassName: "container"},
 		dc...,
 	)
 }
 
-func (p ExamplesDef) renderExample(key exampleKey, title, msg r.Element, jsxSrc string, elem r.Element) r.Element {
+func (p ExamplesDef) renderExample(key exampleKey, title, msg react.Element, jsxSrc string, elem react.Element) react.Element {
 
 	var goSrc string
 	src, _ := p.State().examples.Get(key)
@@ -157,31 +157,31 @@ func (p ExamplesDef) renderExample(key exampleKey, title, msg r.Element, jsxSrc 
 		goSrc = src.src()
 	}
 
-	var code *r.DangerousInnerHTML
+	var code *react.DangerousInnerHTML
 	switch v, _ := p.State().selectedTabs.Get(key); v {
 	case tabGo:
-		code = r.NewDangerousInnerHTML(highlightjs.Highlight("go", goSrc, true).Value)
+		code = react.NewDangerousInnerHTML(highlightjs.Highlight("go", goSrc, true).Value)
 	case tabJsx:
-		code = r.NewDangerousInnerHTML(highlightjs.Highlight("javascript", jsxSrc, true).Value)
+		code = react.NewDangerousInnerHTML(highlightjs.Highlight("javascript", jsxSrc, true).Value)
 	}
 
-	return r.Div(nil,
-		r.H3(nil, title),
+	return react.Div(nil,
+		react.H3(nil, title),
 		msg,
-		r.Div(&r.DivProps{ClassName: "row"},
-			r.Div(&r.DivProps{ClassName: "col-md-8"},
-				r.Div(&r.DivProps{ClassName: "panel panel-default with-nav-tabs"},
-					r.Div(&r.DivProps{ClassName: "panel-heading"},
-						r.Ul(
-							&r.UlProps{ClassName: "nav nav-tabs"},
+		react.Div(&react.DivProps{ClassName: "row"},
+			react.Div(&react.DivProps{ClassName: "col-md-8"},
+				react.Div(&react.DivProps{ClassName: "panel panel-default with-nav-tabs"},
+					react.Div(&react.DivProps{ClassName: "panel-heading"},
+						react.Ul(
+							&react.UlProps{ClassName: "nav nav-tabs"},
 
 							p.buildExampleNavTab(key, tabGo, "GopherJS"),
 							p.buildExampleNavTab(key, tabJsx, "JSX"),
 						),
 					),
-					r.Div(&r.DivProps{ClassName: "panel-body"},
-						r.Pre(&r.PreProps{
-							Style: &r.CSS{
+					react.Div(&react.DivProps{ClassName: "panel-body"},
+						react.Pre(&react.PreProps{
+							Style: &react.CSS{
 								MaxHeight: "400px",
 							},
 							DangerouslySetInnerHTML: code,
@@ -189,25 +189,25 @@ func (p ExamplesDef) renderExample(key exampleKey, title, msg r.Element, jsxSrc 
 					),
 				),
 			),
-			r.Div(&r.DivProps{ClassName: "col-md-4"},
+			react.Div(&react.DivProps{ClassName: "col-md-4"},
 				plainPanel(elem),
 			),
 		),
 	)
 }
 
-func (p ExamplesDef) buildExampleNavTab(key exampleKey, t tab, title string) *r.LiElem {
-	lip := &r.LiProps{Role: "presentation"}
+func (p ExamplesDef) buildExampleNavTab(key exampleKey, t tab, title string) *react.LiElem {
+	lip := &react.LiProps{Role: "presentation"}
 
 	if v, _ := p.State().selectedTabs.Get(key); v == t {
 		lip.ClassName = "active"
 	}
 
-	return r.Li(
+	return react.Li(
 		lip,
-		r.A(
-			&r.AProps{Href: "#", OnClick: tabChange{p, key, t}},
-			r.S(title),
+		react.A(
+			&react.AProps{Href: "#", OnClick: tabChange{p, key, t}},
+			react.S(title),
 		),
 	)
 
@@ -219,7 +219,7 @@ type tabChange struct {
 	t   tab
 }
 
-func (tc tabChange) OnClick(e *r.SyntheticMouseEvent) {
+func (tc tabChange) OnClick(e *react.SyntheticMouseEvent) {
 	p := tc.e
 	key := tc.key
 	t := tc.t
@@ -233,8 +233,8 @@ func (tc tabChange) OnClick(e *r.SyntheticMouseEvent) {
 	e.PreventDefault()
 }
 
-func plainPanel(children ...r.Element) r.Element {
-	return r.Div(&r.DivProps{ClassName: "panel panel-default panel-body"},
+func plainPanel(children ...react.Element) react.Element {
+	return react.Div(&react.DivProps{ClassName: "panel panel-default panel-body"},
 		children...,
 	)
 }
