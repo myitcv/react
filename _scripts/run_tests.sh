@@ -27,6 +27,15 @@ find -path ./_vendor -prune -o -name "gen_*.go" -exec rm '{}' \;
 	popd
 }
 
+{
+	pushd examples/sites/helloworldbootstrap
+
+	rm -f *.{go,html}
+	reactGen -init bootstrap
+
+	popd
+}
+
 go generate ./...
 
 z=$(goimports -l !(_vendor)/**/!(gen_*).go !(gen_*).go)
