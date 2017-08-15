@@ -5,10 +5,6 @@ package main
 import (
 	"fmt"
 
-	// It's also normal to name the import of myitcv.io/react with something
-	// like "r" because it's used repeatedly. Dot imports are strongly
-	// discouraged per the core Go team's advice on this subject.
-	//
 	"myitcv.io/react"
 )
 
