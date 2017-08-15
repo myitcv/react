@@ -45,12 +45,17 @@ func FooBar(p FooBarProps) *FooBarElem {
 //
 func (f FooBarDef) Render() react.Element {
 
-	// all React components must render under a single root. This is typically achieved
-	// by rendering everything within a <div> elememt
+	name := f.Props().Name
+	age := f.State().Age
+
+	details := fmt.Sprintf("My name is %v. My age is %v", name, age)
+
+	// all React components must render under a single root. This is typically
+	// achieved by rendering everything within a <div> elememt
 	//
 	return react.Div(nil,
 		react.P(nil,
-			react.S(fmt.Sprintf("My name is %v. My age is %v", f.Props().Name, f.State().Age)),
+			react.S(details),
 		),
 		react.Button(
 			&react.ButtonProps{
@@ -61,17 +66,15 @@ func (f FooBarDef) Render() react.Element {
 	)
 }
 
-// ageClick implements the react.OnClick interface to handle when the "Bump age" button
-// is clicked
+// ageClick implements the react.OnClick interface to handle when the "Bump
+// age" button is clicked
 //
 type ageClick struct{ FooBarDef }
 
 // OnClick is the ageClick implementation of the react.OnClick interface
 //
 func (a ageClick) OnClick(e *react.SyntheticMouseEvent) {
-	f := a.FooBarDef
-
-	s := f.State()
+	s := a.State()
 	s.Age++
-	f.SetState(s)
+	a.SetState(s)
 }
