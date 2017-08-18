@@ -1,0 +1,1240 @@
+{/* This is the slide template. It defines how presentations are formatted. */}
+
+{{define "root"}}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{.Title}}</title>
+    <meta charset='utf-8'>
+    <script>
+      var notesEnabled = {{.NotesEnabled}};
+    </script>
+    <!-- This is a test -->
+      <style>
+@media screen {
+  /* Framework */
+  html {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+
+    display: block !important;
+
+    height: 100%;
+    min-height: 740px;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    background: rgb(215, 215, 215);
+    background: -o-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+    background: -moz-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+    background: -webkit-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+    background: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 500, from(rgb(240, 240, 240)), to(rgb(190, 190, 190)));
+
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .slides {
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+
+    position: absolute;
+
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+
+  .slides > article {
+    display: block;
+
+    position: absolute;
+    overflow: hidden;
+
+    width: 900px;
+    height: 700px;
+
+    left: 50%;
+    top: 50%;
+
+    margin-left: -450px;
+    margin-top: -350px;
+
+    padding: 40px 60px;
+
+    box-sizing: border-box;
+    -o-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+
+    border-radius: 10px;
+    -o-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+
+    background-color: white;
+
+    border: 1px solid rgba(0, 0, 0, .3);
+
+    transition: transform .3s ease-out;
+    -o-transition: -o-transform .3s ease-out;
+    -moz-transition: -moz-transform .3s ease-out;
+    -webkit-transition: -webkit-transform .3s ease-out;
+  }
+  .slides.layout-widescreen > article {
+    margin-left: -550px;
+    width: 1100px;
+  }
+  .slides.layout-faux-widescreen > article {
+    margin-left: -550px;
+    width: 1100px;
+
+    padding: 40px 160px;
+  }
+
+  .slides.layout-widescreen > article:not(.nobackground):not(.biglogo),
+  .slides.layout-faux-widescreen > article:not(.nobackground):not(.biglogo) {
+    background-position-x: 0, 840px;
+  }
+
+  /* Clickable/tappable areas */
+
+  .slide-area {
+    z-index: 1000;
+
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 150px;
+    height: 700px;
+
+    left: 50%;
+    top: 50%;
+
+    cursor: pointer;
+    margin-top: -350px;
+
+    tap-highlight-color: transparent;
+    -o-tap-highlight-color: transparent;
+    -moz-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #prev-slide-area {
+    margin-left: -550px;
+  }
+  #next-slide-area {
+    margin-left: 400px;
+  }
+  .slides.layout-widescreen #prev-slide-area,
+  .slides.layout-faux-widescreen #prev-slide-area {
+    margin-left: -650px;
+  }
+  .slides.layout-widescreen #next-slide-area,
+  .slides.layout-faux-widescreen #next-slide-area {
+    margin-left: 500px;
+  }
+
+  /* Slides */
+
+  .slides > article {
+    display: none;
+  }
+  .slides > article.far-past {
+    display: block;
+    transform: translate(-2040px);
+    -o-transform: translate(-2040px);
+    -moz-transform: translate(-2040px);
+    -webkit-transform: translate3d(-2040px, 0, 0);
+  }
+  .slides > article.past {
+    display: block;
+    transform: translate(-1020px);
+    -o-transform: translate(-1020px);
+    -moz-transform: translate(-1020px);
+    -webkit-transform: translate3d(-1020px, 0, 0);
+  }
+  .slides > article.current {
+    display: block;
+    transform: translate(0);
+    -o-transform: translate(0);
+    -moz-transform: translate(0);
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+  .slides > article.next {
+    display: block;
+    transform: translate(1020px);
+    -o-transform: translate(1020px);
+    -moz-transform: translate(1020px);
+    -webkit-transform: translate3d(1020px, 0, 0);
+  }
+  .slides > article.far-next {
+    display: block;
+    transform: translate(2040px);
+    -o-transform: translate(2040px);
+    -moz-transform: translate(2040px);
+    -webkit-transform: translate3d(2040px, 0, 0);
+  }
+
+  .slides.layout-widescreen > article.far-past,
+  .slides.layout-faux-widescreen > article.far-past {
+    display: block;
+    transform: translate(-2260px);
+    -o-transform: translate(-2260px);
+    -moz-transform: translate(-2260px);
+    -webkit-transform: translate3d(-2260px, 0, 0);
+  }
+  .slides.layout-widescreen > article.past,
+  .slides.layout-faux-widescreen > article.past {
+    display: block;
+    transform: translate(-1130px);
+    -o-transform: translate(-1130px);
+    -moz-transform: translate(-1130px);
+    -webkit-transform: translate3d(-1130px, 0, 0);
+  }
+  .slides.layout-widescreen > article.current,
+  .slides.layout-faux-widescreen > article.current {
+    display: block;
+    transform: translate(0);
+    -o-transform: translate(0);
+    -moz-transform: translate(0);
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+  .slides.layout-widescreen > article.next,
+  .slides.layout-faux-widescreen > article.next {
+    display: block;
+    transform: translate(1130px);
+    -o-transform: translate(1130px);
+    -moz-transform: translate(1130px);
+    -webkit-transform: translate3d(1130px, 0, 0);
+  }
+  .slides.layout-widescreen > article.far-next,
+  .slides.layout-faux-widescreen > article.far-next {
+    display: block;
+    transform: translate(2260px);
+    -o-transform: translate(2260px);
+    -moz-transform: translate(2260px);
+    -webkit-transform: translate3d(2260px, 0, 0);
+  }
+}
+
+@media print {
+  /* Set page layout */
+  @page {
+    size: A4 landscape;
+  }
+
+  body {
+    display: block !important;
+  }
+
+  .slides > article {
+    display: block;
+
+    position: relative;
+
+    page-break-inside: never;
+    page-break-after: always;
+
+    overflow: hidden;
+  }
+
+  h2 {
+    position: static !important;
+    margin-top: 400px !important;
+    margin-bottom: 100px !important;
+  }
+
+  div.code {
+    background: rgb(240, 240, 240);
+  }
+
+  /* Add explicit links */
+  a:link:after, a:visited:after {
+   content: " (" attr(href) ") ";
+   font-size: 50%;
+  }
+
+  #help {
+    display: none;
+    visibility: hidden;
+  }
+}
+
+/* Styles for slides */
+
+.slides > article {
+  font-family: 'Open Sans', Arial, sans-serif;
+
+  color: black;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, .1);
+
+  font-size: 26px;
+  line-height: 36px;
+
+  letter-spacing: -1px;
+}
+
+b {
+  font-weight: 600;
+}
+
+a {
+  color: rgb(0, 102, 204);
+  text-decoration: none;
+}
+a:visited {
+  color: rgba(0, 102, 204, .75);
+}
+a:hover {
+  color: black;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+
+  margin-top: 20px;
+}
+p:first-child {
+  margin-top: 0;
+}
+
+h1 {
+  font-size: 60px;
+  line-height: 60px;
+
+  padding: 0;
+  margin: 0;
+  margin-top: 200px;
+  margin-bottom: 5px;
+  padding-right: 40px;
+
+  font-weight: 600;
+
+  letter-spacing: -3px;
+
+  color: rgb(51, 51, 51);
+}
+
+h2 {
+  font-size: 45px;
+  line-height: 45px;
+
+  position: absolute;
+  bottom: 150px;
+
+  padding: 0;
+  margin: 0;
+  padding-right: 40px;
+
+  font-weight: 600;
+
+  letter-spacing: -2px;
+
+  color: rgb(51, 51, 51);
+}
+
+h3 {
+  font-size: 30px;
+  line-height: 36px;
+
+  padding: 0;
+  margin: 0;
+  padding-right: 40px;
+
+  font-weight: 600;
+
+  letter-spacing: -1px;
+
+  color: rgb(51, 51, 51);
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  margin-top: 20px;
+  margin-left: 1.5em;
+}
+li {
+  padding: 0;
+  margin: 0 0 .5em 0;
+}
+
+div.code {
+  padding: 5px 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  overflow: hidden;
+
+  background: rgb(240, 240, 240);
+  border: 1px solid rgb(224, 224, 224);
+}
+pre {
+  margin: 0;
+  padding: 0;
+
+  font-family: 'Droid Sans Mono', 'Courier New', monospace;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -1px;
+
+  color: black;
+}
+
+pre.numbers span:before {
+  content: attr(num);
+  margin-right: 1em;
+  display: inline-block;
+}
+
+code {
+  font-size: 95%;
+  font-family: 'Droid Sans Mono', 'Courier New', monospace;
+
+  color: black;
+}
+
+article > .image,
+article > .video {
+  text-align: center;
+  margin-top: 40px;
+}
+
+article > .background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
+article > .background > img {
+  max-height: 100%;
+  max-width: 100%;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 40px;
+}
+th {
+  font-weight: 600;
+  text-align: left;
+}
+td,
+th {
+  border: 1px solid rgb(224, 224, 224);
+  padding: 5px 10px;
+  vertical-align: top;
+}
+
+p.link {
+  margin-left: 20px;
+}
+
+/* Code */
+div.code {
+  outline: 0px solid transparent;
+}
+div.playground {
+  position: relative;
+}
+div.output {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  right: 40px;
+  bottom: 40px;
+  background: #202020;
+  padding: 5px 10px;
+  z-index: 2;
+
+  border-radius: 10px;
+  -o-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+
+}
+div.output pre {
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+div.output .stdout, div.output pre {
+  color: #e6e6e6;
+}
+div.output .stderr, div.output .error {
+  color: rgb(255, 200, 200);
+}
+div.output .system, div.output .exit {
+  color: rgb(255, 230, 120)
+}
+.buttons {
+  position: relative;
+  float: right;
+  top: -60px;
+  right: 10px;
+}
+div.output .buttons {
+  position: absolute;
+  float: none;
+  top: auto;
+  right: 5px;
+  bottom: 5px;
+}
+
+/* Presenter details */
+.presenter {
+  margin-top: 20px;
+}
+.presenter p,
+.presenter .link {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.2em;
+}
+
+/* Output resize details */
+.ui-resizable-handle {
+  position: absolute;
+}
+.ui-resizable-n {
+  cursor: n-resize;
+  height: 7px;
+  width: 100%;
+  top: -5px;
+  left: 0;
+}
+.ui-resizable-w {
+  cursor: w-resize;
+  width: 7px;
+  left: -5px;
+  top: 0;
+  height: 100%;
+}
+.ui-resizable-nw {
+  cursor: nw-resize;
+  width: 9px;
+  height: 9px;
+  left: -5px;
+  top: -5px;
+}
+iframe {
+  border: none;
+}
+figcaption {
+  color: #666;
+  text-align: center;
+  font-size: 0.75em;
+}
+
+#help {
+  font-family: 'Open Sans', Arial, sans-serif;
+  text-align: center;
+  color: white;
+  background: #000;
+  opacity: 0.5;
+  position: fixed;
+  bottom: 25px;
+  left: 50px;
+  right: 50px;
+  padding: 20px;
+
+  border-radius: 10px;
+  -o-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+}
+      </style>
+    <script>
+    // Copyright 2012 The Go Authors. All rights reserved.
+    // Use of this source code is governed by a BSD-style
+    // license that can be found in the LICENSE file.
+
+    var PERMANENT_URL_PREFIX = '/static/';
+
+    var SLIDE_CLASSES = ['far-past', 'past', 'current', 'next', 'far-next'];
+
+    var PM_TOUCH_SENSITIVITY = 15;
+
+    var curSlide;
+
+    /* ---------------------------------------------------------------------- */
+    /* classList polyfill by Eli Grey
+     * (http://purl.eligrey.com/github/classList.js/blob/master/classList.js) */
+
+    if (typeof document !== 'undefined' && !('classList' in document.createElement('a'))) {
+
+    (function (view) {
+
+    var
+        classListProp = 'classList'
+      , protoProp = 'prototype'
+      , elemCtrProto = (view.HTMLElement || view.Element)[protoProp]
+      , objCtr = Object
+        strTrim = String[protoProp].trim || function () {
+        return this.replace(/^\s+|\s+$/g, '');
+      }
+      , arrIndexOf = Array[protoProp].indexOf || function (item) {
+        for (var i = 0, len = this.length; i < len; i++) {
+          if (i in this && this[i] === item) {
+            return i;
+          }
+        }
+        return -1;
+      }
+      // Vendors: please allow content code to instantiate DOMExceptions
+      , DOMEx = function (type, message) {
+        this.name = type;
+        this.code = DOMException[type];
+        this.message = message;
+      }
+      , checkTokenAndGetIndex = function (classList, token) {
+        if (token === '') {
+          throw new DOMEx(
+              'SYNTAX_ERR'
+            , 'An invalid or illegal string was specified'
+          );
+        }
+        if (/\s/.test(token)) {
+          throw new DOMEx(
+              'INVALID_CHARACTER_ERR'
+            , 'String contains an invalid character'
+          );
+        }
+        return arrIndexOf.call(classList, token);
+      }
+      , ClassList = function (elem) {
+        var
+            trimmedClasses = strTrim.call(elem.className)
+          , classes = trimmedClasses ? trimmedClasses.split(/\s+/) : []
+        ;
+        for (var i = 0, len = classes.length; i < len; i++) {
+          this.push(classes[i]);
+        }
+        this._updateClassName = function () {
+          elem.className = this.toString();
+        };
+      }
+      , classListProto = ClassList[protoProp] = []
+      , classListGetter = function () {
+        return new ClassList(this);
+      }
+    ;
+    // Most DOMException implementations don't allow calling DOMException's toString()
+    // on non-DOMExceptions. Error's toString() is sufficient here.
+    DOMEx[protoProp] = Error[protoProp];
+    classListProto.item = function (i) {
+      return this[i] || null;
+    };
+    classListProto.contains = function (token) {
+      token += '';
+      return checkTokenAndGetIndex(this, token) !== -1;
+    };
+    classListProto.add = function (token) {
+      token += '';
+      if (checkTokenAndGetIndex(this, token) === -1) {
+        this.push(token);
+        this._updateClassName();
+      }
+    };
+    classListProto.remove = function (token) {
+      token += '';
+      var index = checkTokenAndGetIndex(this, token);
+      if (index !== -1) {
+        this.splice(index, 1);
+        this._updateClassName();
+      }
+    };
+    classListProto.toggle = function (token) {
+      token += '';
+      if (checkTokenAndGetIndex(this, token) === -1) {
+        this.add(token);
+      } else {
+        this.remove(token);
+      }
+    };
+    classListProto.toString = function () {
+      return this.join(' ');
+    };
+
+    if (objCtr.defineProperty) {
+      var classListPropDesc = {
+          get: classListGetter
+        , enumerable: true
+        , configurable: true
+      };
+      try {
+        objCtr.defineProperty(elemCtrProto, classListProp, classListPropDesc);
+      } catch (ex) { // IE 8 doesn't support enumerable:true
+        if (ex.number === -0x7FF5EC54) {
+          classListPropDesc.enumerable = false;
+          objCtr.defineProperty(elemCtrProto, classListProp, classListPropDesc);
+        }
+      }
+    } else if (objCtr[protoProp].__defineGetter__) {
+      elemCtrProto.__defineGetter__(classListProp, classListGetter);
+    }
+
+    }(self));
+
+    }
+    /* ---------------------------------------------------------------------- */
+
+    /* Slide movement */
+
+    function hideHelpText() {
+      document.getElementById('help').style.display = 'none';
+    };
+
+    function getSlideEl(no) {
+      if ((no < 0) || (no >= slideEls.length)) {
+        return null;
+      } else {
+        return slideEls[no];
+      }
+    };
+
+    function updateSlideClass(slideNo, className) {
+      var el = getSlideEl(slideNo);
+
+      if (!el) {
+        return;
+      }
+
+      if (className) {
+        el.classList.add(className);
+      }
+
+      for (var i in SLIDE_CLASSES) {
+        if (className != SLIDE_CLASSES[i]) {
+          el.classList.remove(SLIDE_CLASSES[i]);
+        }
+      }
+    };
+
+    function updateSlides() {
+      if (window.trackPageview) window.trackPageview();
+
+      for (var i = 0; i < slideEls.length; i++) {
+        switch (i) {
+          case curSlide - 2:
+            updateSlideClass(i, 'far-past');
+            break;
+          case curSlide - 1:
+            updateSlideClass(i, 'past');
+            break;
+          case curSlide:
+            updateSlideClass(i, 'current');
+            break;
+          case curSlide + 1:
+            updateSlideClass(i, 'next');
+            break;
+          case curSlide + 2:
+            updateSlideClass(i, 'far-next');
+            break;
+          default:
+            updateSlideClass(i);
+            break;
+        }
+      }
+
+      triggerLeaveEvent(curSlide - 1);
+      triggerEnterEvent(curSlide);
+
+      window.setTimeout(function() {
+        // Hide after the slide
+        disableSlideFrames(curSlide - 2);
+      }, 301);
+
+      enableSlideFrames(curSlide - 1);
+      enableSlideFrames(curSlide + 2);
+
+      updateHash();
+    };
+
+    function prevSlide() {
+      hideHelpText();
+      if (curSlide > 0) {
+        curSlide--;
+
+        updateSlides();
+      }
+
+      if (notesEnabled) localStorage.setItem('destSlide', curSlide);
+    };
+
+    function nextSlide() {
+      hideHelpText();
+      if (curSlide < slideEls.length - 1) {
+        curSlide++;
+
+        updateSlides();
+      }
+
+      if (notesEnabled) localStorage.setItem('destSlide', curSlide);
+    };
+
+    /* Slide events */
+
+    function triggerEnterEvent(no) {
+      var el = getSlideEl(no);
+      if (!el) {
+        return;
+      }
+
+      var onEnter = el.getAttribute('onslideenter');
+      if (onEnter) {
+        new Function(onEnter).call(el);
+      }
+
+      var evt = document.createEvent('Event');
+      evt.initEvent('slideenter', true, true);
+      evt.slideNumber = no + 1; // Make it readable
+
+      el.dispatchEvent(evt);
+    };
+
+    function triggerLeaveEvent(no) {
+      var el = getSlideEl(no);
+      if (!el) {
+        return;
+      }
+
+      var onLeave = el.getAttribute('onslideleave');
+      if (onLeave) {
+        new Function(onLeave).call(el);
+      }
+
+      var evt = document.createEvent('Event');
+      evt.initEvent('slideleave', true, true);
+      evt.slideNumber = no + 1; // Make it readable
+
+      el.dispatchEvent(evt);
+    };
+
+    /* Touch events */
+
+    function handleTouchStart(event) {
+      if (event.touches.length == 1) {
+        touchDX = 0;
+        touchDY = 0;
+
+        touchStartX = event.touches[0].pageX;
+        touchStartY = event.touches[0].pageY;
+
+        document.body.addEventListener('touchmove', handleTouchMove, true);
+        document.body.addEventListener('touchend', handleTouchEnd, true);
+      }
+    };
+
+    function handleTouchMove(event) {
+      if (event.touches.length > 1) {
+        cancelTouch();
+      } else {
+        touchDX = event.touches[0].pageX - touchStartX;
+        touchDY = event.touches[0].pageY - touchStartY;
+        event.preventDefault();
+      }
+    };
+
+    function handleTouchEnd(event) {
+      var dx = Math.abs(touchDX);
+      var dy = Math.abs(touchDY);
+
+      if ((dx > PM_TOUCH_SENSITIVITY) && (dy < (dx * 2 / 3))) {
+        if (touchDX > 0) {
+          prevSlide();
+        } else {
+          nextSlide();
+        }
+      }
+
+      cancelTouch();
+    };
+
+    function cancelTouch() {
+      document.body.removeEventListener('touchmove', handleTouchMove, true);
+      document.body.removeEventListener('touchend', handleTouchEnd, true);
+    };
+
+    /* Preloading frames */
+
+    function disableSlideFrames(no) {
+      var el = getSlideEl(no);
+      if (!el) {
+        return;
+      }
+
+      var frames = el.getElementsByTagName('iframe');
+      for (var i = 0, frame; frame = frames[i]; i++) {
+        disableFrame(frame);
+      }
+    };
+
+    function enableSlideFrames(no) {
+      var el = getSlideEl(no);
+      if (!el) {
+        return;
+      }
+
+      var frames = el.getElementsByTagName('iframe');
+      for (var i = 0, frame; frame = frames[i]; i++) {
+        enableFrame(frame);
+      }
+    };
+
+    function disableFrame(frame) {
+      frame.src = 'about:blank';
+    };
+
+    function enableFrame(frame) {
+      var src = frame._src;
+
+      if (frame.src != src && src != 'about:blank') {
+        frame.src = src;
+      }
+    };
+
+    function setupFrames() {
+      var frames = document.querySelectorAll('iframe');
+      for (var i = 0, frame; frame = frames[i]; i++) {
+        frame._src = frame.src;
+        disableFrame(frame);
+      }
+
+      enableSlideFrames(curSlide);
+      enableSlideFrames(curSlide + 1);
+      enableSlideFrames(curSlide + 2);
+    };
+
+    function setupInteraction() {
+      /* Clicking and tapping */
+
+      var el = document.createElement('div');
+      el.className = 'slide-area';
+      el.id = 'prev-slide-area';
+      el.addEventListener('click', prevSlide, false);
+      document.querySelector('section.slides').appendChild(el);
+
+      var el = document.createElement('div');
+      el.className = 'slide-area';
+      el.id = 'next-slide-area';
+      el.addEventListener('click', nextSlide, false);
+      document.querySelector('section.slides').appendChild(el);
+
+      /* Swiping */
+
+      document.body.addEventListener('touchstart', handleTouchStart, false);
+    }
+
+    /* Hash functions */
+
+    function getCurSlideFromHash() {
+      var slideNo = parseInt(location.hash.substr(1));
+
+      if (slideNo) {
+        curSlide = slideNo - 1;
+      } else {
+        curSlide = 0;
+      }
+    };
+
+    function updateHash() {
+      // TODO
+      // location.replace('#' + (curSlide + 1));
+    };
+
+    /* Event listeners */
+
+    function handleBodyKeyDown(event) {
+      // If we're in a code element, only handle pgup/down.
+      var inCode = event.target.classList.contains('code');
+
+      switch (event.keyCode) {
+        case 78: // 'N' opens presenter notes window
+          if (!inCode && notesEnabled) toggleNotesWindow();
+          break;
+        case 72: // 'H' hides the help text
+        case 27: // escape key
+          if (!inCode) hideHelpText();
+          break;
+
+        case 39: // right arrow
+        case 13: // Enter
+        case 32: // space
+          if (inCode) break;
+        case 34: // PgDn
+          nextSlide();
+          event.preventDefault();
+          break;
+
+        case 37: // left arrow
+        case 8: // Backspace
+          if (inCode) break;
+        case 33: // PgUp
+          prevSlide();
+          event.preventDefault();
+          break;
+
+        case 40: // down arrow
+          if (inCode) break;
+          nextSlide();
+          event.preventDefault();
+          break;
+
+        case 38: // up arrow
+          if (inCode) break;
+          prevSlide();
+          event.preventDefault();
+          break;
+      }
+    };
+
+    function addEventListeners() {
+      document.addEventListener('keydown', handleBodyKeyDown, false);
+    };
+
+    /* Initialization */
+
+    function addFontStyle() {
+      var el = document.createElement('link');
+      el.rel = 'stylesheet';
+      el.type = 'text/css';
+      el.href = '//fonts.googleapis.com/css?family=' +
+                'Open+Sans:regular,semibold,italic,italicsemibold|Droid+Sans+Mono';
+
+      document.body.appendChild(el);
+    };
+
+    function addGeneralStyle() {
+      var el = document.createElement('link');
+      el.rel = 'stylesheet';
+      el.type = 'text/css';
+      el.href = PERMANENT_URL_PREFIX + 'styles.css';
+      document.body.appendChild(el);
+
+      var el = document.createElement('meta');
+      el.name = 'viewport';
+      el.content = 'width=1100,height=750';
+      document.querySelector('head').appendChild(el);
+
+      var el = document.createElement('meta');
+      el.name = 'apple-mobile-web-app-capable';
+      el.content = 'yes';
+      document.querySelector('head').appendChild(el);
+    };
+
+    function handleDomLoaded() {
+      slideEls = document.querySelectorAll('section.slides > article');
+
+      setupFrames();
+
+      addFontStyle();
+      // addGeneralStyle();
+      addEventListeners();
+
+      updateSlides();
+
+      setupInteraction();
+
+      if (window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1' || window.location.hostname == '::1') {
+        hideHelpText();
+      }
+
+      document.body.classList.add('loaded');
+
+      setupNotesSync();
+    };
+
+    function initialize() {
+      getCurSlideFromHash();
+
+      if (window['_DEBUG']) {
+        PERMANENT_URL_PREFIX = '../';
+      }
+
+      if (window['_DCL']) {
+        handleDomLoaded();
+      } else {
+        document.addEventListener('DOMContentLoaded', handleDomLoaded, false);
+      }
+    }
+
+    // If ?debug exists then load the script relative instead of absolute
+    if (!window['_DEBUG'] && document.location.href.indexOf('?debug') !== -1) {
+      document.addEventListener('DOMContentLoaded', function() {
+        // Avoid missing the DomContentLoaded event
+        window['_DCL'] = true
+      }, false);
+
+      window['_DEBUG'] = true;
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = '../slides.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(script, s);
+
+      // Remove this script
+      s.parentNode.removeChild(s);
+    } else {
+      initialize();
+    }
+
+    /* Synchronize windows when notes are enabled */
+
+    function setupNotesSync() {
+      if (!notesEnabled) return;
+
+      function setupPlayResizeSync() {
+        var out = document.getElementsByClassName('output');
+        for (var i = 0; i < out.length; i++) {
+          $(out[i]).bind('resize', function(event) {
+            if ($(event.target).hasClass('ui-resizable')) {
+              localStorage.setItem('play-index', i);
+              localStorage.setItem('output-style', out[i].style.cssText);
+            }
+          })
+        }
+      };
+      function setupPlayCodeSync() {
+        var play = document.querySelectorAll('div.playground');
+        for (var i = 0; i < play.length; i++) {
+          play[i].addEventListener('input', inputHandler, false);
+
+          function inputHandler(e) {
+            localStorage.setItem('play-index', i);
+            localStorage.setItem('play-code', e.target.innerHTML);
+          }
+        }
+      };
+
+      setupPlayCodeSync();
+      setupPlayResizeSync();
+      localStorage.setItem('destSlide', curSlide);
+      window.addEventListener('storage', updateOtherWindow, false);
+    }
+
+    // An update to local storage is caught only by the other window
+    // The triggering window does not handle any sync actions
+    function updateOtherWindow(e) {
+      // Ignore remove storage events which are not meant to update the other window
+      var isRemoveStorageEvent = !e.newValue;
+      if (isRemoveStorageEvent) return;
+
+      var destSlide = localStorage.getItem('destSlide');
+      while (destSlide > curSlide) {
+        nextSlide();
+      }
+      while (destSlide < curSlide) {
+        prevSlide();
+      }
+
+      updatePlay(e);
+      updateNotes();
+    }
+    </script>
+
+    {{if .NotesEnabled}}
+    <script>
+      var sections = {{.Sections}};
+      var titleNotes = {{.TitleNotes}}
+    </script>
+    <script src='/static/notes.js'></script>
+    {{end}}
+
+    <script>
+      // Initialize Google Analytics tracking code on production site only.
+      if (window["location"] && window["location"]["hostname"] == "talks.golang.org") {
+        var _gaq = _gaq || [];
+        _gaq.push(["_setAccount", "UA-11222381-6"]);
+        _gaq.push(["b._setAccount", "UA-49880327-6"]);
+        window.trackPageview = function() {
+          _gaq.push(["_trackPageview", location.pathname+location.hash]);
+          _gaq.push(["b._trackPageview", location.pathname+location.hash]);
+        };
+        window.trackPageview();
+        window.trackEvent = function(category, action, opt_label, opt_value, opt_noninteraction) {
+          _gaq.push(["_trackEvent", category, action, opt_label, opt_value, opt_noninteraction]);
+          _gaq.push(["b._trackEvent", category, action, opt_label, opt_value, opt_noninteraction]);
+        };
+      }
+    </script>
+  </head>
+
+  <body style='display: none'>
+
+    <section class='slides layout-widescreen'>
+
+      <article>
+        <h1>{{.Title}}</h1>
+        {{with .Subtitle}}<h3>{{.}}</h3>{{end}}
+        {{if not .Time.IsZero}}<h3>{{.Time.Format "2 January 2006"}}</h3>{{end}}
+        {{range .Authors}}
+          <div class="presenter">
+            {{range .TextElem}}{{elem $.Template .}}{{end}}
+          </div>
+        {{end}}
+      </article>
+
+  {{range $i, $s := .Sections}}
+  <!-- start of slide {{$s.Number}} -->
+      <article>
+      {{if $s.Elem}}
+        <h3>{{$s.Title}}</h3>
+        {{range $s.Elem}}{{elem $.Template .}}{{end}}
+      {{else}}
+        <h2>{{$s.Title}}</h2>
+      {{end}}
+      </article>
+  <!-- end of slide {{$i}} -->
+  {{end}}{{/* of Slide block */}}
+
+      <article>
+        <h3>Thank you</h3>
+        {{range .Authors}}
+          <div class="presenter">
+            {{range .Elem}}{{elem $.Template .}}{{end}}
+          </div>
+        {{end}}
+      </article>
+
+    </section>
+
+    <div id="help">
+      Use the left and right arrow keys or click the left and right
+      edges of the page to navigate between slides.<br>
+      (Press 'H' or navigate to hide this message.)
+    </div>
+
+    {{if .PlayEnabled}}
+    <script src='/play.js'></script>
+    {{end}}
+
+    <script>
+      (function() {
+        // Load Google Analytics tracking code on production site only.
+        if (window["location"] && window["location"]["hostname"] == "talks.golang.org") {
+          var ga = document.createElement("script"); ga.type = "text/javascript"; ga.async = true;
+          ga.src = ("https:" == document.location.protocol ? "https://ssl" : "http://www") + ".google-analytics.com/ga.js";
+          var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ga, s);
+        }
+      })();
+    </script>
+  </body>
+</html>
+{{end}}
+
+{{define "newline"}}
+<br>
+{{end}}

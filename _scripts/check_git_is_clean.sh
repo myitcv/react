@@ -5,6 +5,8 @@
 
 source "${BASH_SOURCE%/*}/common.bash"
 
+git diff
+
 if [ ! -z "$(git status --porcelain)" ]
 then
   echo "Git is not clean"
