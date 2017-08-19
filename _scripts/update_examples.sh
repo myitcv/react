@@ -13,6 +13,8 @@ echo "Cloning git@github.com:myitcv/gopherjs_examples_sites.git into $r"
 git clone -q git@github.com:myitcv/gopherjs_examples_sites.git $r/gopherjs_examples_sites
 rm -rf $r/gopherjs_examples_sites/*
 
+mkdir $r/gopherjs_examples_sites/blog
+
 echo ""
 
 echo "Copying..."
@@ -27,6 +29,18 @@ do
 	cp -rp $t/localhost:8080/myitcv.io/react/examples/sites/$i/ $r/gopherjs_examples_sites/
 
 	du -sh $r/gopherjs_examples_sites/$i
+done
+
+for i in $(command ls "${BASH_SOURCE%/*}/../examples/blog" | grep -v common)
+do
+	echo $i
+	(
+		cd $t
+		wget --quiet --mirror http://localhost:8080/myitcv.io/react/examples/blog/$i/
+	)
+	cp -rp $t/localhost:8080/myitcv.io/react/examples/blog/$i/ $r/gopherjs_examples_sites/blog
+
+	du -sh $r/gopherjs_examples_sites/blog/$i
 done
 
 cp -rp examples/sites/common $r/gopherjs_examples_sites/
