@@ -12,6 +12,7 @@ type AElem struct {
 type _AProps struct {
 	*BasicHTMLElement
 
+	Title  string `js:"title"`
 	Target string `js:"target"`
 	Href   string `js:"href"`
 }
