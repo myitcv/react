@@ -4,7 +4,8 @@ package main
 
 import (
 	"bytes"
-	"fmt"
+	"net/url"
+	"strconv"
 	"strings"
 
 	"honnef.co/go/js/dom"
@@ -12,17 +13,43 @@ import (
 	"myitcv.io/react"
 )
 
+const (
+	queryParamHideAddressBar = "hideAddressBar"
+	queryParamURL            = "url"
+)
+
 type AppDef struct {
 	react.ComponentDef
 }
 
 type AppState struct {
-	URL    string
-	Slides string
+	URL            string
+	Slides         string
+	Error          string
+	Status         string
+	HideAddressBar bool
 }
 
 func App() *AppElem {
 	return buildAppElem()
+}
+
+func (a AppDef) GetInitialState() AppState {
+	loc := dom.GetWindow().Location()
+	u, err := url.Parse(loc.String())
+	if err != nil {
+		panic(err)
+	}
+
+	res := AppState{}
+
+	res.URL = u.Query().Get(queryParamURL)
+
+	if b, err := strconv.ParseBool(u.Query().Get(queryParamHideAddressBar)); err == nil && b {
+		res.HideAddressBar = true
+	}
+
+	return res
 }
 
 func (a AppDef) ComponentWillMount() {
@@ -30,69 +57,69 @@ func (a AppDef) ComponentWillMount() {
 		if err := initTemplates("."); err != nil {
 			panic(err)
 		}
+
+		if u := a.State().URL; u != "" {
+			a.newUrl(u)
+		}
 	}()
 }
 
 func (a AppDef) Render() react.Element {
 	s := a.State()
 
-	var iframe react.Element
+	var contents []react.Element
 
 	if s.Slides != "" {
-		iframe = react.IFrame(&react.IFrameProps{
+		contents = append(contents, react.IFrame(&react.IFrameProps{
 			SrcDoc: s.Slides,
 			Style: &react.CSS{
-				Width:    "100%",
-				Height:   "100%",
-				Position: "absolute",
-				Top:      "0px",
-				Left:     "0px",
-				ZIndex:   "1",
-				Overflow: "hidden",
+				Width:  "100%",
+				Height: "100%",
 			},
-		})
+		}))
 	} else {
-		iframe = react.H1(&react.H1Props{
-			Style: &react.CSS{
-				Position: "absolute",
-				Top:      "50%",
-				Left:     "50%",
-			},
-		},
-			react.S("Enter a URL to start"),
-		)
+		if s.Error != "" {
+			contents = append(contents,
+				react.Div(&react.DivProps{ClassName: "placeholder error"}, react.S(s.Error)),
+			)
+		} else if s.Status != "" {
+			contents = append(contents,
+				react.Div(&react.DivProps{ClassName: "placeholder status"}, react.S(s.Status)),
+			)
+		} else {
+			contents = append(contents,
+				react.Div(&react.DivProps{ClassName: "placeholder arrow"}, react.S("\u21E7")),
+				react.Div(&react.DivProps{ClassName: "placeholder text"}, react.S("Enter URL above")),
+			)
+		}
+	}
+
+	var addressBar react.Element
+
+	if !s.HideAddressBar {
+		addressBar = react.Input(&react.InputProps{
+			ID:       "addressbar",
+			OnChange: urlChange{a},
+			Value:    s.URL,
+		})
 	}
 
 	return react.Div(
-		&react.DivProps{
-			Style: &react.CSS{
-				Overflow: "hidden",
-			},
-		},
-		react.Input(&react.InputProps{
-			OnChange: urlChange{a},
-			Value:    s.URL,
-			Style: &react.CSS{
-				Width:    "100%",
-				Position: "absolute",
-				Top:      "0px",
-				Left:     "0px",
-				ZIndex:   "2",
-			},
-		}),
-		iframe,
+		&react.DivProps{ClassName: "box"},
+		react.Div(&react.DivProps{ClassName: "row header"},
+			addressBar,
+		),
+		react.Div(&react.DivProps{ClassName: "row content"},
+			contents...,
+		),
 	)
 }
 
-type urlChange struct{ AppDef }
-
-func (i urlChange) OnChange(se *react.SyntheticEvent) {
-	target := se.Target().(*dom.HTMLInputElement)
-	u := target.Value
-
-	st := i.State()
+func (a AppDef) newUrl(u string) {
+	st := a.State()
 	st.URL = u
-	i.SetState(st)
+	st.Status = "Loading..."
+	a.SetState(st)
 
 	if u == "" {
 		return
@@ -100,11 +127,19 @@ func (i urlChange) OnChange(se *react.SyntheticEvent) {
 
 	go func() {
 		req := xhr.NewRequest("GET", u)
+
 		err := req.Send(nil)
+
+		st := a.State()
+
 		if err != nil {
-			fmt.Printf("Failed to fetch %v\n", u)
+			st.Error = "Invalid URL"
+			a.SetState(st)
 			return
 		}
+
+		st.Status = "Loading..."
+		a.SetState(st)
 
 		out := new(bytes.Buffer)
 		in := strings.NewReader(req.ResponseText)
@@ -114,8 +149,17 @@ func (i urlChange) OnChange(se *react.SyntheticEvent) {
 			panic(err)
 		}
 
-		st := i.State()
+		st = a.State()
 		st.Slides = out.String()
-		i.SetState(st)
+		a.SetState(st)
 	}()
+}
+
+type urlChange struct{ AppDef }
+
+func (uc urlChange) OnChange(se *react.SyntheticEvent) {
+	target := se.Target().(*dom.HTMLInputElement)
+	u := target.Value
+
+	uc.newUrl(u)
 }

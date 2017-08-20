@@ -1,0 +1,425 @@
+Creating interactive frontend apps with GopherJS and React
+
+Paul Jolly
+Co-founder, modelogiq
+paul@myitcv.io
+https://myitcv.io
+@_myitcv
+
+
+* Today we will
+
+- Write a browser-based, interactive frontend app in Go
+- Using myitcv.io/react, a wrapper around Facebook's React
+- Learn to love `go`generate`
+- Enjoy the benefits of writing frontend apps in Go, thereby solving many of the problems associated with using Javascript
+- End up with teams of happy frontend Gophers
+
+.image golang_uk/frontend_gopher.png 250 _
+
+
+* What do we mean by "frontend"?
+
+For the purposes of this talk:
+
+- A browser/equivalent (e.g. Electron) on a client device
+- Rendering of HTML and CSS
+- Backend could be local/remote/non-existent
+
+
+* What do we mean by "interactive"?
+
+For the purposes of this talk:
+
+- Intra-page-load responsiveness
+- Visual changes, i.e. re-rendering in response to user interactions
+- May or may not involve backend calls; could be entirely frontend logic
+
+
+* What do we mean by "app"?
+
+For the purposes of this talk:
+
+- HTML page/pages that are interactive
+- Page `=>` a single page application - everything retrieved in a single page load
+- Pages `=>` logic split across multiple pages (and hence page loads)
+
+
+* Why is any of this important?
+
+- Browser is an extremely good cross platform way of building frontend apps
+- Billions of devices
+- Zero cost to adoption
+- Low cost from a development perspective (or should be at least!)
+
+* Examples of interactive frontend apps
+
+
+* 
+
+.iframe http://blog.myitcv.io/gopherjs_examples_sites/globalstate/?hideGithubRibbon=true 600 975
+
+
+* 
+
+.iframe http://blog.myitcv.io/gopherjs_examples_sites/markdowneditor/?hideGithubRibbon=true 600 975
+
+
+* 
+
+.iframe http://blog.myitcv.io/gopherjs_examples_sites/immtodoapp/?hideGithubRibbon=true 600 975
+
+
+* 
+
+.iframe http://blog.myitcv.io/gopherize.me_site/?hideGithubRibbon=true 600 975
+
+
+* 
+
+.iframe http://blog.myitcv.io/gopherjs_examples_sites/latency/?hideGithubRibbon=true 600 975
+
+
+* How do we make HTML and CSS dynamic in this way?
+
+DOM model represents a document with a logical tree.
+
+Using Javascript we can then manipulate the DOM:
+
+- add, change, and remove HTML elements and attributes
+- change CSS styles
+- react to existing events (e.g. mouse clicks, key press)
+- create new events (e.g. timer events)
+
+
+* Javascript? Really?
+
+_“JavaScript_is_ubiquitous_on_the_web,_and_that’s_not_going_to_change_anytime_soon,_so_there’s_no_point_in_carrying_the_baggage_necessary_for_multiple_scripting_engines_that_never_materialized.”_
+
+A Mozilla maintainer, 2012.
+
+
+* Javascript: the reality
+
+- Javascript "won" the browser battle
+- Easily picked up and learnt
+- Standardised via ECMAScript
+- `asm.js`, WebAssembly (possibly) represent tomorrow's world
+
+
+* What's the option space for writing interactive frontend apps?
+
+A very incomplete list:
+
+- Javascript
+- CoffeeScript (compiles to Javascript)
+- Typescript (compiles to Javascript)
+- ClojureScript (compiles to Javascript)
+- Other languages that compile to Javascript/`asm.js`/WebAssembly
+- ...
+
+
+* A brief (incomplete) analysis of Typescript
+
+- Typed superset of Javascript that compiles to Javascript
+- Large language; extensive specification, more edge cases, harder to write tools that work with language
+- Painful hangovers from Javascript
+- Myriad compiler options to satisfy myriad backgrounds of newcomers
+- Low development velocity
+- No single-source-of-truth `gofmt` equivalent
+
+
+* Is there another way?
+
+- We want to write interactive frontend apps
+- We *ultimately* have to use Javascript to do so
+
+
+* 
+
+.image golang_uk/gophercolor.png 500 _
+
+.caption _Gopher_ by [[http://www.reneefrench.com][Renée French]]
+
+
+* GopherJS
+
+* What is GopherJS?
+
+- A compiler from Go to JavaScript
+- Developed by Richard Musiol et al
+- Principally targets the browser
+
+
+
+* What does GopherJS support?
+
+- Full language coverage, including goroutines
+- Almost the entire standard library
+- Performance is good in most cases
+- Source map support (debugging)
+- DOM package
+- Javascript interoperability package
+
+
+* React
+
+
+* Why React?
+
+_"A_Javascript_library_for_building_user_interfaces"_
+
+- Presents a nice abstraction of the DOM
+- Makes you think in terms of components (reuse primitive)
+- Pragmatic: doesn't mandate data or state patterns
+- Widely used; existing Javascript components can be reused
+
+
+* React Fundamentals
+
+- Components - a description of what HTML/components we want to render via a `Render()` method
+- Props - parameters to a component (optional)
+- State - private to a component (optional)
+- Virtual DOM
+
+
+* Render()
+
+- `Render()` is a function of a component's props and state
+- Results in a hierarchy of component instances/HTML
+
+.image golang_uk/react_component_tree.png 450 _
+
+
+* myitcv.io/react
+
+* What is myitcv.io/react?
+
+_Package_myitcv.io/react_is_a_set_of_GopherJS_bindings_for_Facebook's_React_
+
+- Wraps the Facebook-distributed React Javascript library
+- Presents a Go-esque "interface" to declare components, props and state
+- `reactGen`: a tool to initialise a new frontend app, but also a code generator as we declare our components, props and state
+
+
+* Let's create a simple app
+
+  # The ubiquitous hello world
+  #
+  mkdir -p $GOPATH/src/example.com/helloworld && cd $_
+
+  # Use the Boostrap template
+  #
+  reactGen -init bootstrap
+
+
+* 
+
+.iframe http://blog.myitcv.io/gopherjs_examples_sites/helloworldbootstrap/ 600 975
+
+* What did reactGen generate?
+
+  helloworld
+  ├── app.go
+  ├── gen_App_reactGen.go
+  ├── index.html
+  └── main.go
+
+* index.html
+
+Effectively the entry point for our app:
+
+.code golang_uk/bootstrap_init/index.html
+
+`helloworld.js` is the GopherJS compiled result of `example.com/helloworld`
+
+
+* main.go
+
+.code golang_uk/bootstrap_init/main.go
+
+
+* app.go
+
+.code golang_uk/bootstrap_init/app.go
+
+
+* gen_App_reactGen.go
+
+`gen_App_reactGen.go` is the result of `go`generate` seeing the directive:
+
+  //go:generate reactGen
+
+`reactGen`:
+
+- generates glue code between component, props and state declarations and the wrapped React library
+- runs at the package level
+- creates type-safe methods for accessing props and state in a component
+- saves you writing lots of boilerplate code!
+
+
+* go generate
+
+.image golang_uk/go_generate.png _ 975
+
+
+* Using a file watcher
+
+.image golang_uk/go_generate_watch.png _ 975
+
+e.g. `github.com/cespare/reflex`
+
+
+* Writing our own React component
+
+* A simple component: declaration
+
+Components are defined as struct types with a `*Def` name suffix that embed `react.ComponentDef`:
+
+  import "myitcv.io/react"
+
+  // FooBarDef is the definition of the FooBar component.
+  //
+  type FooBarDef struct {
+      react.ComponentDef
+  }
+
+
+* A simple component: props
+
+The props type for a component use a corresponding `*Props` suffix:
+
+  // FooBarProps is the props type for the FooBar component.
+  //
+  type FooBarProps struct {
+      Name string
+  }
+
+
+* A simple component: state
+
+The state type for a component use a corresponding `*State` suffix:
+
+  // FooBarState is the state type for the FooBar component.
+  //
+  type FooBarState struct {
+      Age int
+  }
+
+
+* What's reactGen done for us?
+
+Amongst other things we now have some type-safe methods:
+
+  func (f FooBarDef) Props() FooBarProps
+
+  func (f FooBarDef) State() FooBarState
+  func (f FooBarDef) SetState(state FooBarState)
+
+
+* A simple component: Render()
+
+.code golang_uk/foo_bar/render.go
+
+
+* A simple component: click handler
+
+  // ageClick implements the react.OnClick interface to handle when the "Bump age" button
+  // is clicked
+  //
+  type ageClick struct{
+          FooBarDef
+  }
+
+  func (a ageClick) OnClick(e *react.SyntheticMouseEvent) {
+          s := a.State()
+          s.Age++
+          a.SetState(s)
+  }
+
+
+* A simple component: constructor function
+
+This constructor function is our component's equivalent to, say, `react.Div(...)`:
+
+  // FooBar is the constructor for a FooBar component.
+  //
+  func FooBar(p FooBarProps) *FooBarElem {
+          return buildFooBarElem(p)
+  }
+
+`buildFooBarElem()` is generated by `reactGen`
+
+
+* Using our simple component
+
+.code golang_uk/foo_bar/revised_app_render.go
+
+
+The result?
+
+* 
+
+.iframe http://blog.myitcv.io/gopherjs_examples_sites/blog/2017_04_16/ 600 975
+
+
+* React dev tools work
+
+.image golang_uk/foo_bar/react_tools.png _ 975
+
+
+* 
+
+.iframe http://blog.myitcv.io/gopherize.me_site/?hideGithubRibbon=true 600 975
+
+* gopherize.me React component hierarchy
+
+.image golang_uk/gopherize.me_comps.png _ 975
+
+
+* Backends for our frontend
+
+
+* Where do we stand?
+
+- Written an interactive frontend app in Go
+- Used `myitcv.io/react` and `reactGen` to declare components, props and state
+- A new found love for `go`generate`
+- But no "data" in our application...
+
+
+* Option space for backends
+
+- No backend
+- JSON/REST API
+- Base64 encoded Protobuf 3 over HTTP 1.1
+- gRPC over HTTP 2
+- ...
+
+You have (almost) the entire standard library at your disposal
+
+
+* 
+
+.iframe https://grpcweb.jbrandhorst.com/ 600 975
+
+
+* That's all Gophers
+
+.image golang_uk/wrap.png 500 _
+
+* Credits and thanks
+
+- [[https://github.com/neelance][Richard Musiol]], [[https://github.com/shurcooL][Dmitry Shuralyov]] and others in the GopherJS community
+- [[https://twitter.com/lejatorn][Mathieu Lonjaret]] and [[https://twitter.com/bradfitz][Brad Fitzpatrick]] - [[https://camlistore.org/][Camlistore]]
+- [[https://twitter.com/tjholowaychuk][TJ Holowaychuk]]
+- [[https://twitter.com/JohanBrandhorst][Johan Brandhorst]] for his excellent work on gRPC-backend example
+- [[https://twitter.com/ashleymcnamara][Ashley McNamara]] and [[https://twitter.com/matryer][Mat Ryer]] - [[https://gopherize.me/]]
+
+
+* More details/getting started/etc
+
+- [[https://github.com/myitcv/react/wiki][`myitcv.io/react` wiki]]
+- [[http://blog.myitcv.io/][My blog]]
+- [[https://gophers.slack.com/messages/gopherjs][GopherJS Slack Channel]]
+
