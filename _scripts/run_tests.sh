@@ -38,7 +38,7 @@ find -path ./_vendor -prune -o -name "gen_*.go" -exec rm '{}' \;
 
 go generate ./...
 
-z=$(goimports -l !(_vendor)/**/!(gen_*).go !(gen_*).go)
+z=$(goimports -l !(_vendor|_talks)/**/!(gen_*).go !(gen_*).go)
 if [ ! -z "$z" ]
 then
 	echo "The following files are not formatted:"

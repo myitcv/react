@@ -47,7 +47,7 @@ var _ react.State = AppState{}
 
 // GetInitialStateIntf is an auto-generated proxy to GetInitialState
 func (a AppDef) GetInitialStateIntf() react.State {
-	return AppState{}
+	return a.GetInitialState()
 }
 
 func (a AppState) EqualsIntf(val react.State) bool {

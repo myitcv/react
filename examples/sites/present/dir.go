@@ -5,6 +5,7 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"io"
 	"net/url"
@@ -15,39 +16,6 @@ import (
 
 	"golang.org/x/tools/present"
 )
-
-// func init() {
-// 	http.HandleFunc("/", dirHandler)
-// }
-
-// func dirHandler(w http.ResponseWriter, r *http.Request) {
-// 	if r.URL.Path == "/favicon.ico" {
-// 		http.Error(w, "not found", 404)
-// 		return
-// 	}
-// 	const base = "."
-// 	name := filepath.Join(base, r.URL.Path)
-// 	if isDoc(name) {
-// 		err := renderDoc(w, name)
-// 		if err != nil {
-// 			log.Println(err)
-// 			http.Error(w, err.Error(), 500)
-// 		}
-// 		return
-// 	}
-// 	if isDir, err := dirList(w, name); err != nil {
-// 		addr, _, e := net.SplitHostPort(r.RemoteAddr)
-// 		if e != nil {
-// 			addr = r.RemoteAddr
-// 		}
-// 		log.Printf("request from %s: %s", addr, err)
-// 		http.Error(w, err.Error(), 500)
-// 		return
-// 	} else if isDir {
-// 		return
-// 	}
-// 	http.FileServer(http.Dir(base)).ServeHTTP(w, r)
-// }
 
 func isDoc(path string) bool {
 	_, ok := contentTemplate[filepath.Ext(path)]
@@ -87,9 +55,6 @@ func initTemplates(base string) error {
 			return err
 		}
 
-		// Read and parse the input.
-		// tmpl := present.Template()
-		// tmpl = tmpl.Funcs(template.FuncMap{"playable": playable})
 		contents, err := Asset(contentTmpl)
 		if err != nil {
 			return err
@@ -107,14 +72,20 @@ func initTemplates(base string) error {
 }
 
 type xhrFileReader struct {
-	rootUrl string
+	rootUrl *url.URL
 }
 
 func (x xhrFileReader) ReadFile(filename string) ([]byte, error) {
-	url := x.rootUrl + "/" + filename
+	fmt.Printf("Read %v, %v\n", filename, x.rootUrl.String())
+	v, err := url.Parse(filename)
+	if err != nil {
+		return nil, err
+	}
 
-	req := xhr.NewRequest("GET", url)
-	err := req.Send(nil)
+	u := x.rootUrl.ResolveReference(v).String()
+
+	req := xhr.NewRequest("GET", u)
+	err = req.Send(nil)
 	if err != nil {
 		return nil, err
 	}
@@ -130,11 +101,8 @@ func renderDoc(w io.Writer, docUrl string, r io.Reader) error {
 		return err
 	}
 
-	b := *u
-	b.Path = path.Dir(b.Path)
-
 	xhrRead := xhrFileReader{
-		rootUrl: b.String(),
+		rootUrl: u,
 	}
 
 	ctxt := &present.Context{
@@ -153,16 +121,13 @@ func renderDoc(w io.Writer, docUrl string, r io.Reader) error {
 		for i, e := range s.Elem {
 			switch v := e.(type) {
 			case present.Image:
-				// u, err := url.Parse(v.URL)
-				// if err != nil {
-				// 	panic(err)
-				// }
+				vv, err := url.Parse(v.URL)
+				if err != nil {
+					panic(err)
+				}
 
-				v.URL = b.String() + "/" + v.URL
+				v.URL = u.ResolveReference(vv).String()
 				s.Elem[i] = v
-
-				// v.URL = b.String() + "/" + v.UR
-
 			}
 		}
 	}
@@ -175,72 +140,6 @@ func renderDoc(w io.Writer, docUrl string, r io.Reader) error {
 	// Execute the template.
 	return doc.Render(mw, tmpl)
 }
-
-// func parse(name io.Reader, mode present.ParseMode) (*present.Doc, error) {
-// 	return present.Parse(name, name, 0)
-// }
-
-// dirList scans the given path and writes a directory listing to w.
-// It parses the first part of each .slide file it encounters to display the
-// presentation title in the listing.
-// If the given path is not a directory, it returns (isDir == false, err == nil)
-// and writes nothing to w.
-// func dirList(w io.Writer, name string) (isDir bool, err error) {
-// 	f, err := os.Open(name)
-// 	if err != nil {
-// 		return false, err
-// 	}
-// 	defer f.Close()
-// 	fi, err := f.Stat()
-// 	if err != nil {
-// 		return false, err
-// 	}
-// 	if isDir = fi.IsDir(); !isDir {
-// 		return false, nil
-// 	}
-// 	fis, err := f.Readdir(0)
-// 	if err != nil {
-// 		return false, err
-// 	}
-// 	d := &dirListData{Path: name}
-// 	for _, fi := range fis {
-// 		// skip the golang.org directory
-// 		if name == "." && fi.Name() == "golang.org" {
-// 			continue
-// 		}
-// 		e := dirEntry{
-// 			Name: fi.Name(),
-// 			Path: filepath.ToSlash(filepath.Join(name, fi.Name())),
-// 		}
-// 		if fi.IsDir() && showDir(e.Name) {
-// 			d.Dirs = append(d.Dirs, e)
-// 			continue
-// 		}
-// 		if isDoc(e.Name) {
-// 			if p, err := parse(e.Path, present.TitlesOnly); err != nil {
-// 				log.Println(err)
-// 			} else {
-// 				e.Title = p.Title
-// 			}
-// 			switch filepath.Ext(e.Path) {
-// 			case ".article":
-// 				d.Articles = append(d.Articles, e)
-// 			case ".slide":
-// 				d.Slides = append(d.Slides, e)
-// 			}
-// 		} else if showFile(e.Name) {
-// 			d.Other = append(d.Other, e)
-// 		}
-// 	}
-// 	if d.Path == "." {
-// 		d.Path = ""
-// 	}
-// 	sort.Sort(d.Dirs)
-// 	sort.Sort(d.Slides)
-// 	sort.Sort(d.Articles)
-// 	sort.Sort(d.Other)
-// 	return true, dirListTemplate.Execute(w, d)
-// }
 
 // showFile reports whether the given file should be displayed in the list.
 func showFile(n string) bool {
