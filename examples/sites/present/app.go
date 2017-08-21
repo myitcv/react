@@ -89,7 +89,7 @@ func (a AppDef) Render() react.Element {
 		} else {
 			contents = append(contents,
 				react.Div(&react.DivProps{ClassName: "placeholder arrow"}, react.S("\u21E7")),
-				react.Div(&react.DivProps{ClassName: "placeholder text"}, react.S("Enter URL above")),
+				react.Div(&react.DivProps{ClassName: "placeholder text"}, react.S("Enter slides URL")),
 			)
 		}
 	}
@@ -98,9 +98,10 @@ func (a AppDef) Render() react.Element {
 
 	if !s.HideAddressBar {
 		addressBar = react.Input(&react.InputProps{
-			ID:       "addressbar",
-			OnChange: urlChange{a},
-			Value:    s.URL,
+			Placeholder: "Slides URL",
+			ID:          "addressbar",
+			OnChange:    urlChange{a},
+			Value:       s.URL,
 		})
 	}
 
