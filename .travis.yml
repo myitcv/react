@@ -1,7 +1,10 @@
 language: go
 
 go:
-  - 1.x
+  - 1.9
+
+before_install:
+  - export GOROOT=$(go env GOROOT)
 
 go_import_path: myitcv.io/react
 
