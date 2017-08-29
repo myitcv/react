@@ -18,7 +18,7 @@
     ./_vendor/src/myitcv.io/gogenerate                       bd69a94c96953d20e106734856b69d71c8fa122b  git@github.com:myitcv/gogenerate
     ./_vendor/src/myitcv.io/remarkable                       6e8b85d04c0c2559fec23559cf88780db6d93083  git@github.com:myitcv/remarkable
     ./_vendor/src/myitcv.io/sorter                           ed1d278951e48d5c8e355c266faec8666d40b2b3  git@github.com:myitcv/sorter
-    ./_vendor/src/myitcv.io/immutable                        74c4e0dc47c184000811bee5bb1bb293c5b2b674  git@github.com:myitcv/immutable
+    ./_vendor/src/myitcv.io/immutable                        10866a77fea4c673e0369db04fcd3acee08c4c8f  git@github.com:myitcv/immutable
     ./_vendor/src/honnef.co/go/js/xhr                        00e3346113aed89b501ead4e863c7c3d04fa0c5b  git@github.com:dominikh/go-js-xhr
     ./_vendor/src/honnef.co/go/js/util                       96b8dd9d16214b6cd9d8c8e84b3a375da4688108  git@github.com:dominikh/go-js-util
     ./_vendor/src/honnef.co/go/js/dom                        0a64a2db1425c1881d4ec762370250c65f44b85b  git@github.com:dominikh/go-js-dom
