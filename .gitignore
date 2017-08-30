@@ -1,7 +1,5 @@
-*.js
-*.js.map
-!internal/dev/dev.inc.js
-!internal/prod/prod.inc.js
-!internal/preact/preact.inc.js
-!examples/sites/common/bootstrap/bootstrap.min.js
-!examples/sites/common/jquery/jquery.min.js
+/examples/**/*.js
+/examples/**/*.js.map
+!/examples/sites/common/bootstrap/bootstrap.min.js
+!/examples/sites/common/jquery/jquery.min.js
+
