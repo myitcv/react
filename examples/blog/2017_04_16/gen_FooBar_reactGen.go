@@ -25,7 +25,7 @@ func buildFooBar(cd react.ComponentDef) react.Component {
 
 func buildFooBarElem(props FooBarProps, children ...react.Element) *FooBarElem {
 	return &FooBarElem{
-		Element: react.CreateElement(buildFooBar, props),
+		Element: react.CreateElement(buildFooBar, props, children...),
 	}
 }
 

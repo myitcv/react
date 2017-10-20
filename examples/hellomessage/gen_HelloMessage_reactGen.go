@@ -23,7 +23,7 @@ func buildHelloMessage(cd react.ComponentDef) react.Component {
 
 func buildHelloMessageElem(props HelloMessageProps, children ...react.Element) *HelloMessageElem {
 	return &HelloMessageElem{
-		Element: react.CreateElement(buildHelloMessage, props),
+		Element: react.CreateElement(buildHelloMessage, props, children...),
 	}
 }
 

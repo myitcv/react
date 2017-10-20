@@ -22,7 +22,7 @@ func buildGlobalStateExamples(cd react.ComponentDef) react.Component {
 
 func buildGlobalStateExamplesElem(children ...react.Element) *GlobalStateExamplesElem {
 	return &GlobalStateExamplesElem{
-		Element: react.CreateElement(buildGlobalStateExamples, nil),
+		Element: react.CreateElement(buildGlobalStateExamples, nil, children...),
 	}
 }
 

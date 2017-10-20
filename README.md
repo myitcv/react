@@ -8,3 +8,10 @@ go get -u myitcv.io/react
 bindings/tools for [React](https://facebook.github.io/react/), a Javascript library for building user interfaces.
 
 See [the wiki](https://github.com/myitcv/react/wiki) for more details
+
+### Running the tests
+
+```bash
+go install myitcv.io/gjbt
+gjbt myitcv.io/react
+```

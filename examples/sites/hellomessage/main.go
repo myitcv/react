@@ -42,7 +42,8 @@ func main() {
 		Name: "Jane",
 	}
 
-	elems = append(elems, hellomessage.HelloMessage(props))
+	// elems = append(elems, hellomessage.HelloMessage(props, react.Div(nil, react.S("Hello"))))
+	elems = append(elems, hellomessage.HelloMessage(props, react.Div(nil, react.S("Hello"))))
 
 	react.Render(react.Div(nil, elems...), domTarget)
 }

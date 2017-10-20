@@ -17,13 +17,19 @@ type HelloMessageProps struct {
 }
 
 // HelloMessage creates instances of the HelloMessage component
-func HelloMessage(p HelloMessageProps) *HelloMessageElem {
-	return buildHelloMessageElem(p)
+func HelloMessage(p HelloMessageProps, children ...react.Element) *HelloMessageElem {
+	return buildHelloMessageElem(p, children...)
 }
 
 // Render renders the HelloMessage component
 func (h HelloMessageDef) Render() react.Element {
+	kids := []react.Element{react.S("Hello " + h.Props().Name)}
+
+	for _, v := range h.Children() {
+		kids = append(kids, v)
+	}
+
 	return react.Div(nil,
-		react.S("Hello "+h.Props().Name),
+		kids...,
 	)
 }

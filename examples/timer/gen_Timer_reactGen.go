@@ -22,7 +22,7 @@ func buildTimer(cd react.ComponentDef) react.Component {
 
 func buildTimerElem(children ...react.Element) *TimerElem {
 	return &TimerElem{
-		Element: react.CreateElement(buildTimer, nil),
+		Element: react.CreateElement(buildTimer, nil, children...),
 	}
 }
 

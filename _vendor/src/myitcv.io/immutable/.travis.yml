@@ -3,9 +3,6 @@ language: go
 go:
   - 1.x
 
-before_install:
-  - export GOROOT=$(go env GOROOT)
-
 go_import_path: myitcv.io/immutable
 
 install: true

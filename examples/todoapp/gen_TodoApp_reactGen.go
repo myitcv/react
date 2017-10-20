@@ -22,7 +22,7 @@ func buildTodoApp(cd react.ComponentDef) react.Component {
 
 func buildTodoAppElem(children ...react.Element) *TodoAppElem {
 	return &TodoAppElem{
-		Element: react.CreateElement(buildTodoApp, nil),
+		Element: react.CreateElement(buildTodoApp, nil, children...),
 	}
 }
 

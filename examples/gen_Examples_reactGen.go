@@ -22,7 +22,7 @@ func buildExamples(cd react.ComponentDef) react.Component {
 
 func buildExamplesElem(children ...react.Element) *ExamplesElem {
 	return &ExamplesElem{
-		Element: react.CreateElement(buildExamples, nil),
+		Element: react.CreateElement(buildExamples, nil, children...),
 	}
 }
 
