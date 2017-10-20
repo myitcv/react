@@ -22,7 +22,7 @@ func buildPersonViewer(cd react.ComponentDef) react.Component {
 
 func buildPersonViewerElem(children ...react.Element) *PersonViewerElem {
 	return &PersonViewerElem{
-		Element: react.CreateElement(buildPersonViewer, nil),
+		Element: react.CreateElement(buildPersonViewer, nil, children...),
 	}
 }
 

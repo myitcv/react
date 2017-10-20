@@ -25,7 +25,7 @@ func buildPersonChooser(cd react.ComponentDef) react.Component {
 
 func buildPersonChooserElem(props PersonChooserProps, children ...react.Element) *PersonChooserElem {
 	return &PersonChooserElem{
-		Element: react.CreateElement(buildPersonChooser, props),
+		Element: react.CreateElement(buildPersonChooser, props, children...),
 	}
 }
 

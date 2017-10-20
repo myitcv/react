@@ -22,7 +22,7 @@ func buildMarkdownEditor(cd react.ComponentDef) react.Component {
 
 func buildMarkdownEditorElem(children ...react.Element) *MarkdownEditorElem {
 	return &MarkdownEditorElem{
-		Element: react.CreateElement(buildMarkdownEditor, nil),
+		Element: react.CreateElement(buildMarkdownEditor, nil, children...),
 	}
 }
 

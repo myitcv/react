@@ -20,6 +20,6 @@ func buildApp(cd react.ComponentDef) react.Component {
 
 func buildAppElem(children ...react.Element) *AppElem {
 	return &AppElem{
-		Element: react.CreateElement(buildApp, nil),
+		Element: react.CreateElement(buildApp, nil, children...),
 	}
 }

@@ -22,7 +22,7 @@ func buildLatency(cd react.ComponentDef) react.Component {
 
 func buildLatencyElem(children ...react.Element) *LatencyElem {
 	return &LatencyElem{
-		Element: react.CreateElement(buildLatency, nil),
+		Element: react.CreateElement(buildLatency, nil, children...),
 	}
 }
 

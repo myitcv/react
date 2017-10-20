@@ -22,7 +22,7 @@ func buildImmExamples(cd react.ComponentDef) react.Component {
 
 func buildImmExamplesElem(children ...react.Element) *ImmExamplesElem {
 	return &ImmExamplesElem{
-		Element: react.CreateElement(buildImmExamples, nil),
+		Element: react.CreateElement(buildImmExamples, nil, children...),
 	}
 }
 

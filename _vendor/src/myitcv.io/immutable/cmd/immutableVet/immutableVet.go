@@ -114,7 +114,8 @@ func loadImmIntf() {
 	}
 
 	conf := types.Config{
-		Importer: importer.Default(),
+		FakeImportC: true,
+		Importer:    importer.For("gc", nil),
 	}
 
 	tpkg, err := conf.Check(ip, fset, files, nil)
@@ -402,7 +403,19 @@ func isImmListOrMap(t types.Type) bool {
 }
 
 func newImmutableVetter(ipkg *build.Package, wd string) *immutableVetter {
-	pkgs, err := parser.ParseDir(fset, ipkg.Dir, nil, parser.ParseComments)
+	goFiles := make(map[string]bool)
+
+	for _, v := range [][]string{ipkg.GoFiles, ipkg.TestGoFiles, ipkg.XTestGoFiles} {
+		for _, f := range v {
+			goFiles[f] = true
+		}
+	}
+
+	isGoFile := func(fi os.FileInfo) bool {
+		return goFiles[fi.Name()]
+	}
+
+	pkgs, err := parser.ParseDir(fset, ipkg.Dir, isGoFile, parser.ParseComments)
 	if err != nil {
 		fatalf("could not parse package directory for %v", ipkg.Name)
 	}
