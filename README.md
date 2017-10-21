@@ -11,7 +11,10 @@ See [the wiki](https://github.com/myitcv/react/wiki) for more details
 
 ### Running the tests
 
+As you can see in [`.travis.yml`](.travis.yml), the CI tests consist of running:
+
 ```bash
-go install myitcv.io/gjbt
-gjbt myitcv.io/react
+./_scripts/run_tests.sh
 ```
+
+followed by ensuring that `git` is clean. This ensures that "current" generated files are committed to the repo.
