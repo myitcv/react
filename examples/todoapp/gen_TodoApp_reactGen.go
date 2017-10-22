@@ -18,6 +18,10 @@ func buildTodoAppElem(children ...react.Element) *TodoAppElem {
 	}
 }
 
+func (t TodoAppDef) RendersElement() react.Element {
+	return t.Render()
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // TodoApp component.  SetState does not immediately mutate t.State()
 // but creates a pending state transition.

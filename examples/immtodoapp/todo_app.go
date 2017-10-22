@@ -40,11 +40,10 @@ func (t TodoAppDef) GetInitialState() TodoAppState {
 
 // Render renders the TodoApp component
 func (t TodoAppDef) Render() react.Element {
-	var entries []*react.LiElem
+	var entries []react.RendersLi
 
 	for _, v := range t.State().items.Range() {
-		entry := react.Li(nil, react.S(v.name()))
-		entries = append(entries, entry)
+		entries = append(entries, Entry(v.name()))
 	}
 
 	return react.Div(nil,

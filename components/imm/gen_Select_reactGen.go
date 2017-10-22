@@ -18,6 +18,10 @@ func buildSelectElem(props SelectProps, children ...react.Element) *SelectElem {
 	}
 }
 
+func (s SelectDef) RendersElement() react.Element {
+	return s.Render()
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // Select component.  SetState does not immediately mutate s.State()
 // but creates a pending state transition.

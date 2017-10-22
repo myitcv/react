@@ -75,7 +75,7 @@ type elementHolder = core.ElementHolder
 type Element = core.Element
 
 type Component interface {
-	Render() Element
+	RendersElement() Element
 }
 
 type componentWithWillMount interface {
@@ -302,7 +302,7 @@ func buildReactComponent(typ reflect.Type, builder ComponentBuilder) *js.Object 
 		elem := this
 		cmp := builder(ComponentDef{elem: elem})
 
-		renderRes := cmp.Render()
+		renderRes := cmp.RendersElement()
 
 		return renderRes
 	}))

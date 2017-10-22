@@ -22,7 +22,7 @@ func HelloMessage(p HelloMessageProps, children ...react.Element) *HelloMessageE
 }
 
 // Render renders the HelloMessage component
-func (h HelloMessageDef) Render() react.Element {
+func (h HelloMessageDef) Render() *react.DivElem {
 	kids := []react.Element{react.S("Hello " + h.Props().Name)}
 
 	for _, v := range h.Children() {
@@ -33,3 +33,5 @@ func (h HelloMessageDef) Render() react.Element {
 		kids...,
 	)
 }
+
+func (h HelloMessageDef) RendersDiv(*react.DivElem) {}
