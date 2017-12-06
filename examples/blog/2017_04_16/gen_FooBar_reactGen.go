@@ -8,17 +8,6 @@ type FooBarElem struct {
 	react.Element
 }
 
-func (f FooBarDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
-	res := false
-
-	{
-		res = f.Props() != nextProps.(FooBarProps) || res
-	}
-	v := prevState.(FooBarState)
-	res = !v.EqualsIntf(nextState) || res
-	return res
-}
-
 func buildFooBar(cd react.ComponentDef) react.Component {
 	return FooBarDef{ComponentDef: cd}
 }

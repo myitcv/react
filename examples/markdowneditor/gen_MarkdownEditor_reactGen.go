@@ -8,14 +8,6 @@ type MarkdownEditorElem struct {
 	react.Element
 }
 
-func (m MarkdownEditorDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
-	res := false
-
-	v := prevState.(MarkdownEditorState)
-	res = !v.EqualsIntf(nextState) || res
-	return res
-}
-
 func buildMarkdownEditor(cd react.ComponentDef) react.Component {
 	return MarkdownEditorDef{ComponentDef: cd}
 }

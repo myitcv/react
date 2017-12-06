@@ -8,14 +8,6 @@ type LatencyElem struct {
 	react.Element
 }
 
-func (l LatencyDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
-	res := false
-
-	v := prevState.(LatencyState)
-	res = !v.EqualsIntf(nextState) || res
-	return res
-}
-
 func buildLatency(cd react.ComponentDef) react.Component {
 	return LatencyDef{ComponentDef: cd}
 }

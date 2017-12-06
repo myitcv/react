@@ -8,14 +8,6 @@ type ImmExamplesElem struct {
 	react.Element
 }
 
-func (i ImmExamplesDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
-	res := false
-
-	v := prevState.(ImmExamplesState)
-	res = !v.EqualsIntf(nextState) || res
-	return res
-}
-
 func buildImmExamples(cd react.ComponentDef) react.Component {
 	return ImmExamplesDef{ComponentDef: cd}
 }

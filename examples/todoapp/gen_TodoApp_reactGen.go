@@ -8,14 +8,6 @@ type TodoAppElem struct {
 	react.Element
 }
 
-func (t TodoAppDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
-	res := false
-
-	v := prevState.(TodoAppState)
-	res = !v.EqualsIntf(nextState) || res
-	return res
-}
-
 func buildTodoApp(cd react.ComponentDef) react.Component {
 	return TodoAppDef{ComponentDef: cd}
 }
