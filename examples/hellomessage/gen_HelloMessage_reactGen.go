@@ -8,15 +8,6 @@ type HelloMessageElem struct {
 	react.Element
 }
 
-func (h HelloMessageDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
-	res := false
-
-	{
-		res = h.Props() != nextProps.(HelloMessageProps) || res
-	}
-	return res
-}
-
 func buildHelloMessage(cd react.ComponentDef) react.Component {
 	return HelloMessageDef{ComponentDef: cd}
 }

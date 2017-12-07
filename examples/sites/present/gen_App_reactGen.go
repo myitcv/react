@@ -8,14 +8,6 @@ type AppElem struct {
 	react.Element
 }
 
-func (a AppDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
-	res := false
-
-	v := prevState.(AppState)
-	res = !v.EqualsIntf(nextState) || res
-	return res
-}
-
 func buildApp(cd react.ComponentDef) react.Component {
 	return AppDef{ComponentDef: cd}
 }

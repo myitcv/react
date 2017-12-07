@@ -36,6 +36,7 @@ const (
 	reactComponentBuilder              = "__componentBuilder"
 	reactCompDisplayName               = "displayName"
 	reactCompSetState                  = "setState"
+	reactCompForceUpdate               = "forceUpdate"
 	reactCompState                     = "state"
 	reactCompGetInitialState           = "getInitialState"
 	reactCompShouldComponentUpdate     = "shouldComponentUpdate"
@@ -74,7 +75,6 @@ type elementHolder = core.ElementHolder
 type Element = core.Element
 
 type Component interface {
-	ShouldComponentUpdateIntf(nextProps Props, prevState, nextState State) bool
 	Render() Element
 }
 
@@ -141,7 +141,7 @@ func (c ComponentDef) SetState(i State) {
 	res := object.New()
 	res.Set(nestedState, wrapValue(i))
 	c.instance().Set(reactCompLastState, res)
-	c.instance().Call(reactCompSetState, res)
+	c.instance().Call(reactCompForceUpdate)
 }
 
 func (c ComponentDef) State() State {
@@ -227,12 +227,26 @@ func buildReactComponent(typ reflect.Type, builder ComponentBuilder) *js.Object 
 	}))
 
 	compDef.Set(reactCompShouldComponentUpdate, js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
-		elem := this.Get(reactInternalInstance)
-		cmp := builder(ComponentDef{elem: elem})
-
 		var nextProps Props
-		var prevState State
-		var nextState State
+		var curProps Props
+
+		// whether a component should update is only a function of its props
+		// ... and a component does not need to have props
+		//
+		// the only way we have of determining that here is whether the this
+		// object has a props property that has a non-nil nestedProps property
+
+		if this != nil {
+			if p := this.Get(reactCompProps); p != nil {
+				if ok, err := jsbuiltin.In(nestedProps, p); err == nil && ok {
+					if v := (p.Get(nestedProps)); v != nil {
+						curProps = unwrapValue(v).(Props)
+					}
+				} else {
+					return false
+				}
+			}
+		}
 
 		if arguments[0] != nil {
 			if ok, err := jsbuiltin.In(nestedProps, arguments[0]); err == nil && ok {
@@ -240,23 +254,7 @@ func buildReactComponent(typ reflect.Type, builder ComponentBuilder) *js.Object 
 			}
 		}
 
-		if arguments[1] != nil {
-			if ok, err := jsbuiltin.In(nestedState, arguments[1]); err == nil && ok {
-				nextState = unwrapValue(arguments[1].Get(nestedState)).(State)
-			}
-		}
-
-		// here we _deliberately_ get React's version of the current state
-		// as opposed to the last state value
-		if this != nil {
-			if s := this.Get(reactCompState); s != nil {
-				if v := unwrapValue(s.Get(nestedState)); v != nil {
-					prevState = v.(State)
-				}
-			}
-		}
-
-		return cmp.ShouldComponentUpdateIntf(nextProps, prevState, nextState)
+		return !curProps.EqualsIntf(nextProps)
 	}))
 
 	compDef.Set(reactCompComponentDidMount, js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {

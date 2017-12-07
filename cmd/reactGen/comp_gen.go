@@ -212,26 +212,6 @@ type {{.Name}}Elem struct {
 	react.Element
 }
 
-func ({{.Recv}} {{.Name}}Def) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
-	res := false
-
-	{{if .HasProps -}}
-	{
-	{{if .PropsHasEquals -}}
-	res = !{{.Recv}}.Props().Equals(nextProps.({{.Name}}Props)) || res
-	{{else -}}
-	res = {{.Recv}}.Props() != nextProps.({{.Name}}Props) || res
-	{{end -}}
-	}
-	{{end -}}
-	{{if .HasState -}}
-	v := prevState.({{.Name}}State)
-	res = !v.EqualsIntf(nextState) || res
-	{{end -}}
-
-	return res
-}
-
 func build{{.Name}}(cd react.ComponentDef) react.Component {
 	return {{.Name}}Def{ComponentDef: cd}
 }

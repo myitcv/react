@@ -8,17 +8,6 @@ type SelectElem struct {
 	react.Element
 }
 
-func (s SelectDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
-	res := false
-
-	{
-		res = s.Props() != nextProps.(SelectProps) || res
-	}
-	v := prevState.(SelectState)
-	res = !v.EqualsIntf(nextState) || res
-	return res
-}
-
 func buildSelect(cd react.ComponentDef) react.Component {
 	return SelectDef{ComponentDef: cd}
 }

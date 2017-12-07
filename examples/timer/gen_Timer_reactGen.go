@@ -8,14 +8,6 @@ type TimerElem struct {
 	react.Element
 }
 
-func (t TimerDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
-	res := false
-
-	v := prevState.(TimerState)
-	res = !v.EqualsIntf(nextState) || res
-	return res
-}
-
 func buildTimer(cd react.ComponentDef) react.Component {
 	return TimerDef{ComponentDef: cd}
 }

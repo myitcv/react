@@ -8,14 +8,6 @@ type ExamplesElem struct {
 	react.Element
 }
 
-func (e ExamplesDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
-	res := false
-
-	v := prevState.(ExamplesState)
-	res = !v.EqualsIntf(nextState) || res
-	return res
-}
-
 func buildExamples(cd react.ComponentDef) react.Component {
 	return ExamplesDef{ComponentDef: cd}
 }

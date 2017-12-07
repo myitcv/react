@@ -8,17 +8,6 @@ type PersonChooserElem struct {
 	react.Element
 }
 
-func (p PersonChooserDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
-	res := false
-
-	{
-		res = p.Props() != nextProps.(PersonChooserProps) || res
-	}
-	v := prevState.(PersonChooserState)
-	res = !v.EqualsIntf(nextState) || res
-	return res
-}
-
 func buildPersonChooser(cd react.ComponentDef) react.Component {
 	return PersonChooserDef{ComponentDef: cd}
 }

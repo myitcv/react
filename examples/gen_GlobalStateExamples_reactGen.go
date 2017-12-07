@@ -8,14 +8,6 @@ type GlobalStateExamplesElem struct {
 	react.Element
 }
 
-func (g GlobalStateExamplesDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
-	res := false
-
-	v := prevState.(GlobalStateExamplesState)
-	res = !v.EqualsIntf(nextState) || res
-	return res
-}
-
 func buildGlobalStateExamples(cd react.ComponentDef) react.Component {
 	return GlobalStateExamplesDef{ComponentDef: cd}
 }

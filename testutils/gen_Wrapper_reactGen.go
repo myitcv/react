@@ -8,12 +8,6 @@ type WrapperElem struct {
 	react.Element
 }
 
-func (w WrapperDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
-	res := false
-
-	return res
-}
-
 func buildWrapper(cd react.ComponentDef) react.Component {
 	return WrapperDef{ComponentDef: cd}
 }

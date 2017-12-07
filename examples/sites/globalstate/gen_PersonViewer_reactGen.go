@@ -8,14 +8,6 @@ type PersonViewerElem struct {
 	react.Element
 }
 
-func (p PersonViewerDef) ShouldComponentUpdateIntf(nextProps react.Props, prevState, nextState react.State) bool {
-	res := false
-
-	v := prevState.(PersonViewerState)
-	res = !v.EqualsIntf(nextState) || res
-	return res
-}
-
 func buildPersonViewer(cd react.ComponentDef) react.Component {
 	return PersonViewerDef{ComponentDef: cd}
 }
