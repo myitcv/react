@@ -16,5 +16,6 @@ before_script:
 install: true
 
 script:
+  - ./_scripts/webpack_deps.sh
   - ./_scripts/run_tests.sh
   - ./_scripts/check_git_is_clean.sh
