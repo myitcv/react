@@ -114,11 +114,11 @@ type State interface {
 }
 
 func (c ComponentDef) Props() Props {
-	return unwrapValue(c.instance().Get(reactCompProps).Get(nestedProps)).(Props)
+	return unwrapValue(c.elem.Get(reactCompProps).Get(nestedProps)).(Props)
 }
 
 func (c ComponentDef) Children() []Element {
-	v := c.instance().Get(reactCompProps).Get(nestedChildren)
+	v := c.elem.Get(reactCompProps).Get(nestedChildren)
 
 	if v == js.Undefined {
 		return nil
@@ -127,37 +127,27 @@ func (c ComponentDef) Children() []Element {
 	return unwrapValue(v).([]Element)
 }
 
-func (c ComponentDef) instance() *js.Object {
-	return c.elem.Get("_instance")
-}
-
 func (c ComponentDef) SetState(i State) {
-	cur := c.State()
+	rs := c.elem.Get(reactCompState)
+	is := rs.Get(nestedState)
+
+	cur := unwrapValue(is.Get(reactCompLastState)).(State)
 
 	if i.EqualsIntf(cur) {
 		return
 	}
 
-	res := object.New()
-	res.Set(nestedState, wrapValue(i))
-	c.instance().Set(reactCompLastState, res)
-	c.instance().Call(reactCompForceUpdate)
+	is.Set(reactCompLastState, wrapValue(i))
+	c.elem.Call(reactCompForceUpdate)
 }
 
 func (c ComponentDef) State() State {
-	ok, err := jsbuiltin.In(reactCompLastState, c.instance())
-	if err != nil {
-		// TODO better handle this case... does that function even need to
-		// return an error?
-		panic(err)
-	}
+	rs := c.elem.Get(reactCompState)
+	is := rs.Get(nestedState)
 
-	if !ok {
-		s := c.instance().Get(reactCompState)
-		c.instance().Set(reactCompLastState, s)
-	}
+	cur := unwrapValue(is.Get(reactCompLastState)).(State)
 
-	return unwrapValue(c.instance().Get(reactCompLastState).Get(nestedState)).(State)
+	return cur
 }
 
 type ComponentBuilder func(elem ComponentDef) Component
@@ -210,20 +200,23 @@ func buildReactComponent(typ reflect.Type, builder ComponentBuilder) *js.Object 
 	compDef.Set(reactComponentBuilder, builder)
 
 	compDef.Set(reactCompGetInitialState, js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
-		elem := this.Get(reactInternalInstance)
+		elem := this
 		cmp := builder(ComponentDef{elem: elem})
+
+		var wv *js.Object
+
+		res := object.New()
+		is := object.New()
 
 		if cmp, ok := cmp.(componentWithGetInitialState); ok {
 			x := cmp.GetInitialStateIntf()
-			if x == nil {
-				return nil
-			}
-			res := object.New()
-			res.Set(nestedState, wrapValue(x))
-			return res
+			wv = wrapValue(x)
 		}
 
-		return nil
+		res.Set(nestedState, is)
+		is.Set(reactCompLastState, wv)
+
+		return res
 	}))
 
 	compDef.Set(reactCompShouldComponentUpdate, js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
@@ -258,7 +251,7 @@ func buildReactComponent(typ reflect.Type, builder ComponentBuilder) *js.Object 
 	}))
 
 	compDef.Set(reactCompComponentDidMount, js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
-		elem := this.Get(reactInternalInstance)
+		elem := this
 		cmp := builder(ComponentDef{elem: elem})
 
 		if cmp, ok := cmp.(componentWithDidMount); ok {
@@ -269,7 +262,7 @@ func buildReactComponent(typ reflect.Type, builder ComponentBuilder) *js.Object 
 	}))
 
 	compDef.Set(reactCompComponentWillReceiveProps, js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
-		elem := this.Get(reactInternalInstance)
+		elem := this
 		cmp := builder(ComponentDef{elem: elem})
 
 		if cmp, ok := cmp.(componentWithWillReceiveProps); ok {
@@ -281,7 +274,7 @@ func buildReactComponent(typ reflect.Type, builder ComponentBuilder) *js.Object 
 	}))
 
 	compDef.Set(reactCompComponentWillUnmount, js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
-		elem := this.Get(reactInternalInstance)
+		elem := this
 		cmp := builder(ComponentDef{elem: elem})
 
 		if cmp, ok := cmp.(componentWithWillUnmount); ok {
@@ -292,7 +285,7 @@ func buildReactComponent(typ reflect.Type, builder ComponentBuilder) *js.Object 
 	}))
 
 	compDef.Set(reactCompComponentWillMount, js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
-		elem := this.Get(reactInternalInstance)
+		elem := this
 		cmp := builder(ComponentDef{elem: elem})
 
 		// TODO we can make this more efficient by not doing the type check
@@ -306,7 +299,7 @@ func buildReactComponent(typ reflect.Type, builder ComponentBuilder) *js.Object 
 	}))
 
 	compDef.Set(reactCompRender, js.MakeFunc(func(this *js.Object, arguments []*js.Object) interface{} {
-		elem := this.Get(reactInternalInstance)
+		elem := this
 		cmp := builder(ComponentDef{elem: elem})
 
 		renderRes := cmp.Render()

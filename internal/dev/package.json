@@ -1,0 +1,13 @@
+{
+  "name": "dev",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "author": "",
+  "devDependencies": {
+    "create-react-class": "15.6.2",
+    "react": "16.2.0",
+    "react-dom": "16.2.0",
+    "webpack": "3.10.0"
+  }
+}
