@@ -37,7 +37,7 @@ func (a AppDef) Render() react.Element {
 		view = examples.GlobalStateExamples()
 	}
 
-	return react.Div(nil,
+	return react.Fragment(
 		react.Nav(&react.NavProps{ClassName: "navbar navbar-inverse navbar-fixed-top"},
 			react.Div(&react.DivProps{ClassName: "container"},
 				react.Div(&react.DivProps{ClassName: "navbar-header"},

@@ -30,7 +30,6 @@ import (
 )
 
 const (
-	reactInternalInstance              = "_reactInternalInstance"
 	reactCompProps                     = "props"
 	reactCompLastState                 = "__lastState"
 	reactComponentBuilder              = "__componentBuilder"
@@ -59,6 +58,7 @@ const (
 var react = js.Global.Get("React")
 var reactDOM = js.Global.Get("ReactDOM")
 var object = js.Global.Get("Object")
+var symbolFragment = react.Get("Fragment")
 
 // ComponentDef is embedded in a type definition to indicate the type is a component
 type ComponentDef struct {
@@ -182,7 +182,7 @@ func CreateElement(buildCmp ComponentBuilder, newprops Props, children ...Elemen
 	}
 }
 
-func createElement(cmp string, props interface{}, children ...Element) Element {
+func createElement(cmp interface{}, props interface{}, children ...Element) Element {
 	args := []interface{}{cmp, props}
 
 	for _, v := range children {
@@ -190,7 +190,7 @@ func createElement(cmp string, props interface{}, children ...Element) Element {
 	}
 
 	return &elementHolder{
-		Elem: react.Call("createElement", args...),
+		Elem: react.Call(reactCreateElement, args...),
 	}
 }
 
