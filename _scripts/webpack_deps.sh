@@ -6,13 +6,16 @@
 source "${BASH_SOURCE%/*}/common.bash"
 
 pushd internal/dev > /dev/null
-
-npm install
-
-./node_modules/.bin/webpack
-
+{
+	npm install
+}
 popd > /dev/null
 
-pushd internal/prod > /dev/null
-
-./node_modules/.bin/webpack
+for i in dev prod testutils
+do
+	pushd internal/$i > /dev/null
+	{
+		./node_modules/.bin/webpack
+	}
+	popd > /dev/null
+done

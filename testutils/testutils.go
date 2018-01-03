@@ -9,18 +9,16 @@ import (
 	"myitcv.io/react/internal/core"
 
 	"github.com/gopherjs/gopherjs/js"
+
+	_ "myitcv.io/react/internal/testutils"
 )
 
 var (
-	reactObj     *js.Object
-	addonsObj    *js.Object
 	testUtilsObj *js.Object
 )
 
 func init() {
-	reactObj = js.Global.Get("React")
-	addonsObj = reactObj.Get("addons")
-	testUtilsObj = addonsObj.Get("TestUtils")
+	testUtilsObj = js.Global.Get("ReactTestUtils")
 
 	if testUtilsObj == nil || testUtilsObj == js.Undefined {
 		panic(fmt.Errorf("Could not load React TestUtils - ensure you are using a development build"))
