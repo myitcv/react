@@ -17,3 +17,7 @@ func buildAppElem(children ...react.Element) *AppElem {
 		Element: react.CreateElement(buildApp, nil, children...),
 	}
 }
+
+func (a AppDef) RendersElement() react.Element {
+	return a.Render()
+}

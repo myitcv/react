@@ -18,6 +18,10 @@ func buildPersonViewerElem(children ...react.Element) *PersonViewerElem {
 	}
 }
 
+func (p PersonViewerDef) RendersElement() react.Element {
+	return p.Render()
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // PersonViewer component.  SetState does not immediately mutate p.State()
 // but creates a pending state transition.

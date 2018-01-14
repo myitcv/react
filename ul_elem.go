@@ -15,7 +15,7 @@ type _UlProps struct {
 
 // Ul creates a new instance of a <ul> element with the provided props and <li>
 // children
-func Ul(props *UlProps, children ...*LiElem) *UlElem {
+func Ul(props *UlProps, children ...RendersLi) *UlElem {
 
 	rProps := &_UlProps{
 		BasicHTMLElement: newBasicHTMLElement(),
@@ -33,4 +33,9 @@ func Ul(props *UlProps, children ...*LiElem) *UlElem {
 	return &UlElem{
 		Element: createElement("ul", rProps, elems...),
 	}
+}
+
+type RendersLi interface {
+	Element
+	RendersLi(*LiElem)
 }

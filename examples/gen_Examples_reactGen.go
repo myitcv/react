@@ -18,6 +18,10 @@ func buildExamplesElem(children ...react.Element) *ExamplesElem {
 	}
 }
 
+func (e ExamplesDef) RendersElement() react.Element {
+	return e.Render()
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // Examples component.  SetState does not immediately mutate e.State()
 // but creates a pending state transition.

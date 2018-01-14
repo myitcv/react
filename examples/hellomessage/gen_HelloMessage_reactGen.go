@@ -8,6 +8,15 @@ type HelloMessageElem struct {
 	react.Element
 }
 
+func (h *HelloMessageElem) RendersDiv(*react.DivElem) {}
+
+func (h *HelloMessageElem) noop() {
+	var v HelloMessageDef
+	r := v.Render()
+
+	v.RendersDiv(r)
+}
+
 func buildHelloMessage(cd react.ComponentDef) react.Component {
 	return HelloMessageDef{ComponentDef: cd}
 }
@@ -16,6 +25,10 @@ func buildHelloMessageElem(props HelloMessageProps, children ...react.Element) *
 	return &HelloMessageElem{
 		Element: react.CreateElement(buildHelloMessage, props, children...),
 	}
+}
+
+func (h HelloMessageDef) RendersElement() react.Element {
+	return h.Render()
 }
 
 // IsProps is an auto-generated definition so that HelloMessageProps implements

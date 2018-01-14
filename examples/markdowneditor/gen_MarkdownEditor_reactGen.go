@@ -18,6 +18,10 @@ func buildMarkdownEditorElem(children ...react.Element) *MarkdownEditorElem {
 	}
 }
 
+func (m MarkdownEditorDef) RendersElement() react.Element {
+	return m.Render()
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // MarkdownEditor component.  SetState does not immediately mutate m.State()
 // but creates a pending state transition.

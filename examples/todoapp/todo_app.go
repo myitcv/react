@@ -49,14 +49,14 @@ func (c TodoAppState) Equals(v TodoAppState) bool {
 
 // Render renders the TodoApp component
 func (t TodoAppDef) Render() react.Element {
-	var entries []*react.LiElem
+	var entries []react.RendersLi
 
 	for _, v := range t.State().items {
 		entry := react.Li(nil, react.S(v))
 		entries = append(entries, entry)
 	}
 
-	return react.Div(nil,
+	return react.Fragment(
 		react.H3(nil, react.S("TODO")),
 		react.Ul(nil, entries...),
 		react.Form(&react.FormProps{ClassName: "form-inline"},

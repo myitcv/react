@@ -8,6 +8,8 @@ type LiElem struct {
 	Element
 }
 
+func (l *LiElem) RendersLi(*LiElem) {}
+
 // _LiProps defines the properties for the <li> element
 type _LiProps struct {
 	*BasicHTMLElement

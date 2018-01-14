@@ -18,6 +18,10 @@ func buildAppElem(children ...react.Element) *AppElem {
 	}
 }
 
+func (a AppDef) RendersElement() react.Element {
+	return a.Render()
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // App component.  SetState does not immediately mutate a.State()
 // but creates a pending state transition.

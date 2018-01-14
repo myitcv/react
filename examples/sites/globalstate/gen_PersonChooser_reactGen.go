@@ -18,6 +18,10 @@ func buildPersonChooserElem(props PersonChooserProps, children ...react.Element)
 	}
 }
 
+func (p PersonChooserDef) RendersElement() react.Element {
+	return p.Render()
+}
+
 // SetState is an auto-generated proxy proxy to update the state for the
 // PersonChooser component.  SetState does not immediately mutate p.State()
 // but creates a pending state transition.

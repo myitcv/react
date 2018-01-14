@@ -24,6 +24,15 @@ type compGen struct {
 
 	PropsHasEquals bool
 	StateHasEquals bool
+
+	RendersSlice bool
+
+	RendersMethods []RendersMethod
+}
+
+type RendersMethod struct {
+	Name string
+	Type string
 }
 
 func (g *gen) genComp(defName string) {
@@ -51,6 +60,58 @@ func (g *gen) genComp(defName string) {
 
 	cg.HasState = hasState
 	cg.HasProps = hasProps
+
+	for _, ff := range g.nonPointMeths[defName] {
+		m := ff.fn
+
+		// gather Renders* methods
+		func() {
+			if !strings.HasPrefix(m.Name.Name, "Renders") {
+				return
+			}
+
+			if m.Type.Params == nil || len(m.Type.Params.List) != 1 {
+				return
+			}
+
+			if m.Type.Results != nil && len(m.Type.Results.List) != 0 {
+				return
+			}
+
+			ap := m.Type.Params.List[0]
+
+			cg.RendersMethods = append(cg.RendersMethods, RendersMethod{
+				Name: m.Name.Name,
+				Type: astNodeString(ap.Type),
+			})
+		}()
+
+		func() {
+			if m.Name.Name != "Render" {
+				return
+			}
+
+			if m.Type.Params != nil && len(m.Type.Params.List) != 0 {
+				return
+			}
+
+			if m.Type.Results == nil || len(m.Type.Results.List) != 1 {
+				return
+			}
+
+			rp := m.Type.Results.List[0]
+
+			at, ok := rp.Type.(*ast.ArrayType)
+
+			if !ok {
+				return
+			}
+
+			if at.Len == nil {
+				cg.RendersSlice = true
+			}
+		}()
+	}
 
 	if hasState {
 		for _, ff := range g.nonPointMeths[defName] {
@@ -208,9 +269,26 @@ func (g *gen) genComp(defName string) {
 	cg.pln()
 
 	cg.pt(`
+{{ $cg := . }}
+
 type {{.Name}}Elem struct {
 	react.Element
 }
+
+{{range $rm := .RendersMethods }}
+func ({{$cg.Recv}} *{{$cg.Name}}Elem) {{$rm.Name}}({{$rm.Type}}) {}
+{{end}}
+
+{{if .RendersMethods}}
+func ({{$cg.Recv}} *{{$cg.Name}}Elem) noop() {
+	var v {{.Name}}Def
+	r := v.Render()
+
+	{{range $rm := .RendersMethods }}
+	v.{{$rm.Name}}(r)
+	{{end -}}
+}
+{{end}}
 
 func build{{.Name}}(cd react.ComponentDef) react.Component {
 	return {{.Name}}Def{ComponentDef: cd}
@@ -220,6 +298,19 @@ func build{{.Name}}Elem({{if .HasProps}}props {{.Name}}Props,{{end}} children ..
 	return &{{.Name}}Elem{
 		Element: react.CreateElement(build{{.Name}}, {{if .HasProps}}props{{else}}nil{{end}}, children...),
 	}
+}
+
+func ({{.Recv}} {{.Name}}Def) RendersElement() react.Element {
+	{{if .RendersSlice -}}
+	rr := t.Render()
+	elems := make([]react.Element, 0, len(rr))
+	for _, r := range rr {
+		elems = append(elems, r)
+	}
+	return react.Fragment(elems...)
+	{{else -}}
+	return {{.Recv}}.Render()
+	{{end -}}
 }
 
 {{if .HasState}}
