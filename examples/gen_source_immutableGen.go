@@ -108,21 +108,21 @@ func (m *exampleSource) Range() map[exampleKey]*source {
 	return m.theMap
 }
 
-func (m *exampleSource) WithMutable(f func(mi *exampleSource)) *exampleSource {
-	res := m.AsMutable()
+func (mr *exampleSource) WithMutable(f func(e *exampleSource)) *exampleSource {
+	res := mr.AsMutable()
 	f(res)
-	res = res.AsImmutable(m)
+	res = res.AsImmutable(mr)
 
 	return res
 }
 
-func (m *exampleSource) WithImmutable(f func(mi *exampleSource)) *exampleSource {
-	prev := m.mutable
-	m.mutable = false
-	f(m)
-	m.mutable = prev
+func (mr *exampleSource) WithImmutable(f func(e *exampleSource)) *exampleSource {
+	prev := mr.mutable
+	mr.mutable = false
+	f(mr)
+	mr.mutable = prev
 
-	return m
+	return mr
 }
 
 func (m *exampleSource) Set(k exampleKey, v *source) *exampleSource {

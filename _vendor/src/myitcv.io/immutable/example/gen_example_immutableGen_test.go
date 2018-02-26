@@ -112,21 +112,21 @@ func (m *myTestMap) Range() map[string]int {
 	return m.theMap
 }
 
-func (m *myTestMap) WithMutable(f func(mi *myTestMap)) *myTestMap {
-	res := m.AsMutable()
+func (mr *myTestMap) WithMutable(f func(m *myTestMap)) *myTestMap {
+	res := mr.AsMutable()
 	f(res)
-	res = res.AsImmutable(m)
+	res = res.AsImmutable(mr)
 
 	return res
 }
 
-func (m *myTestMap) WithImmutable(f func(mi *myTestMap)) *myTestMap {
-	prev := m.mutable
-	m.mutable = false
-	f(m)
-	m.mutable = prev
+func (mr *myTestMap) WithImmutable(f func(m *myTestMap)) *myTestMap {
+	prev := mr.mutable
+	mr.mutable = false
+	f(mr)
+	mr.mutable = prev
 
-	return m
+	return mr
 }
 
 func (m *myTestMap) Set(k string, v int) *myTestMap {

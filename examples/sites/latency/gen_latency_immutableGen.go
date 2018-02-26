@@ -108,21 +108,21 @@ func (m *latencies) Range() map[location]latency {
 	return m.theMap
 }
 
-func (m *latencies) WithMutable(f func(mi *latencies)) *latencies {
-	res := m.AsMutable()
+func (mr *latencies) WithMutable(f func(l *latencies)) *latencies {
+	res := mr.AsMutable()
 	f(res)
-	res = res.AsImmutable(m)
+	res = res.AsImmutable(mr)
 
 	return res
 }
 
-func (m *latencies) WithImmutable(f func(mi *latencies)) *latencies {
-	prev := m.mutable
-	m.mutable = false
-	f(m)
-	m.mutable = prev
+func (mr *latencies) WithImmutable(f func(l *latencies)) *latencies {
+	prev := mr.mutable
+	mr.mutable = false
+	f(mr)
+	mr.mutable = prev
 
-	return m
+	return mr
 }
 
 func (m *latencies) Set(k location, v latency) *latencies {
