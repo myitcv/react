@@ -93,21 +93,21 @@ func (m *{{.Name}}) Range() map[{{.KeyType}}]{{.ValType}} {
 	return m.theMap
 }
 
-func (m *{{.Name}}) WithMutable(f func(mi *{{.Name}})) *{{.Name}} {
-	res := m.AsMutable()
+func (mr *{{.Name}}) WithMutable(f func({{.VarName}} *{{.Name}})) *{{.Name}} {
+	res := mr.AsMutable()
 	f(res)
-	res = res.AsImmutable(m)
+	res = res.AsImmutable(mr)
 
 	return res
 }
 
-func (m *{{.Name}}) WithImmutable(f func(mi *{{.Name}})) *{{.Name}} {
-	prev := m.mutable
-	m.mutable = false
-	f(m)
-	m.mutable = prev
+func (mr *{{.Name}}) WithImmutable(f func({{.VarName}} *{{.Name}})) *{{.Name}} {
+	prev := mr.mutable
+	mr.mutable = false
+	f(mr)
+	mr.mutable = prev
 
-	return m
+	return mr
 }
 
 func (m *{{.Name}}) Set(k {{.KeyType}}, v {{.ValType}}) *{{.Name}} {

@@ -113,21 +113,21 @@ func (m *MyMap) Range() map[string]*MySlice {
 	return m.theMap
 }
 
-func (m *MyMap) WithMutable(f func(mi *MyMap)) *MyMap {
-	res := m.AsMutable()
+func (mr *MyMap) WithMutable(f func(m *MyMap)) *MyMap {
+	res := mr.AsMutable()
 	f(res)
-	res = res.AsImmutable(m)
+	res = res.AsImmutable(mr)
 
 	return res
 }
 
-func (m *MyMap) WithImmutable(f func(mi *MyMap)) *MyMap {
-	prev := m.mutable
-	m.mutable = false
-	f(m)
-	m.mutable = prev
+func (mr *MyMap) WithImmutable(f func(m *MyMap)) *MyMap {
+	prev := mr.mutable
+	mr.mutable = false
+	f(mr)
+	mr.mutable = prev
 
-	return m
+	return mr
 }
 
 func (m *MyMap) Set(k string, v *MySlice) *MyMap {

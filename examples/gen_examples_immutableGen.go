@@ -108,21 +108,21 @@ func (m *tabS) Range() map[exampleKey]tab {
 	return m.theMap
 }
 
-func (m *tabS) WithMutable(f func(mi *tabS)) *tabS {
-	res := m.AsMutable()
+func (mr *tabS) WithMutable(f func(t *tabS)) *tabS {
+	res := mr.AsMutable()
 	f(res)
-	res = res.AsImmutable(m)
+	res = res.AsImmutable(mr)
 
 	return res
 }
 
-func (m *tabS) WithImmutable(f func(mi *tabS)) *tabS {
-	prev := m.mutable
-	m.mutable = false
-	f(m)
-	m.mutable = prev
+func (mr *tabS) WithImmutable(f func(t *tabS)) *tabS {
+	prev := mr.mutable
+	mr.mutable = false
+	f(mr)
+	mr.mutable = prev
 
-	return m
+	return mr
 }
 
 func (m *tabS) Set(k exampleKey, v tab) *tabS {

@@ -108,21 +108,21 @@ func (m *strEntrySelect) Range() map[string]Label {
 	return m.theMap
 }
 
-func (m *strEntrySelect) WithMutable(f func(mi *strEntrySelect)) *strEntrySelect {
-	res := m.AsMutable()
+func (mr *strEntrySelect) WithMutable(f func(s *strEntrySelect)) *strEntrySelect {
+	res := mr.AsMutable()
 	f(res)
-	res = res.AsImmutable(m)
+	res = res.AsImmutable(mr)
 
 	return res
 }
 
-func (m *strEntrySelect) WithImmutable(f func(mi *strEntrySelect)) *strEntrySelect {
-	prev := m.mutable
-	m.mutable = false
-	f(m)
-	m.mutable = prev
+func (mr *strEntrySelect) WithImmutable(f func(s *strEntrySelect)) *strEntrySelect {
+	prev := mr.mutable
+	mr.mutable = false
+	f(mr)
+	mr.mutable = prev
 
-	return m
+	return mr
 }
 
 func (m *strEntrySelect) Set(k string, v Label) *strEntrySelect {

@@ -23,10 +23,12 @@ func (o *output) genImmMaps(maps []immMap) {
 	for _, m := range maps {
 		blanks := struct {
 			Name    string
+			VarName string
 			KeyType string
 			ValType string
 		}{
 			Name:    m.name,
+			VarName: genVarName(m.name),
 			KeyType: o.exprString(m.keyTyp),
 			ValType: o.exprString(m.valTyp),
 		}
