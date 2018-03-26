@@ -4,14 +4,17 @@ package react
 
 // OptionProps defines the properties for the <option> element
 type OptionProps struct {
+	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
-	ID                      string
-	Key                     string
+	DataSet
+	ID  string
+	Key string
 
 	OnChange
 	OnClick
 
+	Ref
 	Role  string
 	Style *CSS
 	Value string
@@ -19,9 +22,21 @@ type OptionProps struct {
 
 func (o *OptionProps) assign(v *_OptionProps) {
 
+	if o.AriaSet != nil {
+		for dk, dv := range o.AriaSet {
+			v.o.Set("aria-"+dk, dv)
+		}
+	}
+
 	v.ClassName = o.ClassName
 
 	v.DangerouslySetInnerHTML = o.DangerouslySetInnerHTML
+
+	if o.DataSet != nil {
+		for dk, dv := range o.DataSet {
+			v.o.Set("data-"+dk, dv)
+		}
+	}
 
 	if o.ID != "" {
 		v.ID = o.ID
@@ -37,6 +52,10 @@ func (o *OptionProps) assign(v *_OptionProps) {
 
 	if o.OnClick != nil {
 		v.o.Set("onClick", o.OnClick.OnClick)
+	}
+
+	if o.Ref != nil {
+		v.o.Set("ref", o.Ref.Ref)
 	}
 
 	v.Role = o.Role

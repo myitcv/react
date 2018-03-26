@@ -4,14 +4,17 @@ package react
 
 // IProps are the props for a <i> component
 type IProps struct {
+	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
-	ID                      string
-	Key                     string
+	DataSet
+	ID  string
+	Key string
 
 	OnChange
 	OnClick
 
+	Ref
 	Role  string
 	Src   string
 	Style *CSS
@@ -19,9 +22,21 @@ type IProps struct {
 
 func (i *IProps) assign(v *_IProps) {
 
+	if i.AriaSet != nil {
+		for dk, dv := range i.AriaSet {
+			v.o.Set("aria-"+dk, dv)
+		}
+	}
+
 	v.ClassName = i.ClassName
 
 	v.DangerouslySetInnerHTML = i.DangerouslySetInnerHTML
+
+	if i.DataSet != nil {
+		for dk, dv := range i.DataSet {
+			v.o.Set("data-"+dk, dv)
+		}
+	}
 
 	if i.ID != "" {
 		v.ID = i.ID
@@ -37,6 +52,10 @@ func (i *IProps) assign(v *_IProps) {
 
 	if i.OnClick != nil {
 		v.o.Set("onClick", i.OnClick.OnClick)
+	}
+
+	if i.Ref != nil {
+		v.o.Set("ref", i.Ref.Ref)
 	}
 
 	v.Role = i.Role

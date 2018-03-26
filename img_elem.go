@@ -12,6 +12,7 @@ type ImgElem struct {
 type _ImgProps struct {
 	*BasicHTMLElement
 
+	Alt string `js:"alt"`
 	Src string `js:"src"`
 }
 

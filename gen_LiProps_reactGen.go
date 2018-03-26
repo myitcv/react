@@ -4,23 +4,38 @@ package react
 
 // LiProps defines the properties for the <li> element
 type LiProps struct {
+	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
-	ID                      string
-	Key                     string
+	DataSet
+	ID  string
+	Key string
 
 	OnChange
 	OnClick
 
+	Ref
 	Role  string
 	Style *CSS
 }
 
 func (l *LiProps) assign(v *_LiProps) {
 
+	if l.AriaSet != nil {
+		for dk, dv := range l.AriaSet {
+			v.o.Set("aria-"+dk, dv)
+		}
+	}
+
 	v.ClassName = l.ClassName
 
 	v.DangerouslySetInnerHTML = l.DangerouslySetInnerHTML
+
+	if l.DataSet != nil {
+		for dk, dv := range l.DataSet {
+			v.o.Set("data-"+dk, dv)
+		}
+	}
 
 	if l.ID != "" {
 		v.ID = l.ID
@@ -36,6 +51,10 @@ func (l *LiProps) assign(v *_LiProps) {
 
 	if l.OnClick != nil {
 		v.o.Set("onClick", l.OnClick.OnClick)
+	}
+
+	if l.Ref != nil {
+		v.o.Set("ref", l.Ref.Ref)
 	}
 
 	v.Role = l.Role

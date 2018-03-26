@@ -4,23 +4,38 @@ package react
 
 // CodeProps defines the properties for the <code> element
 type CodeProps struct {
+	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
-	ID                      string
-	Key                     string
+	DataSet
+	ID  string
+	Key string
 
 	OnChange
 	OnClick
 
+	Ref
 	Role  string
 	Style *CSS
 }
 
 func (c *CodeProps) assign(v *_CodeProps) {
 
+	if c.AriaSet != nil {
+		for dk, dv := range c.AriaSet {
+			v.o.Set("aria-"+dk, dv)
+		}
+	}
+
 	v.ClassName = c.ClassName
 
 	v.DangerouslySetInnerHTML = c.DangerouslySetInnerHTML
+
+	if c.DataSet != nil {
+		for dk, dv := range c.DataSet {
+			v.o.Set("data-"+dk, dv)
+		}
+	}
 
 	if c.ID != "" {
 		v.ID = c.ID
@@ -36,6 +51,10 @@ func (c *CodeProps) assign(v *_CodeProps) {
 
 	if c.OnClick != nil {
 		v.o.Set("onClick", c.OnClick.OnClick)
+	}
+
+	if c.Ref != nil {
+		v.o.Set("ref", c.Ref.Ref)
 	}
 
 	v.Role = c.Role

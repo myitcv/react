@@ -4,23 +4,38 @@ package react
 
 // PProps are the props for a <div> component
 type PProps struct {
+	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
-	ID                      string
-	Key                     string
+	DataSet
+	ID  string
+	Key string
 
 	OnChange
 	OnClick
 
+	Ref
 	Role  string
 	Style *CSS
 }
 
 func (p *PProps) assign(v *_PProps) {
 
+	if p.AriaSet != nil {
+		for dk, dv := range p.AriaSet {
+			v.o.Set("aria-"+dk, dv)
+		}
+	}
+
 	v.ClassName = p.ClassName
 
 	v.DangerouslySetInnerHTML = p.DangerouslySetInnerHTML
+
+	if p.DataSet != nil {
+		for dk, dv := range p.DataSet {
+			v.o.Set("data-"+dk, dv)
+		}
+	}
 
 	if p.ID != "" {
 		v.ID = p.ID
@@ -36,6 +51,10 @@ func (p *PProps) assign(v *_PProps) {
 
 	if p.OnClick != nil {
 		v.o.Set("onClick", p.OnClick.OnClick)
+	}
+
+	if p.Ref != nil {
+		v.o.Set("ref", p.Ref.Ref)
 	}
 
 	v.Role = p.Role

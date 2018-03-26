@@ -102,6 +102,23 @@ func (g *gen) genProps(defName string, t typeFile) {
 
 	func ({{$recv}} *{{.Name}}) assign(v *_{{.Name}}) {
 		{{- range .Fields}}
+			{{ if eq .TName "Ref" }}
+			if {{$recv}}.Ref != nil {
+				v.o.Set("ref", {{$recv}}.Ref.Ref)
+			}
+			{{ else if eq .TName "DataSet" }}
+			if {{$recv}}.DataSet != nil {
+				for dk, dv := range {{$recv}}.DataSet {
+					v.o.Set("data-"+dk, dv)
+				}
+			}
+			{{ else if eq .TName "AriaSet" }}
+			if {{$recv}}.AriaSet != nil {
+				for dk, dv := range {{$recv}}.AriaSet {
+					v.o.Set("aria-"+dk, dv)
+				}
+			}
+			{{else}}
 			{{ if .Omit }}
 				if {{$recv}}.{{.TName}} != "" {
 					v.{{.TName}} = {{$recv}}.{{.TName}}
@@ -117,6 +134,7 @@ func (g *gen) genProps(defName string, t typeFile) {
 				v.{{.TName}} = {{$recv}}.{{.TName}}.hack()
 			{{else}}
 				v.{{.TName}} = {{$recv}}.{{.TName}}
+			{{end}}
 			{{end}}
 			{{end}}
 		{{- end}}

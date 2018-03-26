@@ -1,6 +1,7 @@
 package markdowneditor // import "myitcv.io/react/examples/markdowneditor"
 
 import (
+	"github.com/gopherjs/gopherjs/js"
 	"honnef.co/go/js/dom"
 	"myitcv.io/react"
 	"myitcv.io/remarkable"
@@ -17,6 +18,11 @@ type MarkdownEditorDef struct {
 type MarkdownEditorState struct {
 	value  string
 	remark *remarkable.Remarkable
+
+	// We don't actually use the DOM element for the containing div in the
+	// logic of the MarkdownEditor example, rather it's just a demonstration
+	// of React Refs at work.
+	div *divRef
 }
 
 // MarkdownEditor creates instances of the MarkdownEditor component
@@ -30,6 +36,7 @@ func (m MarkdownEditorDef) GetInitialState() MarkdownEditorState {
 	return MarkdownEditorState{
 		value:  "Type some *markdown* here!",
 		remark: remark,
+		div:    &divRef{m: m},
 	}
 }
 
@@ -37,7 +44,7 @@ func (m MarkdownEditorDef) GetInitialState() MarkdownEditorState {
 func (m MarkdownEditorDef) Render() react.Element {
 	val := m.State().value
 
-	return react.Div(nil,
+	return react.Div(&react.DivProps{Ref: m.State().div},
 		react.H3(nil, react.S("Input")),
 		react.TextArea(
 			&react.TextAreaProps{
@@ -71,4 +78,23 @@ func (i inputChange) OnChange(se *react.SyntheticEvent) {
 	st.value = target.Value
 
 	i.m.SetState(st)
+}
+
+type divRef struct {
+	m   MarkdownEditorDef
+	div *dom.HTMLDivElement
+}
+
+func (d *divRef) Ref(h *js.Object) {
+	var div *dom.HTMLDivElement
+	if e := dom.WrapHTMLElement(h); e != nil {
+		div = e.(*dom.HTMLDivElement)
+	}
+
+	d.div = div
+
+	print("Here is the containing div for the rendered MarkdownEditor", div.Object)
+
+	// in case we need to re-render at this point we could call
+	d.m.ForceUpdate()
 }

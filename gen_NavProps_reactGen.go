@@ -4,23 +4,38 @@ package react
 
 // NavProps defines the properties for the <nav> element
 type NavProps struct {
+	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
-	ID                      string
-	Key                     string
+	DataSet
+	ID  string
+	Key string
 
 	OnChange
 	OnClick
 
+	Ref
 	Role  string
 	Style *CSS
 }
 
 func (n *NavProps) assign(v *_NavProps) {
 
+	if n.AriaSet != nil {
+		for dk, dv := range n.AriaSet {
+			v.o.Set("aria-"+dk, dv)
+		}
+	}
+
 	v.ClassName = n.ClassName
 
 	v.DangerouslySetInnerHTML = n.DangerouslySetInnerHTML
+
+	if n.DataSet != nil {
+		for dk, dv := range n.DataSet {
+			v.o.Set("data-"+dk, dv)
+		}
+	}
 
 	if n.ID != "" {
 		v.ID = n.ID
@@ -36,6 +51,10 @@ func (n *NavProps) assign(v *_NavProps) {
 
 	if n.OnClick != nil {
 		v.o.Set("onClick", n.OnClick.OnClick)
+	}
+
+	if n.Ref != nil {
+		v.o.Set("ref", n.Ref.Ref)
 	}
 
 	v.Role = n.Role
