@@ -150,6 +150,10 @@ func (c ComponentDef) State() State {
 	return cur
 }
 
+func (c ComponentDef) ForceUpdate() {
+	c.elem.Call(reactCompForceUpdate)
+}
+
 type ComponentBuilder func(elem ComponentDef) Component
 
 func CreateElement(buildCmp ComponentBuilder, newprops Props, children ...Element) Element {

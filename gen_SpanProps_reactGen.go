@@ -4,23 +4,38 @@ package react
 
 // SpanProps defines the properties for the <p> element
 type SpanProps struct {
+	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
-	ID                      string
-	Key                     string
+	DataSet
+	ID  string
+	Key string
 
 	OnChange
 	OnClick
 
+	Ref
 	Role  string
 	Style *CSS
 }
 
 func (s *SpanProps) assign(v *_SpanProps) {
 
+	if s.AriaSet != nil {
+		for dk, dv := range s.AriaSet {
+			v.o.Set("aria-"+dk, dv)
+		}
+	}
+
 	v.ClassName = s.ClassName
 
 	v.DangerouslySetInnerHTML = s.DangerouslySetInnerHTML
+
+	if s.DataSet != nil {
+		for dk, dv := range s.DataSet {
+			v.o.Set("data-"+dk, dv)
+		}
+	}
 
 	if s.ID != "" {
 		v.ID = s.ID
@@ -36,6 +51,10 @@ func (s *SpanProps) assign(v *_SpanProps) {
 
 	if s.OnClick != nil {
 		v.o.Set("onClick", s.OnClick.OnClick)
+	}
+
+	if s.Ref != nil {
+		v.o.Set("ref", s.Ref.Ref)
 	}
 
 	v.Role = s.Role

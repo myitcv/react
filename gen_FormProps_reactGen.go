@@ -4,23 +4,38 @@ package react
 
 // FormProps defines the properties for the <form> element
 type FormProps struct {
+	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
-	ID                      string
-	Key                     string
+	DataSet
+	ID  string
+	Key string
 
 	OnChange
 	OnClick
 
+	Ref
 	Role  string
 	Style *CSS
 }
 
 func (f *FormProps) assign(v *_FormProps) {
 
+	if f.AriaSet != nil {
+		for dk, dv := range f.AriaSet {
+			v.o.Set("aria-"+dk, dv)
+		}
+	}
+
 	v.ClassName = f.ClassName
 
 	v.DangerouslySetInnerHTML = f.DangerouslySetInnerHTML
+
+	if f.DataSet != nil {
+		for dk, dv := range f.DataSet {
+			v.o.Set("data-"+dk, dv)
+		}
+	}
 
 	if f.ID != "" {
 		v.ID = f.ID
@@ -36,6 +51,10 @@ func (f *FormProps) assign(v *_FormProps) {
 
 	if f.OnClick != nil {
 		v.o.Set("onClick", f.OnClick.OnClick)
+	}
+
+	if f.Ref != nil {
+		v.o.Set("ref", f.Ref.Ref)
 	}
 
 	v.Role = f.Role

@@ -4,15 +4,18 @@ package react
 
 // AProps defines the properties for the <a> element
 type AProps struct {
+	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
-	Href                    string
-	ID                      string
-	Key                     string
+	DataSet
+	Href string
+	ID   string
+	Key  string
 
 	OnChange
 	OnClick
 
+	Ref
 	Role   string
 	Style  *CSS
 	Target string
@@ -21,9 +24,21 @@ type AProps struct {
 
 func (a *AProps) assign(v *_AProps) {
 
+	if a.AriaSet != nil {
+		for dk, dv := range a.AriaSet {
+			v.o.Set("aria-"+dk, dv)
+		}
+	}
+
 	v.ClassName = a.ClassName
 
 	v.DangerouslySetInnerHTML = a.DangerouslySetInnerHTML
+
+	if a.DataSet != nil {
+		for dk, dv := range a.DataSet {
+			v.o.Set("data-"+dk, dv)
+		}
+	}
 
 	v.Href = a.Href
 
@@ -41,6 +56,10 @@ func (a *AProps) assign(v *_AProps) {
 
 	if a.OnClick != nil {
 		v.o.Set("onClick", a.OnClick.OnClick)
+	}
+
+	if a.Ref != nil {
+		v.o.Set("ref", a.Ref.Ref)
 	}
 
 	v.Role = a.Role

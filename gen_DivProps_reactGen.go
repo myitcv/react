@@ -4,23 +4,38 @@ package react
 
 // DivProps are the props for a <div> component
 type DivProps struct {
+	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
-	ID                      string
-	Key                     string
+	DataSet
+	ID  string
+	Key string
 
 	OnChange
 	OnClick
 
+	Ref
 	Role  string
 	Style *CSS
 }
 
 func (d *DivProps) assign(v *_DivProps) {
 
+	if d.AriaSet != nil {
+		for dk, dv := range d.AriaSet {
+			v.o.Set("aria-"+dk, dv)
+		}
+	}
+
 	v.ClassName = d.ClassName
 
 	v.DangerouslySetInnerHTML = d.DangerouslySetInnerHTML
+
+	if d.DataSet != nil {
+		for dk, dv := range d.DataSet {
+			v.o.Set("data-"+dk, dv)
+		}
+	}
 
 	if d.ID != "" {
 		v.ID = d.ID
@@ -36,6 +51,10 @@ func (d *DivProps) assign(v *_DivProps) {
 
 	if d.OnClick != nil {
 		v.o.Set("onClick", d.OnClick.OnClick)
+	}
+
+	if d.Ref != nil {
+		v.o.Set("ref", d.Ref.Ref)
 	}
 
 	v.Role = d.Role

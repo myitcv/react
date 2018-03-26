@@ -4,30 +4,45 @@ package react
 
 // TextAreaProps defines the properties for the <textarea> element
 type TextAreaProps struct {
+	AriaSet
 	ClassName               string
 	Cols                    uint
 	DangerouslySetInnerHTML *DangerousInnerHTML
-	DefaultValue            string
-	ID                      string
-	Key                     string
+	DataSet
+	DefaultValue string
+	ID           string
+	Key          string
 
 	OnChange
 	OnClick
 
 	Placeholder string
-	Role        string
-	Rows        uint
-	Style       *CSS
-	Value       string
+	Ref
+	Role  string
+	Rows  uint
+	Style *CSS
+	Value string
 }
 
 func (t *TextAreaProps) assign(v *_TextAreaProps) {
+
+	if t.AriaSet != nil {
+		for dk, dv := range t.AriaSet {
+			v.o.Set("aria-"+dk, dv)
+		}
+	}
 
 	v.ClassName = t.ClassName
 
 	v.Cols = t.Cols
 
 	v.DangerouslySetInnerHTML = t.DangerouslySetInnerHTML
+
+	if t.DataSet != nil {
+		for dk, dv := range t.DataSet {
+			v.o.Set("data-"+dk, dv)
+		}
+	}
 
 	if t.DefaultValue != "" {
 		v.DefaultValue = t.DefaultValue
@@ -50,6 +65,10 @@ func (t *TextAreaProps) assign(v *_TextAreaProps) {
 	}
 
 	v.Placeholder = t.Placeholder
+
+	if t.Ref != nil {
+		v.o.Set("ref", t.Ref.Ref)
+	}
 
 	v.Role = t.Role
 

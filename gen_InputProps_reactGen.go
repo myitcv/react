@@ -4,27 +4,42 @@ package react
 
 // InputProps defines the properties for the <input> element
 type InputProps struct {
+	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
-	DefaultValue            string
-	ID                      string
-	Key                     string
+	DataSet
+	DefaultValue string
+	ID           string
+	Key          string
 
 	OnChange
 	OnClick
 
 	Placeholder string
-	Role        string
-	Style       *CSS
-	Type        string
-	Value       string
+	Ref
+	Role  string
+	Style *CSS
+	Type  string
+	Value string
 }
 
 func (i *InputProps) assign(v *_InputProps) {
 
+	if i.AriaSet != nil {
+		for dk, dv := range i.AriaSet {
+			v.o.Set("aria-"+dk, dv)
+		}
+	}
+
 	v.ClassName = i.ClassName
 
 	v.DangerouslySetInnerHTML = i.DangerouslySetInnerHTML
+
+	if i.DataSet != nil {
+		for dk, dv := range i.DataSet {
+			v.o.Set("data-"+dk, dv)
+		}
+	}
 
 	if i.DefaultValue != "" {
 		v.DefaultValue = i.DefaultValue
@@ -47,6 +62,10 @@ func (i *InputProps) assign(v *_InputProps) {
 	}
 
 	v.Placeholder = i.Placeholder
+
+	if i.Ref != nil {
+		v.o.Set("ref", i.Ref.Ref)
+	}
 
 	v.Role = i.Role
 

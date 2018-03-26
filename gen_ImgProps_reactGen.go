@@ -4,14 +4,18 @@ package react
 
 // ImgProps are the props for a <Img> component
 type ImgProps struct {
+	Alt string
+	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
-	ID                      string
-	Key                     string
+	DataSet
+	ID  string
+	Key string
 
 	OnChange
 	OnClick
 
+	Ref
 	Role  string
 	Src   string
 	Style *CSS
@@ -19,9 +23,23 @@ type ImgProps struct {
 
 func (i *ImgProps) assign(v *_ImgProps) {
 
+	v.Alt = i.Alt
+
+	if i.AriaSet != nil {
+		for dk, dv := range i.AriaSet {
+			v.o.Set("aria-"+dk, dv)
+		}
+	}
+
 	v.ClassName = i.ClassName
 
 	v.DangerouslySetInnerHTML = i.DangerouslySetInnerHTML
+
+	if i.DataSet != nil {
+		for dk, dv := range i.DataSet {
+			v.o.Set("data-"+dk, dv)
+		}
+	}
 
 	if i.ID != "" {
 		v.ID = i.ID
@@ -37,6 +55,10 @@ func (i *ImgProps) assign(v *_ImgProps) {
 
 	if i.OnClick != nil {
 		v.o.Set("onClick", i.OnClick.OnClick)
+	}
+
+	if i.Ref != nil {
+		v.o.Set("ref", i.Ref.Ref)
 	}
 
 	v.Role = i.Role

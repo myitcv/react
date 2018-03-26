@@ -4,23 +4,38 @@ package react
 
 // BrProps defines the properties for the <br> element
 type BrProps struct {
+	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
-	ID                      string
-	Key                     string
+	DataSet
+	ID  string
+	Key string
 
 	OnChange
 	OnClick
 
+	Ref
 	Role  string
 	Style *CSS
 }
 
 func (b *BrProps) assign(v *_BrProps) {
 
+	if b.AriaSet != nil {
+		for dk, dv := range b.AriaSet {
+			v.o.Set("aria-"+dk, dv)
+		}
+	}
+
 	v.ClassName = b.ClassName
 
 	v.DangerouslySetInnerHTML = b.DangerouslySetInnerHTML
+
+	if b.DataSet != nil {
+		for dk, dv := range b.DataSet {
+			v.o.Set("data-"+dk, dv)
+		}
+	}
 
 	if b.ID != "" {
 		v.ID = b.ID
@@ -36,6 +51,10 @@ func (b *BrProps) assign(v *_BrProps) {
 
 	if b.OnClick != nil {
 		v.o.Set("onClick", b.OnClick.OnClick)
+	}
+
+	if b.Ref != nil {
+		v.o.Set("ref", b.Ref.Ref)
 	}
 
 	v.Role = b.Role
