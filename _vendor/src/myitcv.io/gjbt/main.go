@@ -1,3 +1,5 @@
+// gjbt is a simple (temporary) wrapper for GopherJS to run tests in Chrome as
+// opposed to NodeJS.
 package main
 
 import (
@@ -107,6 +109,7 @@ func main() {
 		err = cmd.Run()
 		if err != nil {
 			os.Remove(tf.Name())
+			fmt.Printf("%v\n", err)
 			failed = true
 			continue
 		}
