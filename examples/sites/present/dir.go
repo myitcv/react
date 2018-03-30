@@ -1,3 +1,11 @@
+// Copyright (c) 2018 Paul Jolly <paul@myitcv.org.uk>, all rights reserved.
+// Use of this document is governed by a license found in the LICENSE document.
+
+// This package contains a fair amount of copy-paste from
+// https://godoc.org/golang.org/x/tools/cmd/present.  The copyright notice from
+// that repo can be seen below, and is linked
+// https://github.com/golang/tools/blob/master/LICENSE
+
 // Copyright 2012 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
