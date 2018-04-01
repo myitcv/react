@@ -4,7 +4,6 @@ package react
 
 // LabelProps defines the properties for the <label> element
 type LabelProps struct {
-	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -21,12 +20,6 @@ type LabelProps struct {
 }
 
 func (l *LabelProps) assign(v *_LabelProps) {
-
-	if l.AriaSet != nil {
-		for dk, dv := range l.AriaSet {
-			v.o.Set("aria-"+dk, dv)
-		}
-	}
 
 	v.ClassName = l.ClassName
 

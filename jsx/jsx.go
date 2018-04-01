@@ -68,7 +68,6 @@ func parseSpan(n *html.Node) *react.SpanElem {
 
 	var vp *react.SpanProps
 	var ds react.DataSet
-	var as react.AriaSet
 
 	if len(n.Attr) > 0 {
 		vp = new(react.SpanProps)
@@ -79,12 +78,6 @@ func parseSpan(n *html.Node) *react.SpanElem {
 				vp.ClassName = a.Val
 			case v == "style":
 				vp.Style = parseCSS(a.Val)
-			case strings.HasPrefix(v, "aria-"):
-				if as == nil {
-					as = make(react.AriaSet)
-				}
-
-				as[strings.TrimPrefix(v, "aria-")] = a.Val
 			case strings.HasPrefix(v, "data-"):
 				if ds == nil {
 					ds = make(react.DataSet)
@@ -102,7 +95,6 @@ func parseSpan(n *html.Node) *react.SpanElem {
 	}
 
 	vp.DataSet = ds
-	vp.AriaSet = as
 
 	return react.Span(vp, kids...)
 }
@@ -255,7 +247,6 @@ func parseImg(n *html.Node) *react.ImgElem {
 
 	var vp *react.ImgProps
 	var ds react.DataSet
-	var as react.AriaSet
 
 	if len(n.Attr) > 0 {
 		vp = new(react.ImgProps)
@@ -270,12 +261,6 @@ func parseImg(n *html.Node) *react.ImgElem {
 				vp.Style = parseCSS(a.Val)
 			case v == "alt":
 				vp.Alt = a.Val
-			case strings.HasPrefix(v, "aria-"):
-				if as == nil {
-					as = make(react.AriaSet)
-				}
-
-				as[strings.TrimPrefix(v, "aria-")] = a.Val
 			case strings.HasPrefix(v, "data-"):
 				if ds == nil {
 					ds = make(react.DataSet)
@@ -293,7 +278,6 @@ func parseImg(n *html.Node) *react.ImgElem {
 	}
 
 	vp.DataSet = ds
-	vp.AriaSet = as
 
 	return react.Img(vp, kids...)
 }

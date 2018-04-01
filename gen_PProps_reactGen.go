@@ -4,7 +4,6 @@ package react
 
 // PProps are the props for a <div> component
 type PProps struct {
-	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -20,12 +19,6 @@ type PProps struct {
 }
 
 func (p *PProps) assign(v *_PProps) {
-
-	if p.AriaSet != nil {
-		for dk, dv := range p.AriaSet {
-			v.o.Set("aria-"+dk, dv)
-		}
-	}
 
 	v.ClassName = p.ClassName
 

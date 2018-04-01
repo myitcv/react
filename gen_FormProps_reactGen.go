@@ -4,7 +4,6 @@ package react
 
 // FormProps defines the properties for the <form> element
 type FormProps struct {
-	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -20,12 +19,6 @@ type FormProps struct {
 }
 
 func (f *FormProps) assign(v *_FormProps) {
-
-	if f.AriaSet != nil {
-		for dk, dv := range f.AriaSet {
-			v.o.Set("aria-"+dk, dv)
-		}
-	}
 
 	v.ClassName = f.ClassName
 

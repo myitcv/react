@@ -4,7 +4,6 @@ package react
 
 // CodeProps defines the properties for the <code> element
 type CodeProps struct {
-	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -20,12 +19,6 @@ type CodeProps struct {
 }
 
 func (c *CodeProps) assign(v *_CodeProps) {
-
-	if c.AriaSet != nil {
-		for dk, dv := range c.AriaSet {
-			v.o.Set("aria-"+dk, dv)
-		}
-	}
 
 	v.ClassName = c.ClassName
 

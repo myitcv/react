@@ -4,7 +4,6 @@ package react
 
 // NavProps defines the properties for the <nav> element
 type NavProps struct {
-	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -20,12 +19,6 @@ type NavProps struct {
 }
 
 func (n *NavProps) assign(v *_NavProps) {
-
-	if n.AriaSet != nil {
-		for dk, dv := range n.AriaSet {
-			v.o.Set("aria-"+dk, dv)
-		}
-	}
 
 	v.ClassName = n.ClassName
 
