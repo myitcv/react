@@ -4,7 +4,6 @@ package react
 
 // LiProps defines the properties for the <li> element
 type LiProps struct {
-	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -20,12 +19,6 @@ type LiProps struct {
 }
 
 func (l *LiProps) assign(v *_LiProps) {
-
-	if l.AriaSet != nil {
-		for dk, dv := range l.AriaSet {
-			v.o.Set("aria-"+dk, dv)
-		}
-	}
 
 	v.ClassName = l.ClassName
 

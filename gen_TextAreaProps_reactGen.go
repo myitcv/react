@@ -4,7 +4,6 @@ package react
 
 // TextAreaProps defines the properties for the <textarea> element
 type TextAreaProps struct {
-	AriaSet
 	ClassName               string
 	Cols                    uint
 	DangerouslySetInnerHTML *DangerousInnerHTML
@@ -25,12 +24,6 @@ type TextAreaProps struct {
 }
 
 func (t *TextAreaProps) assign(v *_TextAreaProps) {
-
-	if t.AriaSet != nil {
-		for dk, dv := range t.AriaSet {
-			v.o.Set("aria-"+dk, dv)
-		}
-	}
 
 	v.ClassName = t.ClassName
 

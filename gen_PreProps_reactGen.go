@@ -4,7 +4,6 @@ package react
 
 // PreProps defines the properties for the <pre> element
 type PreProps struct {
-	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -20,12 +19,6 @@ type PreProps struct {
 }
 
 func (p *PreProps) assign(v *_PreProps) {
-
-	if p.AriaSet != nil {
-		for dk, dv := range p.AriaSet {
-			v.o.Set("aria-"+dk, dv)
-		}
-	}
 
 	v.ClassName = p.ClassName
 

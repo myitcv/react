@@ -4,7 +4,6 @@ package react
 
 // H3Props defines the properties for the <h3> element
 type H3Props struct {
-	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -20,12 +19,6 @@ type H3Props struct {
 }
 
 func (h *H3Props) assign(v *_H3Props) {
-
-	if h.AriaSet != nil {
-		for dk, dv := range h.AriaSet {
-			v.o.Set("aria-"+dk, dv)
-		}
-	}
 
 	v.ClassName = h.ClassName
 

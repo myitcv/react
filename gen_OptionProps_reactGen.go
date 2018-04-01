@@ -4,7 +4,6 @@ package react
 
 // OptionProps defines the properties for the <option> element
 type OptionProps struct {
-	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -21,12 +20,6 @@ type OptionProps struct {
 }
 
 func (o *OptionProps) assign(v *_OptionProps) {
-
-	if o.AriaSet != nil {
-		for dk, dv := range o.AriaSet {
-			v.o.Set("aria-"+dk, dv)
-		}
-	}
 
 	v.ClassName = o.ClassName
 

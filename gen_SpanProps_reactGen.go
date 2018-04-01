@@ -4,7 +4,6 @@ package react
 
 // SpanProps defines the properties for the <p> element
 type SpanProps struct {
-	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -20,12 +19,6 @@ type SpanProps struct {
 }
 
 func (s *SpanProps) assign(v *_SpanProps) {
-
-	if s.AriaSet != nil {
-		for dk, dv := range s.AriaSet {
-			v.o.Set("aria-"+dk, dv)
-		}
-	}
 
 	v.ClassName = s.ClassName
 

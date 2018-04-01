@@ -4,7 +4,6 @@ package react
 
 // BrProps defines the properties for the <br> element
 type BrProps struct {
-	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -20,12 +19,6 @@ type BrProps struct {
 }
 
 func (b *BrProps) assign(v *_BrProps) {
-
-	if b.AriaSet != nil {
-		for dk, dv := range b.AriaSet {
-			v.o.Set("aria-"+dk, dv)
-		}
-	}
 
 	v.ClassName = b.ClassName
 
