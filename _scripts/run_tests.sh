@@ -5,11 +5,11 @@
 
 source "${BASH_SOURCE%/*}/common.bash"
 
-export PATH=$PWD/_vendor/bin:$GOPATH/bin:$PATH
-export GOPATH=$PWD/_vendor:$GOPATH
-
 # ensure we are in the right directory
 cd "${BASH_SOURCE%/*}/.."
+
+export PATH=$PWD/_vendor/bin:$GOPATH/bin:$PATH
+export GOPATH=$PWD/_vendor:$GOPATH
 
 for i in $(cat .vendored_bin_deps .bin_deps)
 do
@@ -36,7 +36,12 @@ find -path ./_vendor -prune -o -name "gen_*.go" -exec rm '{}' \;
 	popd
 }
 
-go generate ./...
+# run this script so we really eat our own dogfood (idea is that
+# this script is reference in a contribution doc)
+./_scripts/generate_react.sh
+
+# run generate on the remainder of our packages
+go list ./... | grep -v '^myitcv.io/react$' | xargs go generate
 
 z=$(goimports -l !(_vendor|_talks)/**/!(gen_*).go !(gen_*).go)
 if [ ! -z "$z" ]
