@@ -19,44 +19,44 @@ type SelectProps struct {
 	Value string
 }
 
-func (s *SelectProps) assign(v *_SelectProps) {
+func (s *SelectProps) assign(_v *_SelectProps) {
 
-	v.ClassName = s.ClassName
+	_v.ClassName = s.ClassName
 
-	v.DangerouslySetInnerHTML = s.DangerouslySetInnerHTML
+	_v.DangerouslySetInnerHTML = s.DangerouslySetInnerHTML
 
 	if s.DataSet != nil {
 		for dk, dv := range s.DataSet {
-			v.o.Set("data-"+dk, dv)
+			_v.o.Set("data-"+dk, dv)
 		}
 	}
 
 	if s.ID != "" {
-		v.ID = s.ID
+		_v.ID = s.ID
 	}
 
 	if s.Key != "" {
-		v.Key = s.Key
+		_v.Key = s.Key
 	}
 
 	if s.OnChange != nil {
-		v.o.Set("onChange", s.OnChange.OnChange)
+		_v.o.Set("onChange", s.OnChange.OnChange)
 	}
 
 	if s.OnClick != nil {
-		v.o.Set("onClick", s.OnClick.OnClick)
+		_v.o.Set("onClick", s.OnClick.OnClick)
 	}
 
 	if s.Ref != nil {
-		v.o.Set("ref", s.Ref.Ref)
+		_v.o.Set("ref", s.Ref.Ref)
 	}
 
-	v.Role = s.Role
+	_v.Role = s.Role
 
 	// TODO: until we have a resolution on
 	// https://github.com/gopherjs/gopherjs/issues/236
-	v.Style = s.Style.hack()
+	_v.Style = s.Style.hack()
 
-	v.Value = s.Value
+	_v.Value = s.Value
 
 }

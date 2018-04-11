@@ -18,42 +18,42 @@ type H1Props struct {
 	Style *CSS
 }
 
-func (h *H1Props) assign(v *_H1Props) {
+func (h *H1Props) assign(_v *_H1Props) {
 
-	v.ClassName = h.ClassName
+	_v.ClassName = h.ClassName
 
-	v.DangerouslySetInnerHTML = h.DangerouslySetInnerHTML
+	_v.DangerouslySetInnerHTML = h.DangerouslySetInnerHTML
 
 	if h.DataSet != nil {
 		for dk, dv := range h.DataSet {
-			v.o.Set("data-"+dk, dv)
+			_v.o.Set("data-"+dk, dv)
 		}
 	}
 
 	if h.ID != "" {
-		v.ID = h.ID
+		_v.ID = h.ID
 	}
 
 	if h.Key != "" {
-		v.Key = h.Key
+		_v.Key = h.Key
 	}
 
 	if h.OnChange != nil {
-		v.o.Set("onChange", h.OnChange.OnChange)
+		_v.o.Set("onChange", h.OnChange.OnChange)
 	}
 
 	if h.OnClick != nil {
-		v.o.Set("onClick", h.OnClick.OnClick)
+		_v.o.Set("onClick", h.OnClick.OnClick)
 	}
 
 	if h.Ref != nil {
-		v.o.Set("ref", h.Ref.Ref)
+		_v.o.Set("ref", h.Ref.Ref)
 	}
 
-	v.Role = h.Role
+	_v.Role = h.Role
 
 	// TODO: until we have a resolution on
 	// https://github.com/gopherjs/gopherjs/issues/236
-	v.Style = h.Style.hack()
+	_v.Style = h.Style.hack()
 
 }

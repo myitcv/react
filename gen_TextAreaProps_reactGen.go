@@ -23,54 +23,54 @@ type TextAreaProps struct {
 	Value string
 }
 
-func (t *TextAreaProps) assign(v *_TextAreaProps) {
+func (t *TextAreaProps) assign(_v *_TextAreaProps) {
 
-	v.ClassName = t.ClassName
+	_v.ClassName = t.ClassName
 
-	v.Cols = t.Cols
+	_v.Cols = t.Cols
 
-	v.DangerouslySetInnerHTML = t.DangerouslySetInnerHTML
+	_v.DangerouslySetInnerHTML = t.DangerouslySetInnerHTML
 
 	if t.DataSet != nil {
 		for dk, dv := range t.DataSet {
-			v.o.Set("data-"+dk, dv)
+			_v.o.Set("data-"+dk, dv)
 		}
 	}
 
 	if t.DefaultValue != "" {
-		v.DefaultValue = t.DefaultValue
+		_v.DefaultValue = t.DefaultValue
 	}
 
 	if t.ID != "" {
-		v.ID = t.ID
+		_v.ID = t.ID
 	}
 
 	if t.Key != "" {
-		v.Key = t.Key
+		_v.Key = t.Key
 	}
 
 	if t.OnChange != nil {
-		v.o.Set("onChange", t.OnChange.OnChange)
+		_v.o.Set("onChange", t.OnChange.OnChange)
 	}
 
 	if t.OnClick != nil {
-		v.o.Set("onClick", t.OnClick.OnClick)
+		_v.o.Set("onClick", t.OnClick.OnClick)
 	}
 
-	v.Placeholder = t.Placeholder
+	_v.Placeholder = t.Placeholder
 
 	if t.Ref != nil {
-		v.o.Set("ref", t.Ref.Ref)
+		_v.o.Set("ref", t.Ref.Ref)
 	}
 
-	v.Role = t.Role
+	_v.Role = t.Role
 
-	v.Rows = t.Rows
+	_v.Rows = t.Rows
 
 	// TODO: until we have a resolution on
 	// https://github.com/gopherjs/gopherjs/issues/236
-	v.Style = t.Style.hack()
+	_v.Style = t.Style.hack()
 
-	v.Value = t.Value
+	_v.Value = t.Value
 
 }

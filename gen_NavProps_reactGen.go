@@ -18,42 +18,42 @@ type NavProps struct {
 	Style *CSS
 }
 
-func (n *NavProps) assign(v *_NavProps) {
+func (n *NavProps) assign(_v *_NavProps) {
 
-	v.ClassName = n.ClassName
+	_v.ClassName = n.ClassName
 
-	v.DangerouslySetInnerHTML = n.DangerouslySetInnerHTML
+	_v.DangerouslySetInnerHTML = n.DangerouslySetInnerHTML
 
 	if n.DataSet != nil {
 		for dk, dv := range n.DataSet {
-			v.o.Set("data-"+dk, dv)
+			_v.o.Set("data-"+dk, dv)
 		}
 	}
 
 	if n.ID != "" {
-		v.ID = n.ID
+		_v.ID = n.ID
 	}
 
 	if n.Key != "" {
-		v.Key = n.Key
+		_v.Key = n.Key
 	}
 
 	if n.OnChange != nil {
-		v.o.Set("onChange", n.OnChange.OnChange)
+		_v.o.Set("onChange", n.OnChange.OnChange)
 	}
 
 	if n.OnClick != nil {
-		v.o.Set("onClick", n.OnClick.OnClick)
+		_v.o.Set("onClick", n.OnClick.OnClick)
 	}
 
 	if n.Ref != nil {
-		v.o.Set("ref", n.Ref.Ref)
+		_v.o.Set("ref", n.Ref.Ref)
 	}
 
-	v.Role = n.Role
+	_v.Role = n.Role
 
 	// TODO: until we have a resolution on
 	// https://github.com/gopherjs/gopherjs/issues/236
-	v.Style = n.Style.hack()
+	_v.Style = n.Style.hack()
 
 }

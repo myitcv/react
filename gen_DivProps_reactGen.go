@@ -18,42 +18,42 @@ type DivProps struct {
 	Style *CSS
 }
 
-func (d *DivProps) assign(v *_DivProps) {
+func (d *DivProps) assign(_v *_DivProps) {
 
-	v.ClassName = d.ClassName
+	_v.ClassName = d.ClassName
 
-	v.DangerouslySetInnerHTML = d.DangerouslySetInnerHTML
+	_v.DangerouslySetInnerHTML = d.DangerouslySetInnerHTML
 
 	if d.DataSet != nil {
 		for dk, dv := range d.DataSet {
-			v.o.Set("data-"+dk, dv)
+			_v.o.Set("data-"+dk, dv)
 		}
 	}
 
 	if d.ID != "" {
-		v.ID = d.ID
+		_v.ID = d.ID
 	}
 
 	if d.Key != "" {
-		v.Key = d.Key
+		_v.Key = d.Key
 	}
 
 	if d.OnChange != nil {
-		v.o.Set("onChange", d.OnChange.OnChange)
+		_v.o.Set("onChange", d.OnChange.OnChange)
 	}
 
 	if d.OnClick != nil {
-		v.o.Set("onClick", d.OnClick.OnClick)
+		_v.o.Set("onClick", d.OnClick.OnClick)
 	}
 
 	if d.Ref != nil {
-		v.o.Set("ref", d.Ref.Ref)
+		_v.o.Set("ref", d.Ref.Ref)
 	}
 
-	v.Role = d.Role
+	_v.Role = d.Role
 
 	// TODO: until we have a resolution on
 	// https://github.com/gopherjs/gopherjs/issues/236
-	v.Style = d.Style.hack()
+	_v.Style = d.Style.hack()
 
 }
