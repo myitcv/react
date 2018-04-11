@@ -19,44 +19,44 @@ type ButtonProps struct {
 	Type  string
 }
 
-func (b *ButtonProps) assign(v *_ButtonProps) {
+func (b *ButtonProps) assign(_v *_ButtonProps) {
 
-	v.ClassName = b.ClassName
+	_v.ClassName = b.ClassName
 
-	v.DangerouslySetInnerHTML = b.DangerouslySetInnerHTML
+	_v.DangerouslySetInnerHTML = b.DangerouslySetInnerHTML
 
 	if b.DataSet != nil {
 		for dk, dv := range b.DataSet {
-			v.o.Set("data-"+dk, dv)
+			_v.o.Set("data-"+dk, dv)
 		}
 	}
 
 	if b.ID != "" {
-		v.ID = b.ID
+		_v.ID = b.ID
 	}
 
 	if b.Key != "" {
-		v.Key = b.Key
+		_v.Key = b.Key
 	}
 
 	if b.OnChange != nil {
-		v.o.Set("onChange", b.OnChange.OnChange)
+		_v.o.Set("onChange", b.OnChange.OnChange)
 	}
 
 	if b.OnClick != nil {
-		v.o.Set("onClick", b.OnClick.OnClick)
+		_v.o.Set("onClick", b.OnClick.OnClick)
 	}
 
 	if b.Ref != nil {
-		v.o.Set("ref", b.Ref.Ref)
+		_v.o.Set("ref", b.Ref.Ref)
 	}
 
-	v.Role = b.Role
+	_v.Role = b.Role
 
 	// TODO: until we have a resolution on
 	// https://github.com/gopherjs/gopherjs/issues/236
-	v.Style = b.Style.hack()
+	_v.Style = b.Style.hack()
 
-	v.Type = b.Type
+	_v.Type = b.Type
 
 }

@@ -22,52 +22,52 @@ type InputProps struct {
 	Value string
 }
 
-func (i *InputProps) assign(v *_InputProps) {
+func (i *InputProps) assign(_v *_InputProps) {
 
-	v.ClassName = i.ClassName
+	_v.ClassName = i.ClassName
 
-	v.DangerouslySetInnerHTML = i.DangerouslySetInnerHTML
+	_v.DangerouslySetInnerHTML = i.DangerouslySetInnerHTML
 
 	if i.DataSet != nil {
 		for dk, dv := range i.DataSet {
-			v.o.Set("data-"+dk, dv)
+			_v.o.Set("data-"+dk, dv)
 		}
 	}
 
 	if i.DefaultValue != "" {
-		v.DefaultValue = i.DefaultValue
+		_v.DefaultValue = i.DefaultValue
 	}
 
 	if i.ID != "" {
-		v.ID = i.ID
+		_v.ID = i.ID
 	}
 
 	if i.Key != "" {
-		v.Key = i.Key
+		_v.Key = i.Key
 	}
 
 	if i.OnChange != nil {
-		v.o.Set("onChange", i.OnChange.OnChange)
+		_v.o.Set("onChange", i.OnChange.OnChange)
 	}
 
 	if i.OnClick != nil {
-		v.o.Set("onClick", i.OnClick.OnClick)
+		_v.o.Set("onClick", i.OnClick.OnClick)
 	}
 
-	v.Placeholder = i.Placeholder
+	_v.Placeholder = i.Placeholder
 
 	if i.Ref != nil {
-		v.o.Set("ref", i.Ref.Ref)
+		_v.o.Set("ref", i.Ref.Ref)
 	}
 
-	v.Role = i.Role
+	_v.Role = i.Role
 
 	// TODO: until we have a resolution on
 	// https://github.com/gopherjs/gopherjs/issues/236
-	v.Style = i.Style.hack()
+	_v.Style = i.Style.hack()
 
-	v.Type = i.Type
+	_v.Type = i.Type
 
-	v.Value = i.Value
+	_v.Value = i.Value
 
 }

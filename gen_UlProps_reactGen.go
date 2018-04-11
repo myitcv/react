@@ -18,42 +18,42 @@ type UlProps struct {
 	Style *CSS
 }
 
-func (u *UlProps) assign(v *_UlProps) {
+func (u *UlProps) assign(_v *_UlProps) {
 
-	v.ClassName = u.ClassName
+	_v.ClassName = u.ClassName
 
-	v.DangerouslySetInnerHTML = u.DangerouslySetInnerHTML
+	_v.DangerouslySetInnerHTML = u.DangerouslySetInnerHTML
 
 	if u.DataSet != nil {
 		for dk, dv := range u.DataSet {
-			v.o.Set("data-"+dk, dv)
+			_v.o.Set("data-"+dk, dv)
 		}
 	}
 
 	if u.ID != "" {
-		v.ID = u.ID
+		_v.ID = u.ID
 	}
 
 	if u.Key != "" {
-		v.Key = u.Key
+		_v.Key = u.Key
 	}
 
 	if u.OnChange != nil {
-		v.o.Set("onChange", u.OnChange.OnChange)
+		_v.o.Set("onChange", u.OnChange.OnChange)
 	}
 
 	if u.OnClick != nil {
-		v.o.Set("onClick", u.OnClick.OnClick)
+		_v.o.Set("onClick", u.OnClick.OnClick)
 	}
 
 	if u.Ref != nil {
-		v.o.Set("ref", u.Ref.Ref)
+		_v.o.Set("ref", u.Ref.Ref)
 	}
 
-	v.Role = u.Role
+	_v.Role = u.Role
 
 	// TODO: until we have a resolution on
 	// https://github.com/gopherjs/gopherjs/issues/236
-	v.Style = u.Style.hack()
+	_v.Style = u.Style.hack()
 
 }

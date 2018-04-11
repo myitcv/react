@@ -21,48 +21,48 @@ type AProps struct {
 	Title  string
 }
 
-func (a *AProps) assign(v *_AProps) {
+func (a *AProps) assign(_v *_AProps) {
 
-	v.ClassName = a.ClassName
+	_v.ClassName = a.ClassName
 
-	v.DangerouslySetInnerHTML = a.DangerouslySetInnerHTML
+	_v.DangerouslySetInnerHTML = a.DangerouslySetInnerHTML
 
 	if a.DataSet != nil {
 		for dk, dv := range a.DataSet {
-			v.o.Set("data-"+dk, dv)
+			_v.o.Set("data-"+dk, dv)
 		}
 	}
 
-	v.Href = a.Href
+	_v.Href = a.Href
 
 	if a.ID != "" {
-		v.ID = a.ID
+		_v.ID = a.ID
 	}
 
 	if a.Key != "" {
-		v.Key = a.Key
+		_v.Key = a.Key
 	}
 
 	if a.OnChange != nil {
-		v.o.Set("onChange", a.OnChange.OnChange)
+		_v.o.Set("onChange", a.OnChange.OnChange)
 	}
 
 	if a.OnClick != nil {
-		v.o.Set("onClick", a.OnClick.OnClick)
+		_v.o.Set("onClick", a.OnClick.OnClick)
 	}
 
 	if a.Ref != nil {
-		v.o.Set("ref", a.Ref.Ref)
+		_v.o.Set("ref", a.Ref.Ref)
 	}
 
-	v.Role = a.Role
+	_v.Role = a.Role
 
 	// TODO: until we have a resolution on
 	// https://github.com/gopherjs/gopherjs/issues/236
-	v.Style = a.Style.hack()
+	_v.Style = a.Style.hack()
 
-	v.Target = a.Target
+	_v.Target = a.Target
 
-	v.Title = a.Title
+	_v.Title = a.Title
 
 }

@@ -18,42 +18,42 @@ type FormProps struct {
 	Style *CSS
 }
 
-func (f *FormProps) assign(v *_FormProps) {
+func (f *FormProps) assign(_v *_FormProps) {
 
-	v.ClassName = f.ClassName
+	_v.ClassName = f.ClassName
 
-	v.DangerouslySetInnerHTML = f.DangerouslySetInnerHTML
+	_v.DangerouslySetInnerHTML = f.DangerouslySetInnerHTML
 
 	if f.DataSet != nil {
 		for dk, dv := range f.DataSet {
-			v.o.Set("data-"+dk, dv)
+			_v.o.Set("data-"+dk, dv)
 		}
 	}
 
 	if f.ID != "" {
-		v.ID = f.ID
+		_v.ID = f.ID
 	}
 
 	if f.Key != "" {
-		v.Key = f.Key
+		_v.Key = f.Key
 	}
 
 	if f.OnChange != nil {
-		v.o.Set("onChange", f.OnChange.OnChange)
+		_v.o.Set("onChange", f.OnChange.OnChange)
 	}
 
 	if f.OnClick != nil {
-		v.o.Set("onClick", f.OnClick.OnClick)
+		_v.o.Set("onClick", f.OnClick.OnClick)
 	}
 
 	if f.Ref != nil {
-		v.o.Set("ref", f.Ref.Ref)
+		_v.o.Set("ref", f.Ref.Ref)
 	}
 
-	v.Role = f.Role
+	_v.Role = f.Role
 
 	// TODO: until we have a resolution on
 	// https://github.com/gopherjs/gopherjs/issues/236
-	v.Style = f.Style.hack()
+	_v.Style = f.Style.hack()
 
 }

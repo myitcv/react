@@ -19,44 +19,44 @@ type OptionProps struct {
 	Value string
 }
 
-func (o *OptionProps) assign(v *_OptionProps) {
+func (o *OptionProps) assign(_v *_OptionProps) {
 
-	v.ClassName = o.ClassName
+	_v.ClassName = o.ClassName
 
-	v.DangerouslySetInnerHTML = o.DangerouslySetInnerHTML
+	_v.DangerouslySetInnerHTML = o.DangerouslySetInnerHTML
 
 	if o.DataSet != nil {
 		for dk, dv := range o.DataSet {
-			v.o.Set("data-"+dk, dv)
+			_v.o.Set("data-"+dk, dv)
 		}
 	}
 
 	if o.ID != "" {
-		v.ID = o.ID
+		_v.ID = o.ID
 	}
 
 	if o.Key != "" {
-		v.Key = o.Key
+		_v.Key = o.Key
 	}
 
 	if o.OnChange != nil {
-		v.o.Set("onChange", o.OnChange.OnChange)
+		_v.o.Set("onChange", o.OnChange.OnChange)
 	}
 
 	if o.OnClick != nil {
-		v.o.Set("onClick", o.OnClick.OnClick)
+		_v.o.Set("onClick", o.OnClick.OnClick)
 	}
 
 	if o.Ref != nil {
-		v.o.Set("ref", o.Ref.Ref)
+		_v.o.Set("ref", o.Ref.Ref)
 	}
 
-	v.Role = o.Role
+	_v.Role = o.Role
 
 	// TODO: until we have a resolution on
 	// https://github.com/gopherjs/gopherjs/issues/236
-	v.Style = o.Style.hack()
+	_v.Style = o.Style.hack()
 
-	v.Value = o.Value
+	_v.Value = o.Value
 
 }

@@ -19,44 +19,44 @@ type LabelProps struct {
 	Style *CSS
 }
 
-func (l *LabelProps) assign(v *_LabelProps) {
+func (l *LabelProps) assign(_v *_LabelProps) {
 
-	v.ClassName = l.ClassName
+	_v.ClassName = l.ClassName
 
-	v.DangerouslySetInnerHTML = l.DangerouslySetInnerHTML
+	_v.DangerouslySetInnerHTML = l.DangerouslySetInnerHTML
 
 	if l.DataSet != nil {
 		for dk, dv := range l.DataSet {
-			v.o.Set("data-"+dk, dv)
+			_v.o.Set("data-"+dk, dv)
 		}
 	}
 
-	v.For = l.For
+	_v.For = l.For
 
 	if l.ID != "" {
-		v.ID = l.ID
+		_v.ID = l.ID
 	}
 
 	if l.Key != "" {
-		v.Key = l.Key
+		_v.Key = l.Key
 	}
 
 	if l.OnChange != nil {
-		v.o.Set("onChange", l.OnChange.OnChange)
+		_v.o.Set("onChange", l.OnChange.OnChange)
 	}
 
 	if l.OnClick != nil {
-		v.o.Set("onClick", l.OnClick.OnClick)
+		_v.o.Set("onClick", l.OnClick.OnClick)
 	}
 
 	if l.Ref != nil {
-		v.o.Set("ref", l.Ref.Ref)
+		_v.o.Set("ref", l.Ref.Ref)
 	}
 
-	v.Role = l.Role
+	_v.Role = l.Role
 
 	// TODO: until we have a resolution on
 	// https://github.com/gopherjs/gopherjs/issues/236
-	v.Style = l.Style.hack()
+	_v.Style = l.Style.hack()
 
 }
