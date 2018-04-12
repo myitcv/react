@@ -87,6 +87,7 @@ if [ "${CI:-}" == "true" ]
 then
 	# off the back of https://github.com/myitcv/react/issues/116#issuecomment-380280847
 	# ensure that we can go get myitcv.io/react/... in a totally clean environment
+	echo "Verify that we can go get myitcv.io/react/..."
 	cd `mktemp -d`
 	export GOPATH=$PWD
 	go get myitcv.io/react/...
