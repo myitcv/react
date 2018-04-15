@@ -4,6 +4,7 @@ package react
 
 // FooterProps are the props for a <footer> component
 type FooterProps struct {
+	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -19,6 +20,12 @@ type FooterProps struct {
 }
 
 func (f *FooterProps) assign(_v *_FooterProps) {
+
+	if f.AriaSet != nil {
+		for dk, dv := range f.AriaSet {
+			_v.o.Set("aria-"+dk, dv)
+		}
+	}
 
 	_v.ClassName = f.ClassName
 

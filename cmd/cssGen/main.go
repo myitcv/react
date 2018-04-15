@@ -20,6 +20,7 @@ import (
 // as a reference
 //
 var attrs = map[string]typ{
+	"Float":     typ{"float", "string"},
 	"FontSize":  typ{"fontSize", "string"},
 	"FontStyle": typ{"fontStyle", "string"},
 	"Height":    typ{"height", "string"},

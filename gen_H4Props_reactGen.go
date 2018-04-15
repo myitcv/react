@@ -4,6 +4,7 @@ package react
 
 // H4Props defines the properties for the <h4> element
 type H4Props struct {
+	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -19,6 +20,12 @@ type H4Props struct {
 }
 
 func (h *H4Props) assign(_v *_H4Props) {
+
+	if h.AriaSet != nil {
+		for dk, dv := range h.AriaSet {
+			_v.o.Set("aria-"+dk, dv)
+		}
+	}
 
 	_v.ClassName = h.ClassName
 

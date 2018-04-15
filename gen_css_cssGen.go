@@ -10,6 +10,7 @@ import "github.com/gopherjs/gopherjs/js"
 type CSS struct {
 	o *js.Object
 
+	Float     string
 	FontSize  string
 	FontStyle string
 	Height    string
@@ -36,6 +37,7 @@ func (c *CSS) hack() *CSS {
 
 	o := object.New()
 
+	o.Set("float", c.Float)
 	o.Set("fontSize", c.FontSize)
 	o.Set("fontStyle", c.FontStyle)
 	o.Set("height", c.Height)

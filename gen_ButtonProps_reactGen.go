@@ -4,6 +4,7 @@ package react
 
 // ButtonProps defines the properties for the <button> element
 type ButtonProps struct {
+	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -20,6 +21,12 @@ type ButtonProps struct {
 }
 
 func (b *ButtonProps) assign(_v *_ButtonProps) {
+
+	if b.AriaSet != nil {
+		for dk, dv := range b.AriaSet {
+			_v.o.Set("aria-"+dk, dv)
+		}
+	}
 
 	_v.ClassName = b.ClassName
 
