@@ -3,7 +3,7 @@
     ./_vendor/src/golang.org/x/crypto                        3cb07270c9455e8ad27956a70891c962d121a228  https://go.googlesource.com/crypto
     ./_vendor/src/golang.org/x/tools                         620ecdb8d7943e20dc030b61bfe898d1b000bdea  https://go.googlesource.com/tools
     ./_vendor/src/github.com/jteeuwen/go-bindata             a0ff2567cfb70903282db057e799fd826784d41d  git@github.com:jteeuwen/go-bindata
-    ./_vendor/src/github.com/gopherjs/gopherjs               82b322028c96512b15077093b16a5f1c7ea897ac  git@github.com:gopherjs/gopherjs
+    ./_vendor/src/github.com/gopherjs/gopherjs               558a9132744c22476178edf3126fd35a9754f565  git@github.com:gopherjs/gopherjs
     ./_vendor/src/github.com/gopherjs/jsbuiltin              67703bfb044e3192fbcab025c3aeaeedafad1f2f  git@github.com:gopherjs/jsbuiltin
     ./_vendor/src/github.com/kisielk/gotool                  0de1eaf82fa3f583ce21fde859f1e7e0c5e9b220  git@github.com:kisielk/gotool
     ./_vendor/src/github.com/fsnotify/fsnotify               7d7316ed6e1ed2de075aab8dfc76de5d158d66e1  git@github.com:fsnotify/fsnotify
@@ -17,7 +17,7 @@
     ./_vendor/src/github.com/russross/blackfriday            b253417e1cb644d645a0a3bb1fa5034c8030127c  git@github.com:russross/blackfriday
     ./_vendor/src/myitcv.io/highlightjs                      e0ea663591fbdbce10ca2658c680ba7be2391ff8  git@github.com:myitcv/highlightjs
     ./_vendor/src/myitcv.io/gogenerate                       bd69a94c96953d20e106734856b69d71c8fa122b  git@github.com:myitcv/gogenerate
-    ./_vendor/src/myitcv.io/gjbt                             35069fb7155fa4346f80de45b1632cd47c630dad  git@github.com:myitcv/gjbt.git
+    ./_vendor/src/myitcv.io/gjbt                             ff72e04c3c6f2769923b8a4048284b718ac3be1f  git@github.com:myitcv/gjbt.git
     ./_vendor/src/myitcv.io/remarkable                       6e8b85d04c0c2559fec23559cf88780db6d93083  git@github.com:myitcv/remarkable
     ./_vendor/src/myitcv.io/sorter                           ed1d278951e48d5c8e355c266faec8666d40b2b3  git@github.com:myitcv/sorter
     ./_vendor/src/myitcv.io/immutable                        14699aec0b605e3fe63944cf91b39d2cebda03dd  git@github.com:myitcv/immutable
