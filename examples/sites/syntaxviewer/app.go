@@ -147,12 +147,12 @@ func (a AppDef) handleEvent() {
 
 	case a.State().Shell:
 		in := strings.NewReader(st.Code)
-		f, err := syntax.NewParser().Parse(in, "")
+		f, err := syntax.NewParser().Parse(in, "stdin")
 		if err != nil {
 			st.Ast = err.Error()
 			return
 		}
-		syntax.NewPrinter().Print(b, f)
+		fprint(b, f, nil)
 	}
 
 	st.Ast = b.String()
