@@ -22,6 +22,7 @@ func newBasicElement() *BasicElement {
 	}
 }
 
+type AriaSet map[string]string
 type DataSet map[string]string
 
 type BasicHTMLElement struct {
@@ -33,6 +34,7 @@ type BasicHTMLElement struct {
 	Role      string `js:"role"`
 	Style     *CSS   `js:"style"`
 
+	AriaSet
 	DataSet
 
 	OnChange `js:"onChange"`

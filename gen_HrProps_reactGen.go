@@ -4,6 +4,7 @@ package react
 
 // HrProps defines the properties for the <hr> element
 type HrProps struct {
+	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -19,6 +20,12 @@ type HrProps struct {
 }
 
 func (h *HrProps) assign(_v *_HrProps) {
+
+	if h.AriaSet != nil {
+		for dk, dv := range h.AriaSet {
+			_v.o.Set("aria-"+dk, dv)
+		}
+	}
 
 	_v.ClassName = h.ClassName
 

@@ -88,13 +88,13 @@ func parseSpan(n *html.Node) *react.SpanElem {
 				panic(fmt.Errorf("don't know how to handle <span> attribute %q", a.Key))
 			}
 		}
+
+		vp.DataSet = ds
 	}
 
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
 		kids = append(kids, parse(c))
 	}
-
-	vp.DataSet = ds
 
 	return react.Span(vp, kids...)
 }
@@ -158,6 +158,7 @@ func parseDiv(n *html.Node) *react.DivElem {
 
 	var vp *react.DivProps
 	var ds react.DataSet
+	var as react.AriaSet
 
 	if len(n.Attr) > 0 {
 		vp = new(react.DivProps)
@@ -176,39 +177,159 @@ func parseDiv(n *html.Node) *react.DivElem {
 				}
 
 				ds[strings.TrimPrefix(v, "data-")] = a.Val
+			case strings.HasPrefix(v, "aria-"):
+				if as == nil {
+					as = make(react.AriaSet)
+				}
+
+				as[strings.TrimPrefix(v, "aria-")] = a.Val
 			default:
 				panic(fmt.Errorf("don't know how to handle <div> attribute %q", a.Key))
 			}
 		}
+
+		vp.DataSet = ds
+		vp.AriaSet = as
 	}
 
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
 		kids = append(kids, parse(c))
 	}
 
-	vp.DataSet = ds
-
 	return react.Div(vp, kids...)
+}
+
+func parseUl(n *html.Node) *react.UlElem {
+	var kids []react.RendersLi
+
+	var vp *react.UlProps
+	var ds react.DataSet
+	var as react.AriaSet
+
+	if len(n.Attr) > 0 {
+		vp = new(react.UlProps)
+
+		for _, a := range n.Attr {
+			switch v := a.Key; {
+			case v == "id":
+				vp.ID = a.Val
+			case v == "class":
+				vp.ClassName = a.Val
+			case v == "style":
+				vp.Style = parseCSS(a.Val)
+			case strings.HasPrefix(v, "data-"):
+				if ds == nil {
+					ds = make(react.DataSet)
+				}
+
+				ds[strings.TrimPrefix(v, "data-")] = a.Val
+			case strings.HasPrefix(v, "aria-"):
+				if as == nil {
+					as = make(react.AriaSet)
+				}
+
+				as[strings.TrimPrefix(v, "aria-")] = a.Val
+			default:
+				panic(fmt.Errorf("don't know how to handle <ul> attribute %q", a.Key))
+			}
+		}
+
+		vp.DataSet = ds
+		vp.AriaSet = as
+	}
+
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		kids = append(kids, parseLi(c))
+	}
+
+	return react.Ul(vp, kids...)
+}
+
+func parseLi(n *html.Node) *react.LiElem {
+	var kids []react.Element
+
+	var vp *react.LiProps
+	var ds react.DataSet
+	var as react.AriaSet
+
+	if len(n.Attr) > 0 {
+		vp = new(react.LiProps)
+
+		for _, a := range n.Attr {
+			switch v := a.Key; {
+			case v == "id":
+				vp.ID = a.Val
+			case v == "class":
+				vp.ClassName = a.Val
+			case v == "role":
+				vp.Role = a.Val
+			case v == "style":
+				vp.Style = parseCSS(a.Val)
+			case strings.HasPrefix(v, "data-"):
+				if ds == nil {
+					ds = make(react.DataSet)
+				}
+
+				ds[strings.TrimPrefix(v, "data-")] = a.Val
+			case strings.HasPrefix(v, "aria-"):
+				if as == nil {
+					as = make(react.AriaSet)
+				}
+
+				as[strings.TrimPrefix(v, "aria-")] = a.Val
+			default:
+				panic(fmt.Errorf("don't know how to handle <li> attribute %q", a.Key))
+			}
+		}
+
+		vp.DataSet = ds
+		vp.AriaSet = as
+	}
+
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		kids = append(kids, parse(c))
+	}
+
+	return react.Li(vp, kids...)
 }
 
 func parseButton(n *html.Node) *react.ButtonElem {
 	var kids []react.Element
 
 	var vp *react.ButtonProps
+	var ds react.DataSet
+	var as react.AriaSet
 
 	if len(n.Attr) > 0 {
 		vp = new(react.ButtonProps)
 
 		for _, a := range n.Attr {
-			switch a.Key {
-			case "id":
+			switch v := a.Key; {
+			case v == "id":
 				vp.ID = a.Val
-			case "class":
+			case v == "class":
 				vp.ClassName = a.Val
+			case v == "type":
+				vp.Type = a.Val
+			case strings.HasPrefix(v, "data-"):
+				if ds == nil {
+					ds = make(react.DataSet)
+				}
+
+				ds[strings.TrimPrefix(v, "data-")] = a.Val
+			case strings.HasPrefix(v, "aria-"):
+				if as == nil {
+					as = make(react.AriaSet)
+				}
+
+				as[strings.TrimPrefix(v, "aria-")] = a.Val
 			default:
-				panic(fmt.Errorf("don't know how to handle <div> attribute %q", a.Key))
+				panic(fmt.Errorf("don't know how to handle <button> attribute %q", a.Key))
 			}
 		}
+
+		vp.DataSet = ds
+		vp.AriaSet = as
 	}
 
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
@@ -271,13 +392,13 @@ func parseImg(n *html.Node) *react.ImgElem {
 				panic(fmt.Errorf("don't know how to handle <img> attribute %q", a.Key))
 			}
 		}
+
+		vp.DataSet = ds
 	}
 
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
 		kids = append(kids, parse(c))
 	}
-
-	vp.DataSet = ds
 
 	return react.Img(vp, kids...)
 }
@@ -311,13 +432,13 @@ func parseA(n *html.Node) *react.AElem {
 				panic(fmt.Errorf("don't know how to handle <a> attribute %q", a.Key))
 			}
 		}
+
+		vp.DataSet = ds
 	}
 
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
 		kids = append(kids, parse(c))
 	}
-
-	vp.DataSet = ds
 
 	return react.A(vp, kids...)
 }
@@ -349,6 +470,8 @@ func parseCSS(s string) *react.CSS {
 			res.FontSize = v
 		case "font-style":
 			res.FontStyle = v
+		case "float":
+			res.Float = v
 		default:
 			panic(fmt.Errorf("unknown CSS key %q in %q", k, s))
 		}
@@ -394,6 +517,10 @@ func parse(n *html.Node) react.Element {
 		return parseButton(n)
 	case "i":
 		return parseI(n)
+	case "ul":
+		return parseUl(n)
+	case "li":
+		return parseLi(n)
 	default:
 		panic(fmt.Errorf("cannot handle Element %v", n.Data))
 	}

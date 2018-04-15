@@ -4,6 +4,7 @@ package react
 
 // IProps are the props for a <i> component
 type IProps struct {
+	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -20,6 +21,12 @@ type IProps struct {
 }
 
 func (i *IProps) assign(_v *_IProps) {
+
+	if i.AriaSet != nil {
+		for dk, dv := range i.AriaSet {
+			_v.o.Set("aria-"+dk, dv)
+		}
+	}
 
 	_v.ClassName = i.ClassName
 

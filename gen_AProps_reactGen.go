@@ -4,6 +4,7 @@ package react
 
 // AProps defines the properties for the <a> element
 type AProps struct {
+	AriaSet
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -22,6 +23,12 @@ type AProps struct {
 }
 
 func (a *AProps) assign(_v *_AProps) {
+
+	if a.AriaSet != nil {
+		for dk, dv := range a.AriaSet {
+			_v.o.Set("aria-"+dk, dv)
+		}
+	}
 
 	_v.ClassName = a.ClassName
 
