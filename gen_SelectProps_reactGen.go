@@ -4,7 +4,9 @@ package react
 
 // SelectProps are the props for a <select> component
 type SelectProps struct {
-	AriaSet
+	AriaExpanded            bool
+	AriaHasPopup            bool
+	AriaLabelledBy          string
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -22,11 +24,11 @@ type SelectProps struct {
 
 func (s *SelectProps) assign(_v *_SelectProps) {
 
-	if s.AriaSet != nil {
-		for dk, dv := range s.AriaSet {
-			_v.o.Set("aria-"+dk, dv)
-		}
-	}
+	_v.AriaExpanded = s.AriaExpanded
+
+	_v.AriaHasPopup = s.AriaHasPopup
+
+	_v.AriaLabelledBy = s.AriaLabelledBy
 
 	_v.ClassName = s.ClassName
 

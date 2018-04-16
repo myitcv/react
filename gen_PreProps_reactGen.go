@@ -4,7 +4,9 @@ package react
 
 // PreProps defines the properties for the <pre> element
 type PreProps struct {
-	AriaSet
+	AriaExpanded            bool
+	AriaHasPopup            bool
+	AriaLabelledBy          string
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -21,11 +23,11 @@ type PreProps struct {
 
 func (p *PreProps) assign(_v *_PreProps) {
 
-	if p.AriaSet != nil {
-		for dk, dv := range p.AriaSet {
-			_v.o.Set("aria-"+dk, dv)
-		}
-	}
+	_v.AriaExpanded = p.AriaExpanded
+
+	_v.AriaHasPopup = p.AriaHasPopup
+
+	_v.AriaLabelledBy = p.AriaLabelledBy
 
 	_v.ClassName = p.ClassName
 

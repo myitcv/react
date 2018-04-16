@@ -4,7 +4,9 @@ package react
 
 // IFrameProps are the props for a <iframe> component
 type IFrameProps struct {
-	AriaSet
+	AriaExpanded            bool
+	AriaHasPopup            bool
+	AriaLabelledBy          string
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -23,11 +25,11 @@ type IFrameProps struct {
 
 func (i *IFrameProps) assign(_v *_IFrameProps) {
 
-	if i.AriaSet != nil {
-		for dk, dv := range i.AriaSet {
-			_v.o.Set("aria-"+dk, dv)
-		}
-	}
+	_v.AriaExpanded = i.AriaExpanded
+
+	_v.AriaHasPopup = i.AriaHasPopup
+
+	_v.AriaLabelledBy = i.AriaLabelledBy
 
 	_v.ClassName = i.ClassName
 

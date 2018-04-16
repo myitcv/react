@@ -75,22 +75,20 @@ func (a AppDef) Render() react.Element {
 				&react.DivProps{ClassName: "dropdown", Style: &react.CSS{Float: "right"}},
 				react.Button(
 					&react.ButtonProps{
-						ClassName: "btn btn-default dropdown-toggle",
-						Type:      "button",
-						ID:        "dropdownMenu1",
-						DataSet:   react.DataSet{"toggle": "dropdown"},
-						AriaSet: react.AriaSet{
-							"haspopup": "true",
-							"expanded": "true",
-						},
+						ClassName:    "btn btn-default dropdown-toggle",
+						Type:         "button",
+						ID:           "dropdownMenu1",
+						DataSet:      react.DataSet{"toggle": "dropdown"},
+						AriaHasPopup: true,
+						AriaExpanded: true,
 					},
 					react.S(s.Name+" "),
 					react.Span(&react.SpanProps{ClassName: "caret"}),
 				),
 				react.Ul(
 					&react.UlProps{
-						ClassName: "dropdown-menu dropdown-menu-right",
-						AriaSet:   react.AriaSet{"labelledby": "dropdownMenu1"},
+						ClassName:      "dropdown-menu dropdown-menu-right",
+						AriaLabelledBy: "dropdownMenu1",
 					},
 					buildLi(a.State().Go),
 					buildLi(a.State().Shell),

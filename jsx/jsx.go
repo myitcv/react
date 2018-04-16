@@ -158,7 +158,6 @@ func parseDiv(n *html.Node) *react.DivElem {
 
 	var vp *react.DivProps
 	var ds react.DataSet
-	var as react.AriaSet
 
 	if len(n.Attr) > 0 {
 		vp = new(react.DivProps)
@@ -177,19 +176,12 @@ func parseDiv(n *html.Node) *react.DivElem {
 				}
 
 				ds[strings.TrimPrefix(v, "data-")] = a.Val
-			case strings.HasPrefix(v, "aria-"):
-				if as == nil {
-					as = make(react.AriaSet)
-				}
-
-				as[strings.TrimPrefix(v, "aria-")] = a.Val
 			default:
 				panic(fmt.Errorf("don't know how to handle <div> attribute %q", a.Key))
 			}
 		}
 
 		vp.DataSet = ds
-		vp.AriaSet = as
 	}
 
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
@@ -204,7 +196,6 @@ func parseUl(n *html.Node) *react.UlElem {
 
 	var vp *react.UlProps
 	var ds react.DataSet
-	var as react.AriaSet
 
 	if len(n.Attr) > 0 {
 		vp = new(react.UlProps)
@@ -223,19 +214,12 @@ func parseUl(n *html.Node) *react.UlElem {
 				}
 
 				ds[strings.TrimPrefix(v, "data-")] = a.Val
-			case strings.HasPrefix(v, "aria-"):
-				if as == nil {
-					as = make(react.AriaSet)
-				}
-
-				as[strings.TrimPrefix(v, "aria-")] = a.Val
 			default:
 				panic(fmt.Errorf("don't know how to handle <ul> attribute %q", a.Key))
 			}
 		}
 
 		vp.DataSet = ds
-		vp.AriaSet = as
 	}
 
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
@@ -250,7 +234,6 @@ func parseLi(n *html.Node) *react.LiElem {
 
 	var vp *react.LiProps
 	var ds react.DataSet
-	var as react.AriaSet
 
 	if len(n.Attr) > 0 {
 		vp = new(react.LiProps)
@@ -271,19 +254,12 @@ func parseLi(n *html.Node) *react.LiElem {
 				}
 
 				ds[strings.TrimPrefix(v, "data-")] = a.Val
-			case strings.HasPrefix(v, "aria-"):
-				if as == nil {
-					as = make(react.AriaSet)
-				}
-
-				as[strings.TrimPrefix(v, "aria-")] = a.Val
 			default:
 				panic(fmt.Errorf("don't know how to handle <li> attribute %q", a.Key))
 			}
 		}
 
 		vp.DataSet = ds
-		vp.AriaSet = as
 	}
 
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
@@ -298,7 +274,6 @@ func parseButton(n *html.Node) *react.ButtonElem {
 
 	var vp *react.ButtonProps
 	var ds react.DataSet
-	var as react.AriaSet
 
 	if len(n.Attr) > 0 {
 		vp = new(react.ButtonProps)
@@ -317,19 +292,12 @@ func parseButton(n *html.Node) *react.ButtonElem {
 				}
 
 				ds[strings.TrimPrefix(v, "data-")] = a.Val
-			case strings.HasPrefix(v, "aria-"):
-				if as == nil {
-					as = make(react.AriaSet)
-				}
-
-				as[strings.TrimPrefix(v, "aria-")] = a.Val
 			default:
 				panic(fmt.Errorf("don't know how to handle <button> attribute %q", a.Key))
 			}
 		}
 
 		vp.DataSet = ds
-		vp.AriaSet = as
 	}
 
 	for c := n.FirstChild; c != nil; c = c.NextSibling {

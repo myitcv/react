@@ -4,7 +4,9 @@ package react
 
 // HrProps defines the properties for the <hr> element
 type HrProps struct {
-	AriaSet
+	AriaExpanded            bool
+	AriaHasPopup            bool
+	AriaLabelledBy          string
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -21,11 +23,11 @@ type HrProps struct {
 
 func (h *HrProps) assign(_v *_HrProps) {
 
-	if h.AriaSet != nil {
-		for dk, dv := range h.AriaSet {
-			_v.o.Set("aria-"+dk, dv)
-		}
-	}
+	_v.AriaExpanded = h.AriaExpanded
+
+	_v.AriaHasPopup = h.AriaHasPopup
+
+	_v.AriaLabelledBy = h.AriaLabelledBy
 
 	_v.ClassName = h.ClassName
 

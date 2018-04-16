@@ -4,7 +4,9 @@ package react
 
 // DivProps are the props for a <div> component
 type DivProps struct {
-	AriaSet
+	AriaExpanded            bool
+	AriaHasPopup            bool
+	AriaLabelledBy          string
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -21,11 +23,11 @@ type DivProps struct {
 
 func (d *DivProps) assign(_v *_DivProps) {
 
-	if d.AriaSet != nil {
-		for dk, dv := range d.AriaSet {
-			_v.o.Set("aria-"+dk, dv)
-		}
-	}
+	_v.AriaExpanded = d.AriaExpanded
+
+	_v.AriaHasPopup = d.AriaHasPopup
+
+	_v.AriaLabelledBy = d.AriaLabelledBy
 
 	_v.ClassName = d.ClassName
 
