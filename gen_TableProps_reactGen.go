@@ -4,7 +4,9 @@ package react
 
 // TableProps are the props for a <table> component
 type TableProps struct {
-	AriaSet
+	AriaExpanded            bool
+	AriaHasPopup            bool
+	AriaLabelledBy          string
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -21,11 +23,11 @@ type TableProps struct {
 
 func (t *TableProps) assign(_v *_TableProps) {
 
-	if t.AriaSet != nil {
-		for dk, dv := range t.AriaSet {
-			_v.o.Set("aria-"+dk, dv)
-		}
-	}
+	_v.AriaExpanded = t.AriaExpanded
+
+	_v.AriaHasPopup = t.AriaHasPopup
+
+	_v.AriaLabelledBy = t.AriaLabelledBy
 
 	_v.ClassName = t.ClassName
 

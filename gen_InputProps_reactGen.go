@@ -4,7 +4,9 @@ package react
 
 // InputProps defines the properties for the <input> element
 type InputProps struct {
-	AriaSet
+	AriaExpanded            bool
+	AriaHasPopup            bool
+	AriaLabelledBy          string
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -25,11 +27,11 @@ type InputProps struct {
 
 func (i *InputProps) assign(_v *_InputProps) {
 
-	if i.AriaSet != nil {
-		for dk, dv := range i.AriaSet {
-			_v.o.Set("aria-"+dk, dv)
-		}
-	}
+	_v.AriaExpanded = i.AriaExpanded
+
+	_v.AriaHasPopup = i.AriaHasPopup
+
+	_v.AriaLabelledBy = i.AriaLabelledBy
 
 	_v.ClassName = i.ClassName
 

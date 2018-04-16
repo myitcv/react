@@ -4,7 +4,9 @@ package react
 
 // H1Props defines the properties for the <h1> element
 type H1Props struct {
-	AriaSet
+	AriaExpanded            bool
+	AriaHasPopup            bool
+	AriaLabelledBy          string
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -21,11 +23,11 @@ type H1Props struct {
 
 func (h *H1Props) assign(_v *_H1Props) {
 
-	if h.AriaSet != nil {
-		for dk, dv := range h.AriaSet {
-			_v.o.Set("aria-"+dk, dv)
-		}
-	}
+	_v.AriaExpanded = h.AriaExpanded
+
+	_v.AriaHasPopup = h.AriaHasPopup
+
+	_v.AriaLabelledBy = h.AriaLabelledBy
 
 	_v.ClassName = h.ClassName
 

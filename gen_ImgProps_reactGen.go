@@ -4,8 +4,10 @@ package react
 
 // ImgProps are the props for a <Img> component
 type ImgProps struct {
-	Alt string
-	AriaSet
+	Alt                     string
+	AriaExpanded            bool
+	AriaHasPopup            bool
+	AriaLabelledBy          string
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -25,11 +27,11 @@ func (i *ImgProps) assign(_v *_ImgProps) {
 
 	_v.Alt = i.Alt
 
-	if i.AriaSet != nil {
-		for dk, dv := range i.AriaSet {
-			_v.o.Set("aria-"+dk, dv)
-		}
-	}
+	_v.AriaExpanded = i.AriaExpanded
+
+	_v.AriaHasPopup = i.AriaHasPopup
+
+	_v.AriaLabelledBy = i.AriaLabelledBy
 
 	_v.ClassName = i.ClassName
 

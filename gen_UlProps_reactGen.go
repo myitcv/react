@@ -4,7 +4,9 @@ package react
 
 // UlProps defines the properties for the <ul> element
 type UlProps struct {
-	AriaSet
+	AriaExpanded            bool
+	AriaHasPopup            bool
+	AriaLabelledBy          string
 	ClassName               string
 	DangerouslySetInnerHTML *DangerousInnerHTML
 	DataSet
@@ -21,11 +23,11 @@ type UlProps struct {
 
 func (u *UlProps) assign(_v *_UlProps) {
 
-	if u.AriaSet != nil {
-		for dk, dv := range u.AriaSet {
-			_v.o.Set("aria-"+dk, dv)
-		}
-	}
+	_v.AriaExpanded = u.AriaExpanded
+
+	_v.AriaHasPopup = u.AriaHasPopup
+
+	_v.AriaLabelledBy = u.AriaLabelledBy
 
 	_v.ClassName = u.ClassName
 

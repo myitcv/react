@@ -28,13 +28,16 @@ type DataSet map[string]string
 type BasicHTMLElement struct {
 	*BasicElement
 
+	AriaHasPopup   bool   `js:"aria-haspopup"`
+	AriaExpanded   bool   `js:"aria-expanded"`
+	AriaLabelledBy string `js:"aria-labelledby"`
+
 	ID        string `js:"id" react:"omitempty"`
 	Key       string `js:"key" react:"omitempty"`
 	ClassName string `js:"className"`
 	Role      string `js:"role"`
 	Style     *CSS   `js:"style"`
 
-	AriaSet
 	DataSet
 
 	OnChange `js:"onChange"`
