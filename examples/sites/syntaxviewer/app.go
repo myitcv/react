@@ -152,7 +152,11 @@ func (a AppDef) handleEvent() {
 			st.Ast = err.Error()
 			return
 		}
-		fprint(b, f, nil)
+
+		if err := syntax.DebugPrint(b, f); err != nil {
+			st.Ast = err.Error()
+			return
+		}
 	}
 
 	st.Ast = b.String()

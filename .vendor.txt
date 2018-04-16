@@ -24,4 +24,4 @@
     ./_vendor/src/honnef.co/go/js/xhr                        00e3346113aed89b501ead4e863c7c3d04fa0c5b  git@github.com:dominikh/go-js-xhr
     ./_vendor/src/honnef.co/go/js/util                       96b8dd9d16214b6cd9d8c8e84b3a375da4688108  git@github.com:dominikh/go-js-util
     ./_vendor/src/honnef.co/go/js/dom                        0a64a2db1425c1881d4ec762370250c65f44b85b  git@github.com:dominikh/go-js-dom
-    ./_vendor/src/mvdan.cc/sh                                0e64bc087f8341d164c07a5edba1e37417bd2df4  git@github.com:mvdan/sh
+    ./_vendor/src/mvdan.cc/sh                                43f0b783abe67b568ff4fe4d0b84c44d73eac979  git@github.com:mvdan/sh
