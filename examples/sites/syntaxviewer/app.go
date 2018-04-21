@@ -132,7 +132,7 @@ func (a AppDef) handleEvent() {
 	switch st {
 	case a.State().Go:
 		fset := token.NewFileSet()
-		f, err := parser.ParseFile(fset, "", st.Code, 0)
+		f, err := parser.ParseFile(fset, "", st.Code, parser.ParseComments)
 		if err != nil {
 			st.Ast = err.Error()
 			return
