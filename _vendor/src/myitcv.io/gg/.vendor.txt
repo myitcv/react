@@ -1,0 +1,2 @@
+    ./_vendor/src/github.com/kisielk/gotool  0de1eaf82fa3f583ce21fde859f1e7e0c5e9b220  git@github.com:kisielk/gotool
+    ./_vendor/src/myitcv.io/gogenerate       bd69a94c96953d20e106734856b69d71c8fa122b  git@github.com:myitcv/gogenerate

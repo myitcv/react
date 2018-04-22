@@ -7,9 +7,6 @@
 // gc compiler.  This package supports go1.7 export data format and all
 // later versions.
 //
-// This package replaces the deprecated golang.org/x/tools/go/gcimporter15
-// package, which will be deleted in October 2017.
-//
 // Although it might seem convenient for this package to live alongside
 // go/types in the standard library, this would cause version skew
 // problems for developer tools that use it, since they must be able to
@@ -32,7 +29,7 @@ import (
 	"io"
 	"io/ioutil"
 
-	gcimporter "golang.org/x/tools/go/gcimporter15"
+	"golang.org/x/tools/go/internal/gcimporter"
 )
 
 // Find returns the name of an object (.o) or archive (.a) file
@@ -44,7 +41,7 @@ import (
 //
 // Find also returns the package's resolved (canonical) import path,
 // reflecting the effects of srcDir and vendoring on importPath.
-func Find(importPath string, srcDir string) (filename, path string) {
+func Find(importPath, srcDir string) (filename, path string) {
 	return gcimporter.FindPkg(importPath, srcDir)
 }
 

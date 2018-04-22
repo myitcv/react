@@ -118,7 +118,12 @@ function SocketTransport() {
 	var id = 0;
 	var outputs = {};
 	var started = {};
-	var websocket = new WebSocket('ws://' + window.location.host + '/socket');
+	var websocket;
+	if (window.location.protocol == "http:") {
+		websocket = new WebSocket('ws://' + window.location.host + '/socket');
+	} else if (window.location.protocol == "https:") {
+		websocket = new WebSocket('wss://' + window.location.host + '/socket');
+	}
 
 	websocket.onclose = function() {
 		console.log('websocket connection closed');
@@ -233,6 +238,7 @@ function PlaygroundOutput(el) {
   //  shareEl - share button element (optional)
   //  shareURLEl - share URL text input element (optional)
   //  shareRedirect - base URL to redirect to on share (optional)
+  //  vetEl - vet button element (optional)
   //  toysEl - toys select element (optional)
   //  enableHistory - enable using HTML5 history API (optional)
   //  transport - playground transport to use (default is HTTPTransport)
@@ -363,6 +369,11 @@ function PlaygroundOutput(el) {
       if (running) running.Kill();
       output.removeClass("error").text('Waiting for remote server...');
     }
+    function noError() {
+      lineClear();
+      if (running) running.Kill();
+      output.removeClass("error").text('No errors.');
+    }
     function run() {
       loading();
       running = transport.Run(body(), highlightOutput(PlaygroundOutput(output[0])));
@@ -389,6 +400,26 @@ function PlaygroundOutput(el) {
       });
     }
 
+    function vet() {
+      loading();
+      var data = {"body": body()};
+      $.ajax("/vet", {
+        data: data,
+        type: "POST",
+        dataType: "json",
+        success: function(data) {
+          if (data.Errors) {
+            setError(data.Errors);
+          } else {
+            noError();
+          }
+        },
+        error: function() {
+          setError('Error communicating with remote server.');
+        }
+      });
+    }
+
     var shareURL; // jQuery element to show the shared URL.
     var sharing = false; // true if there is a pending request.
     var shareCallbacks = [];
@@ -403,6 +434,7 @@ function PlaygroundOutput(el) {
         processData: false,
         data: sharingData,
         type: "POST",
+        contentType: "text/plain; charset=utf-8",
         complete: function(xhr) {
           sharing = false;
           if (xhr.status != 200) {
@@ -435,6 +467,7 @@ function PlaygroundOutput(el) {
 
     $(opts.runEl).click(run);
     $(opts.fmtEl).click(fmt);
+    $(opts.vetEl).click(vet);
 
     if (opts.shareEl !== null && (opts.shareURLEl !== null || opts.shareRedirect !== null)) {
       if (opts.shareURLEl) {
