@@ -4,6 +4,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"go/ast"
 	"go/parser"
 	"go/token"
@@ -19,17 +20,49 @@ type AppDef struct {
 	react.ComponentDef
 }
 
-type Lang struct {
-	Name  string
+//go:generate immutableGen
+
+type lang int
+
+const (
+	langGo    lang = iota // Go
+	langShell             // Shell
+)
+
+type _Imm_langState struct {
 	Code  string
 	Ast   string
 	Error bool
 }
 
 type AppState struct {
-	Go     *Lang
-	Shell  *Lang
-	Choice *Lang
+	Go     *langState
+	Shell  *langState
+	Choice lang
+}
+
+func (a AppState) currLangState() *langState {
+	switch a.Choice {
+	case langGo:
+		return a.Go
+	case langShell:
+		return a.Shell
+	default:
+		panic(fmt.Errorf("unable to handle language %v", a.Choice))
+	}
+}
+
+func (a AppState) setCurrLangState(ls *langState) AppState {
+	switch a.Choice {
+	case langGo:
+		a.Go = ls
+	case langShell:
+		a.Shell = ls
+	default:
+		panic(fmt.Errorf("unable to handle language %v", a.Choice))
+	}
+
+	return a
 }
 
 func App() *AppElem {
@@ -37,31 +70,30 @@ func App() *AppElem {
 }
 
 func (a AppDef) GetInitialState() AppState {
-	Go := &Lang{Name: "Go - go/ast"}
-	Shell := &Lang{Name: "Shell - mvdan.cc/sh/syntax"}
 	return AppState{
-		Go:     Go,
-		Shell:  Shell,
-		Choice: Go,
+		Go:     new(langState),
+		Shell:  new(langState),
+		Choice: langGo,
 	}
 }
 
 func (a AppDef) Render() react.Element {
-	s := a.State().Choice
+	s := a.State()
+	curr := s.currLangState()
 
 	outputClass := "ast"
-	if s.Error {
+	if curr.Error() {
 		outputClass += " asterror"
 	}
 
-	buildLi := func(l *Lang) *react.LiElem {
+	buildLi := func(l lang) *react.LiElem {
 		return react.Li(nil,
 			react.A(
 				&react.AProps{
 					Href:    "#",
 					OnClick: languageChange(a, l),
 				},
-				react.S(l.Name),
+				react.S(l.String()),
 			),
 		)
 	}
@@ -82,7 +114,7 @@ func (a AppDef) Render() react.Element {
 						AriaHasPopup: true,
 						AriaExpanded: true,
 					},
-					react.S(s.Name+" "),
+					react.Sprintf("%v ", s.Choice),
 					react.Span(&react.SpanProps{ClassName: "caret"}),
 				),
 				react.Ul(
@@ -90,8 +122,8 @@ func (a AppDef) Render() react.Element {
 						ClassName:      "dropdown-menu dropdown-menu-right",
 						AriaLabelledBy: "dropdownMenu1",
 					},
-					buildLi(a.State().Go),
-					buildLi(a.State().Shell),
+					buildLi(langGo),
+					buildLi(langShell),
 				),
 			),
 		),
@@ -101,7 +133,7 @@ func (a AppDef) Render() react.Element {
 				&react.TextAreaProps{
 					ClassName:   "codeinput",
 					Placeholder: "Your code here...",
-					Value:       s.Code,
+					Value:       curr.Code(),
 					OnChange:    inputChange(a),
 				},
 			),
@@ -110,62 +142,68 @@ func (a AppDef) Render() react.Element {
 			&react.DivProps{ClassName: "right"},
 			react.Pre(
 				&react.PreProps{ClassName: outputClass},
-				react.S(s.Ast),
+				react.S(curr.Ast()),
 			),
 		),
 	)
 }
 
 func (a AppDef) handleEvent() {
-	defer a.ForceUpdate()
+	st := a.State().currLangState().AsMutable()
+	defer func() {
+		st.AsImmutable(nil)
+		a.SetState(a.State().setCurrLangState(st))
+	}()
 
-	st := a.State().Choice
-	st.Error = true
-	st.Ast = ""
+	st.SetError(true)
+	st.SetAst("")
 
-	if st.Code == "" {
+	if st.Code() == "" {
 		return
 	}
 
 	b := new(bytes.Buffer)
 
-	switch st {
-	case a.State().Go:
+	switch a.State().Choice {
+	case langGo:
 		fset := token.NewFileSet()
-		f, err := parser.ParseFile(fset, "", st.Code, parser.ParseComments)
+		f, err := parser.ParseFile(fset, "", st.Code(), parser.ParseComments)
 		if err != nil {
-			st.Ast = err.Error()
+			st.SetAst(err.Error())
 			return
 		}
 
 		if err := ast.Fprint(b, fset, f, nil); err != nil {
-			st.Ast = err.Error()
+			st.SetAst(err.Error())
 			return
 		}
 
-	case a.State().Shell:
-		in := strings.NewReader(st.Code)
+	case langShell:
+		in := strings.NewReader(st.Code())
 		f, err := syntax.NewParser().Parse(in, "stdin")
 		if err != nil {
-			st.Ast = err.Error()
+			st.SetAst(err.Error())
 			return
 		}
 
 		if err := syntax.DebugPrint(b, f); err != nil {
-			st.Ast = err.Error()
+			st.SetAst(err.Error())
 			return
 		}
+
+	default:
+		panic(fmt.Errorf("don't know how to handleEvent for %v", a.State().Choice))
 	}
 
-	st.Ast = b.String()
-	st.Error = false
+	st.SetAst(b.String())
+	st.SetError(false)
 }
 
 type changeEvent struct {
 	a AppDef
 }
 
-func languageChange(a AppDef, l *Lang) languageChangeEvent {
+func languageChange(a AppDef, l lang) languageChangeEvent {
 	return languageChangeEvent{
 		changeEvent: changeEvent{
 			a: a,
@@ -176,13 +214,16 @@ func languageChange(a AppDef, l *Lang) languageChangeEvent {
 
 type languageChangeEvent struct {
 	changeEvent
-	l *Lang
+	l lang
 }
 
 func (l languageChangeEvent) OnClick(se *react.SyntheticMouseEvent) {
+	se.PreventDefault()
+
 	st := l.a.State()
 	st.Choice = l.l
 	l.a.SetState(st)
+
 	l.a.handleEvent()
 }
 
@@ -198,7 +239,10 @@ type inputChangeEvent struct {
 
 func (i inputChangeEvent) OnChange(se *react.SyntheticEvent) {
 	target := se.Target().(*dom.HTMLTextAreaElement)
+
 	st := i.a.State()
-	st.Choice.Code = target.Value
+	st = st.setCurrLangState(st.currLangState().SetCode(target.Value))
+	i.a.SetState(st)
+
 	i.a.handleEvent()
 }

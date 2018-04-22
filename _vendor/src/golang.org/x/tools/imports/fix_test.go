@@ -802,6 +802,93 @@ import (
 var _ = fmt.Sprintf
 `,
 	},
+
+	{
+		name: "issue #19190 1",
+		in: `package main
+
+import (
+	"time"
+)
+
+func main() {
+	_ = snappy.Encode
+	_ = p.P
+	_ = time.Parse
+}
+`,
+		out: `package main
+
+import (
+	"time"
+
+	"code.google.com/p/snappy-go/snappy"
+	"rsc.io/p"
+)
+
+func main() {
+	_ = snappy.Encode
+	_ = p.P
+	_ = time.Parse
+}
+`,
+	},
+
+	{
+		name: "issue #19190 2",
+		in: `package main
+
+import (
+	"time"
+
+	"code.google.com/p/snappy-go/snappy"
+)
+
+func main() {
+	_ = snappy.Encode
+	_ = p.P
+	_ = time.Parse
+}
+`,
+		out: `package main
+
+import (
+	"time"
+
+	"code.google.com/p/snappy-go/snappy"
+	"rsc.io/p"
+)
+
+func main() {
+	_ = snappy.Encode
+	_ = p.P
+	_ = time.Parse
+}
+`,
+	},
+
+	{
+		name: "issue #12097",
+		in: `// a
+// b
+// c
+
+func main() {
+    _ = fmt.Println
+}`,
+		out: `package main
+
+import "fmt"
+
+// a
+// b
+// c
+
+func main() {
+	_ = fmt.Println
+}
+`,
+	},
 }
 
 func TestFixImports(t *testing.T) {
@@ -839,6 +926,72 @@ func TestFixImports(t *testing.T) {
 			continue
 		}
 		buf, err := Process(tt.name+".go", []byte(tt.in), options)
+		if err != nil {
+			t.Errorf("error on %q: %v", tt.name, err)
+			continue
+		}
+		if got := string(buf); got != tt.out {
+			t.Errorf("results diff on %q\nGOT:\n%s\nWANT:\n%s\n", tt.name, got, tt.out)
+		}
+	}
+}
+
+func TestProcess_nil_src(t *testing.T) {
+	dir, err := ioutil.TempDir("", "goimports-")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer os.RemoveAll(dir)
+	tests := []struct {
+		name    string
+		in, out string
+	}{
+		{
+			name: "nil-src",
+			in: `package foo
+func bar() {
+fmt.Println("hi")
+}
+`,
+			out: `package foo
+
+import "fmt"
+
+func bar() {
+	fmt.Println("hi")
+}
+`,
+		},
+		{
+			name: "missing package",
+			in: `
+func bar() {
+fmt.Println("hi")
+}
+`,
+			out: `
+import "fmt"
+
+func bar() {
+	fmt.Println("hi")
+}
+`,
+		},
+	}
+
+	options := &Options{
+		TabWidth:  8,
+		TabIndent: true,
+		Comments:  true,
+		Fragment:  true,
+	}
+
+	for _, tt := range tests {
+		filename := filepath.Join(dir, tt.name+".go")
+		if err := ioutil.WriteFile(filename, []byte(tt.in), 0666); err != nil {
+			t.Fatal(err)
+		}
+		buf, err := Process(filename, nil, options)
 		if err != nil {
 			t.Errorf("error on %q: %v", tt.name, err)
 			continue
@@ -1209,12 +1362,12 @@ func TestFindImportStdlib(t *testing.T) {
 		{"ioutil", []string{"Discard"}, "io/ioutil"},
 	}
 	for _, tt := range tests {
-		got, rename, ok := findImportStdlib(tt.pkg, strSet(tt.symbols))
+		got, ok := findImportStdlib(tt.pkg, strSet(tt.symbols))
 		if (got != "") != ok {
 			t.Error("findImportStdlib return value inconsistent")
 		}
-		if got != tt.want || rename {
-			t.Errorf("findImportStdlib(%q, %q) = %q, %t; want %q, false", tt.pkg, tt.symbols, got, rename, tt.want)
+		if got != tt.want {
+			t.Errorf("findImportStdlib(%q, %q) = %q, want %q", tt.pkg, tt.symbols, got, tt.want)
 		}
 	}
 }
@@ -1333,19 +1486,21 @@ const Y = bar.X
 // Tests that the LocalPrefix option causes imports
 // to be added into a later group (num=3).
 func TestLocalPrefix(t *testing.T) {
-	defer func(s string) { LocalPrefix = s }(LocalPrefix)
-	LocalPrefix = "foo/"
-
-	testConfig{
-		gopathFiles: map[string]string{
-			"foo/bar/bar.go": "package bar \n const X = 1",
-		},
-	}.test(t, func(t *goimportTest) {
-		buf, err := Process(t.gopath+"/src/test/t.go", []byte("package main \n const Y = bar.X \n const _ = runtime.GOOS"), &Options{})
-		if err != nil {
-			t.Fatal(err)
-		}
-		const want = `package main
+	tests := []struct {
+		config      testConfig
+		localPrefix string
+		src         string
+		want        string
+	}{
+		{
+			config: testConfig{
+				gopathFiles: map[string]string{
+					"foo/bar/bar.go": "package bar \n const X = 1",
+				},
+			},
+			localPrefix: "foo/",
+			src:         "package main \n const Y = bar.X \n const _ = runtime.GOOS",
+			want: `package main
 
 import (
 	"runtime"
@@ -1355,11 +1510,72 @@ import (
 
 const Y = bar.X
 const _ = runtime.GOOS
-`
-		if string(buf) != want {
-			t.Errorf("Got:\n%s\nWant:\n%s", buf, want)
-		}
-	})
+`,
+		},
+		{
+			config: testConfig{
+				gopathFiles: map[string]string{
+					"foo/foo.go":     "package foo \n const X = 1",
+					"foo/bar/bar.go": "package bar \n const X = 1",
+				},
+			},
+			localPrefix: "foo/",
+			src:         "package main \n const Y = bar.X \n const Z = foo.X \n const _ = runtime.GOOS",
+			want: `package main
+
+import (
+	"runtime"
+
+	"foo"
+	"foo/bar"
+)
+
+const Y = bar.X
+const Z = foo.X
+const _ = runtime.GOOS
+`,
+		},
+		{
+			config: testConfig{
+				gopathFiles: map[string]string{
+					"example.org/pkg/pkg.go":          "package pkg \n const A = 1",
+					"foo/bar/bar.go":                  "package bar \n const B = 1",
+					"code.org/r/p/expproj/expproj.go": "package expproj \n const C = 1",
+				},
+			},
+			localPrefix: "example.org/pkg,foo/,code.org",
+			src:         "package main \n const X = pkg.A \n const Y = bar.B \n const Z = expproj.C \n const _ = runtime.GOOS",
+			want: `package main
+
+import (
+	"runtime"
+
+	"code.org/r/p/expproj"
+	"example.org/pkg"
+	"foo/bar"
+)
+
+const X = pkg.A
+const Y = bar.B
+const Z = expproj.C
+const _ = runtime.GOOS
+`,
+		},
+	}
+
+	for _, tt := range tests {
+		tt.config.test(t, func(t *goimportTest) {
+			defer func(s string) { LocalPrefix = s }(LocalPrefix)
+			LocalPrefix = tt.localPrefix
+			buf, err := Process(t.gopath+"/src/test/t.go", []byte(tt.src), &Options{})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if string(buf) != tt.want {
+				t.Errorf("Got:\n%s\nWant:\n%s", buf, tt.want)
+			}
+		})
+	}
 }
 
 // Tests that running goimport on files in GOROOT (for people hacking
@@ -1532,6 +1748,66 @@ func TestGlobalImports(t *testing.T) {
 		}
 		if string(buf) != testGlobalImportsUsesGlobal {
 			t.Errorf("wrong output.\ngot:\n%q\nwant:\n%q\n", buf, testGlobalImportsUsesGlobal)
+		}
+	})
+}
+
+// Tests that sibling files - other files in the same package - can provide an
+// import that may not be the default one otherwise.
+func TestSiblingImports(t *testing.T) {
+
+	// provide is the sibling file that provides the desired import.
+	const provide = `package siblingimporttest
+
+import "local/log"
+import "my/bytes"
+
+func LogSomething() {
+	log.Print("Something")
+	bytes.SomeFunc()
+}
+`
+
+	// need is the file being tested that needs the import.
+	const need = `package siblingimporttest
+
+var _ = bytes.Buffer{}
+
+func LogSomethingElse() {
+	log.Print("Something else")
+}
+`
+
+	// want is the expected result file
+	const want = `package siblingimporttest
+
+import (
+	"bytes"
+	"local/log"
+)
+
+var _ = bytes.Buffer{}
+
+func LogSomethingElse() {
+	log.Print("Something else")
+}
+`
+
+	const pkg = "siblingimporttest"
+	const siblingFile = pkg + "/needs_import.go"
+	testConfig{
+		gopathFiles: map[string]string{
+			siblingFile:                 need,
+			pkg + "/provides_import.go": provide,
+		},
+	}.test(t, func(t *goimportTest) {
+		buf, err := Process(
+			t.gopath+"/src/"+siblingFile, []byte(need), nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if string(buf) != want {
+			t.Errorf("wrong output.\ngot:\n%q\nwant:\n%q\n", buf, want)
 		}
 	})
 }
@@ -1750,5 +2026,160 @@ func TestShouldTraverse(t *testing.T) {
 		if got != tt.want {
 			t.Errorf("%d. shouldTraverse(%q, %q) = %v; want %v", i, tt.dir, tt.file, got, tt.want)
 		}
+	}
+}
+
+// Issue 20941: this used to panic on Windows.
+func TestProcessStdin(t *testing.T) {
+	got, err := Process("<standard input>", []byte("package main\nfunc main() {\n\tfmt.Println(123)\n}\n"), nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(got), `"fmt"`) {
+		t.Errorf("expected fmt import; got: %s", got)
+	}
+}
+
+// Tests LocalPackagePromotion when there is a local package that matches, it
+// should be the closest match.
+// https://golang.org/issues/17557
+func TestLocalPackagePromotion(t *testing.T) {
+	testConfig{
+		gopathFiles: map[string]string{
+			"config.net/config/config.go":         "package config\n type SystemConfig struct {}", // Will match but should not be first choice
+			"mycompany.net/config/config.go":      "package config\n type SystemConfig struct {}", // Will match but should not be first choice
+			"mycompany.net/tool/config/config.go": "package config\n type SystemConfig struct {}", // Local package should be promoted over shorter package
+		},
+	}.test(t, func(t *goimportTest) {
+		const in = "package main\n var c = &config.SystemConfig{}"
+		const want = `package main
+
+import "mycompany.net/tool/config"
+
+var c = &config.SystemConfig{}
+`
+		got, err := Process(filepath.Join(t.gopath, "src", "mycompany.net/tool/main.go"), []byte(in), nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if string(got) != want {
+			t.Errorf("Process = %q; want %q", got, want)
+		}
+	})
+}
+
+// Tests FindImportInLocalGoFiles looks at the import lines for other Go files in the
+// local directory, since the user is likely to import the same packages in the current
+// Go file.  If an import is found that satisfies the need, it should be used over the
+// standard library.
+// https://golang.org/issues/17557
+func TestFindImportInLocalGoFiles(t *testing.T) {
+	testConfig{
+		gopathFiles: map[string]string{
+			"bytes.net/bytes/bytes.go":  "package bytes\n type Buffer struct {}",                               // Should be selected over standard library
+			"mycompany.net/tool/io.go":  "package main\n import \"bytes.net/bytes\"\n var _ = &bytes.Buffer{}", // Contains package import that will cause stdlib to be ignored
+			"mycompany.net/tool/err.go": "package main\n import \"bogus.net/bytes\"\n var _ = &bytes.Buffer{}", // Contains import which is not resolved, so it is ignored
+		},
+	}.test(t, func(t *goimportTest) {
+		const in = "package main\n var _ = &bytes.Buffer{}"
+		const want = `package main
+
+import "bytes.net/bytes"
+
+var _ = &bytes.Buffer{}
+`
+		got, err := Process(filepath.Join(t.gopath, "src", "mycompany.net/tool/main.go"), []byte(in), nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if string(got) != want {
+			t.Errorf("Process = got %q; want %q", got, want)
+		}
+	})
+}
+
+func TestImportNoGoFiles(t *testing.T) {
+	testConfig{
+		gopathFiles: map[string]string{},
+	}.test(t, func(t *goimportTest) {
+		const in = "package main\n var _ = &bytes.Buffer{}"
+		const want = `package main
+
+import "bytes"
+
+var _ = &bytes.Buffer{}
+`
+		got, err := Process(filepath.Join(t.gopath, "src", "mycompany.net/tool/main.go"), []byte(in), nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if string(got) != want {
+			t.Errorf("Process = got %q; want %q", got, want)
+		}
+	})
+}
+
+// A happy path test for Process
+func TestProcess(t *testing.T) {
+	in := `package testimports
+
+	var s = fmt.Sprintf("%s", "value")
+`
+	out, err := Process("foo", []byte(in), nil)
+
+	if err != nil {
+		t.Errorf("Process returned error.\n got:\n%v\nwant:\nnil", err)
+	}
+
+	want := `package testimports
+
+import "fmt"
+
+var s = fmt.Sprintf("%s", "value")
+`
+	if got := string(out); got != want {
+		t.Errorf("Process returned unexpected result.\ngot:\n%v\nwant:\n%v", got, want)
+	}
+}
+
+// Ensures a token as large as 500000 bytes can be handled
+// https://golang.org/issues/18201
+func TestProcessLargeToken(t *testing.T) {
+	largeString := strings.Repeat("x", 500000)
+
+	in := `package testimports
+
+import (
+	"fmt"
+	"mydomain.mystuff/mypkg"
+)
+
+const s = fmt.Sprintf("%s", "` + largeString + `")
+const x = mypkg.Sprintf("%s", "my package")
+
+// end
+`
+
+	out, err := Process("foo", []byte(in), nil)
+
+	if err != nil {
+		t.Errorf("Process returned error.\n got:\n%v\nwant:\nnil", err)
+	}
+
+	want := `package testimports
+
+import (
+	"fmt"
+
+	"mydomain.mystuff/mypkg"
+)
+
+const s = fmt.Sprintf("%s", "` + largeString + `")
+const x = mypkg.Sprintf("%s", "my package")
+
+// end
+`
+	if got := string(out); got != want {
+		t.Errorf("Process returned unexpected result.\ngot:\n%.100v\nwant:\n%.100v", got, want)
 	}
 }

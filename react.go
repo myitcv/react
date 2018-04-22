@@ -70,6 +70,10 @@ var compMap = make(map[reflect.Type]*js.Object)
 // S is the React representation of a string
 type S = core.S
 
+func Sprintf(format string, args ...interface{}) S {
+	return S(fmt.Sprintf(format, args...))
+}
+
 type elementHolder = core.ElementHolder
 
 type Element = core.Element

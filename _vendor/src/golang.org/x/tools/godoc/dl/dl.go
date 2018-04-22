@@ -32,13 +32,12 @@ import (
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/memcache"
-	"google.golang.org/appengine/user"
 )
 
 const (
-	gcsBaseURL    = "https://storage.googleapis.com/golang/"
-	cacheKey      = "download_list_3" // increment if listTemplateData changes
-	cacheDuration = time.Hour
+	downloadBaseURL = "https://dl.google.com/go/"
+	cacheKey        = "download_list_3" // increment if listTemplateData changes
+	cacheDuration   = time.Hour
 )
 
 func RegisterHandlers(mux *http.ServeMux) {
@@ -49,15 +48,15 @@ func RegisterHandlers(mux *http.ServeMux) {
 }
 
 type File struct {
-	Filename       string
-	OS             string
-	Arch           string
-	Version        string
-	Checksum       string `datastore:",noindex"` // SHA1; deprecated
-	ChecksumSHA256 string `datastore:",noindex"`
-	Size           int64  `datastore:",noindex"`
-	Kind           string // "archive", "installer", "source"
-	Uploaded       time.Time
+	Filename       string    `json:"filename"`
+	OS             string    `json:"os"`
+	Arch           string    `json:"arch"`
+	Version        string    `json:"-"`
+	Checksum       string    `json:"-" datastore:",noindex"` // SHA1; deprecated
+	ChecksumSHA256 string    `json:"sha256" datastore:",noindex"`
+	Size           int64     `json:"size" datastore:",noindex"`
+	Kind           string    `json:"kind"` // "archive", "installer", "source"
+	Uploaded       time.Time `json:"-"`
 }
 
 func (f File) ChecksumType() string {
@@ -134,15 +133,15 @@ func (f File) Highlight() bool {
 }
 
 func (f File) URL() string {
-	return gcsBaseURL + f.Filename
+	return downloadBaseURL + f.Filename
 }
 
 type Release struct {
-	Version        string
-	Stable         bool
-	Files          []File
-	Visible        bool // show files on page load
-	SplitPortTable bool // whether files should be split by primary/other ports.
+	Version        string `json:"version"`
+	Stable         bool   `json:"stable"`
+	Files          []File `json:"files"`
+	Visible        bool   `json:"-"` // show files on page load
+	SplitPortTable bool   `json:"-"` // whether files should be split by primary/other ports.
 }
 
 type Feature struct {
@@ -151,7 +150,7 @@ type Feature struct {
 	File
 	fileRE *regexp.Regexp
 
-	Platform     string // "Microsoft Windows", "Mac OS X", "Linux"
+	Platform     string // "Microsoft Windows", "Apple macOS", "Linux"
 	Requirements string // "Windows XP and above, 64-bit Intel Processor"
 }
 
@@ -160,12 +159,12 @@ type Feature struct {
 var featuredFiles = []Feature{
 	{
 		Platform:     "Microsoft Windows",
-		Requirements: "Windows XP or later, Intel 64-bit processor",
+		Requirements: "Windows XP SP3 or later, Intel 64-bit processor",
 		fileRE:       regexp.MustCompile(`\.windows-amd64\.msi$`),
 	},
 	{
-		Platform:     "Apple OS X",
-		Requirements: "OS X 10.8 or later, Intel 64-bit processor",
+		Platform:     "Apple macOS",
+		Requirements: "macOS 10.8 or later, Intel 64-bit processor",
 		fileRE:       regexp.MustCompile(`\.darwin-amd64(-osx10\.8)?\.pkg$`),
 	},
 	{
@@ -183,7 +182,6 @@ var featuredFiles = []Feature{
 type listTemplateData struct {
 	Featured                  []Feature
 	Stable, Unstable, Archive []Release
-	LoginURL                  string
 }
 
 var (
@@ -218,16 +216,22 @@ func listHandler(w http.ResponseWriter, r *http.Request) {
 			d.Featured = filesToFeatured(d.Stable[0].Files)
 		}
 
-		d.LoginURL, _ = user.LoginURL(c, "/dl")
-		if user.Current(c) != nil {
-			d.LoginURL, _ = user.LogoutURL(c, "/dl")
-		}
-
 		item := &memcache.Item{Key: cacheKey, Object: &d, Expiration: cacheDuration}
 		if err := memcache.Gob.Set(c, item); err != nil {
 			log.Errorf(c, "cache set error: %v", err)
 		}
 	}
+
+	if r.URL.Query().Get("mode") == "json" {
+		w.Header().Set("Content-Type", "application/json")
+		enc := json.NewEncoder(w)
+		enc.SetIndent("", " ")
+		if err := enc.Encode(d.Stable); err != nil {
+			log.Errorf(c, "failed rendering JSON for releases: %v", err)
+		}
+		return
+	}
+
 	if err := listTemplate.ExecuteTemplate(w, "root", d); err != nil {
 		log.Errorf(c, "error executing template: %v", err)
 	}
@@ -431,12 +435,12 @@ func getHandler(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	http.Redirect(w, r, gcsBaseURL+name, http.StatusFound)
+	http.Redirect(w, r, downloadBaseURL+name, http.StatusFound)
 }
 
 func validUser(user string) bool {
 	switch user {
-	case "adg", "bradfitz", "cbro":
+	case "adg", "bradfitz", "cbro", "andybons":
 		return true
 	}
 	return false
@@ -486,15 +490,15 @@ func pretty(s string) string {
 }
 
 var prettyStrings = map[string]string{
-	"darwin":  "OS X",
+	"darwin":  "macOS",
 	"freebsd": "FreeBSD",
 	"linux":   "Linux",
 	"windows": "Windows",
 
-	"386":   "32-bit",
-	"amd64": "64-bit",
-
+	"386":    "x86",
+	"amd64":  "x86-64",
 	"armv6l": "ARMv6",
+	"arm64":  "ARMv8",
 
 	"archive":   "Archive",
 	"installer": "Installer",

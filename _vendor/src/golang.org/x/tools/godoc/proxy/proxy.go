@@ -4,28 +4,25 @@
 
 // +build appengine
 
-// Package proxy proxies requests to the sandbox compiler service and the
-// playground share handler.
+// Package proxy proxies requests to the playground's compile and share handlers.
 // It is designed to run only on the instance of godoc that serves golang.org.
 package proxy
 
 import (
 	"bytes"
-	"crypto/sha1"
 	"encoding/json"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"strings"
 	"time"
 
 	"golang.org/x/net/context"
 
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
-	"google.golang.org/appengine/memcache"
 	"google.golang.org/appengine/urlfetch"
 )
 
@@ -44,13 +41,7 @@ type Event struct {
 	Delay   time.Duration // time to wait before printing Message
 }
 
-const (
-	// We need to use HTTP here for "reasons", but the traffic isn't
-	// sensitive and it only travels across Google's internal network
-	// so we should be OK.
-	sandboxURL    = "http://sandbox.golang.org/compile"
-	playgroundURL = "https://play.golang.org"
-)
+const playgroundURL = "https://play.golang.org"
 
 const expires = 7 * 24 * time.Hour // 1 week
 var cacheControlHeader = fmt.Sprintf("public, max-age=%d", int(expires.Seconds()))
@@ -66,27 +57,15 @@ func compile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	c := appengine.NewContext(r)
+	ctx := appengine.NewContext(r)
 
 	body := r.FormValue("body")
 	res := &Response{}
-	key := cacheKey(body)
-	if _, err := memcache.Gob.Get(c, key, res); err != nil {
-		if err != memcache.ErrCacheMiss {
-			log.Errorf(c, "getting response cache: %v", err)
-		}
-
-		req := &Request{Body: body}
-		if err := makeSandboxRequest(c, req, res); err != nil {
-			log.Errorf(c, "compile error: %v", err)
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-			return
-		}
-
-		item := &memcache.Item{Key: key, Object: res}
-		if err := memcache.Gob.Set(c, item); err != nil {
-			log.Errorf(c, "setting response cache: %v", err)
-		}
+	req := &Request{Body: body}
+	if err := makeCompileRequest(ctx, req, res); err != nil {
+		log.Errorf(ctx, "compile error: %v", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
 	}
 
 	expiresTime := time.Now().Add(expires).UTC()
@@ -104,18 +83,18 @@ func compile(w http.ResponseWriter, r *http.Request) {
 		}{res.Errors, flatten(res.Events)}
 	}
 	if err := json.NewEncoder(w).Encode(out); err != nil {
-		log.Errorf(c, "encoding response: %v", err)
+		log.Errorf(ctx, "encoding response: %v", err)
 	}
 }
 
-// makeSandboxRequest sends the given Request to the sandbox
-// and stores the response in the given Response.
-func makeSandboxRequest(c context.Context, req *Request, res *Response) error {
+// makePlaygroundRequest sends the given Request to the playground compile
+// endpoint and stores the response in the given Response.
+func makeCompileRequest(ctx context.Context, req *Request, res *Response) error {
 	reqJ, err := json.Marshal(req)
 	if err != nil {
 		return fmt.Errorf("marshalling request: %v", err)
 	}
-	r, err := urlfetch.Client(c).Post(sandboxURL, "application/json", bytes.NewReader(reqJ))
+	r, err := urlfetch.Client(ctx).Post(playgroundURL+"/compile", "application/json", bytes.NewReader(reqJ))
 	if err != nil {
 		return fmt.Errorf("making request: %v", err)
 	}
@@ -140,15 +119,9 @@ func flatten(seq []Event) string {
 	return buf.String()
 }
 
-func cacheKey(body string) string {
-	h := sha1.New()
-	io.WriteString(h, body)
-	return fmt.Sprintf("prog-%x", h.Sum(nil))
-}
-
 func share(w http.ResponseWriter, r *http.Request) {
-	if !allowShare(r) {
-		http.Error(w, "Forbidden", http.StatusForbidden)
+	if googleCN(r) {
+		http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
 		return
 	}
 	target, _ := url.Parse(playgroundURL)
@@ -157,13 +130,19 @@ func share(w http.ResponseWriter, r *http.Request) {
 	p.ServeHTTP(w, r)
 }
 
-func allowShare(r *http.Request) bool {
+func googleCN(r *http.Request) bool {
+	if r.FormValue("googlecn") != "" {
+		return true
+	}
 	if appengine.IsDevAppServer() {
+		return false
+	}
+	if strings.HasSuffix(r.Host, ".cn") {
 		return true
 	}
 	switch r.Header.Get("X-AppEngine-Country") {
 	case "", "ZZ", "CN":
-		return false
+		return true
 	}
-	return true
+	return false
 }
