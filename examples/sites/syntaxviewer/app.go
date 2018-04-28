@@ -10,6 +10,7 @@ import (
 	"go/token"
 	"strings"
 
+	"github.com/gopherjs/gopherjs/js"
 	"mvdan.cc/sh/syntax"
 
 	"honnef.co/go/js/dom"
@@ -22,11 +23,11 @@ type AppDef struct {
 
 //go:generate immutableGen
 
-type lang int
+type lang string
 
 const (
-	langGo    lang = iota // Go
-	langShell             // Shell
+	langGo    lang = "Go"
+	langShell lang = "Shell"
 )
 
 type _Imm_langState struct {
@@ -39,6 +40,45 @@ type AppState struct {
 	Go     *langState
 	Shell  *langState
 	Choice lang
+
+	listener *hashListener
+}
+
+type hashListener struct {
+	o *js.Object
+
+	a           AppDef
+	handleEvent func() `js:"handleEvent"`
+}
+
+func newHashListenener(a AppDef) *hashListener {
+	res := &hashListener{o: js.Global.Get("Object").New()}
+	res.a = a
+	res.handleEvent = res.handleEventImpl
+	return res
+}
+
+func (h *hashListener) handleEventImpl() {
+	hash := lang(strings.TrimPrefix(js.Global.Get("location").Get("hash").String(), "#"))
+
+	switch hash {
+	case langGo, langShell:
+	default:
+		hash = langGo
+	}
+
+	st := h.a.State()
+	st.Choice = hash
+	h.a.SetState(st)
+}
+
+func (h *hashListener) attach() {
+	h.handleEventImpl()
+	js.Global.Get("window").Call("addEventListener", "hashchange", h)
+}
+
+func (h *hashListener) detach() {
+	js.Global.Get("window").Call("removeEventListener", "hashchange", h)
 }
 
 func (a AppState) currLangState() *langState {
@@ -74,7 +114,17 @@ func (a AppDef) GetInitialState() AppState {
 		Go:     new(langState),
 		Shell:  new(langState),
 		Choice: langGo,
+
+		listener: newHashListenener(a),
 	}
+}
+
+func (a AppDef) ComponentDidMount() {
+	a.State().listener.attach()
+}
+
+func (a AppDef) ComponentDidUmount() {
+	a.State().listener.detach()
 }
 
 func (a AppDef) Render() react.Element {
@@ -90,10 +140,9 @@ func (a AppDef) Render() react.Element {
 		return react.Li(nil,
 			react.A(
 				&react.AProps{
-					Href:    "#",
-					OnClick: languageChange(a, l),
+					Href: fmt.Sprintf("#%v", l),
 				},
-				react.S(l.String()),
+				react.S(l),
 			),
 		)
 	}
@@ -132,7 +181,7 @@ func (a AppDef) Render() react.Element {
 			react.TextArea(
 				&react.TextAreaProps{
 					ClassName:   "codeinput",
-					Placeholder: "Your code here...",
+					Placeholder: fmt.Sprintf("Your %v code here...", s.Choice),
 					Value:       curr.Code(),
 					OnChange:    inputChange(a),
 				},
