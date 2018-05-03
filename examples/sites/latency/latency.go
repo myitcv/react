@@ -74,17 +74,17 @@ func (l LatencyDef) Render() react.Element {
 	return react.Div(&react.DivProps{ClassName: "App"},
 		react.Div(&react.DivProps{ClassName: "Content center full column"},
 			jsx.HTMLElem(`
-			<div className="Title margin center">
-				<span className="text">Latency</span>
-				<span className="subtext">Global latency testing tool</span>
+			<div class="Title margin center">
+				<span class="text">Latency</span>
+				<span class="subtext">Global latency testing tool</span>
 			</div>
 			`),
 			c,
 			jsx.HTMLElem(`
-			<div className="Title margin center">
+			<div class="Title margin center">
 				<br/>
-				<span className="subtext" style="font-size:smaller; font-style: italic">(randomly generated results)</span>
-				<span className="subtext" style="font-size:smaller; font-style: italic">
+				<span class="subtext" style="font-size:smaller; font-style: italic">(randomly generated results)</span>
+				<span class="subtext" style="font-size:smaller; font-style: italic">
 					Real, original version <a href="https://latency.apex.sh/" target="_blank">https://latency.apex.sh/</a>
 				</span>
 			</div>
