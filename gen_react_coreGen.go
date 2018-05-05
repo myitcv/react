@@ -11,7 +11,7 @@ type AElem struct {
 
 func (a *AElem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// AProps defines the properties for the <a> element
 type AProps struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -112,7 +112,7 @@ type BrElem struct {
 
 func (a *BrElem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// BrProps defines the properties for the <br> element
 type BrProps struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -202,7 +202,7 @@ type ButtonElem struct {
 
 func (a *ButtonElem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// ButtonProps defines the properties for the <button> element
 type ButtonProps struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -295,7 +295,7 @@ type CodeElem struct {
 
 func (a *CodeElem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// CodeProps defines the properties for the <code> element
 type CodeProps struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -385,7 +385,7 @@ type DivElem struct {
 
 func (a *DivElem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// DivProps defines the properties for the <div> element
 type DivProps struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -475,7 +475,7 @@ type FooterElem struct {
 
 func (a *FooterElem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// FooterProps defines the properties for the <footer> element
 type FooterProps struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -565,7 +565,7 @@ type FormElem struct {
 
 func (a *FormElem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// FormProps defines the properties for the <form> element
 type FormProps struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -655,7 +655,7 @@ type H1Elem struct {
 
 func (a *H1Elem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// H1Props defines the properties for the <h1> element
 type H1Props struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -745,7 +745,7 @@ type H2Elem struct {
 
 func (a *H2Elem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// H2Props defines the properties for the <h2> element
 type H2Props struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -835,7 +835,7 @@ type H3Elem struct {
 
 func (a *H3Elem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// H3Props defines the properties for the <h3> element
 type H3Props struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -925,7 +925,7 @@ type H4Elem struct {
 
 func (a *H4Elem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// H4Props defines the properties for the <h4> element
 type H4Props struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -1015,7 +1015,7 @@ type H5Elem struct {
 
 func (a *H5Elem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// H5Props defines the properties for the <h5> element
 type H5Props struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -1105,7 +1105,7 @@ type HrElem struct {
 
 func (a *HrElem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// HrProps defines the properties for the <hr> element
 type HrProps struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -1195,7 +1195,7 @@ type IElem struct {
 
 func (a *IElem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// IProps defines the properties for the <i> element
 type IProps struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -1285,7 +1285,7 @@ type IFrameElem struct {
 
 func (a *IFrameElem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// IFrameProps defines the properties for the <iframe> element
 type IFrameProps struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -1379,7 +1379,7 @@ type ImgElem struct {
 
 func (a *ImgElem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// ImgProps defines the properties for the <img> element
 type ImgProps struct {
 	Alt                     string
 	AriaExpanded            bool
@@ -1477,7 +1477,7 @@ type InputElem struct {
 
 func (a *InputElem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// InputProps defines the properties for the <input> element
 type InputProps struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -1578,7 +1578,7 @@ type LabelElem struct {
 
 func (a *LabelElem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// LabelProps defines the properties for the <label> element
 type LabelProps struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -1674,7 +1674,7 @@ func (a *LiElem) coreReactElement() {}
 
 func (l *LiElem) RendersLi(*LiElem) {}
 
-// _AProps defines the properties for the <a> element
+// LiProps defines the properties for the <li> element
 type LiProps struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -1764,7 +1764,7 @@ type NavElem struct {
 
 func (a *NavElem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// NavProps defines the properties for the <nav> element
 type NavProps struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -1854,7 +1854,7 @@ type OptionElem struct {
 
 func (a *OptionElem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// OptionProps defines the properties for the <option> element
 type OptionProps struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -1947,7 +1947,7 @@ type PElem struct {
 
 func (a *PElem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// PProps defines the properties for the <p> element
 type PProps struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -2037,7 +2037,7 @@ type PreElem struct {
 
 func (a *PreElem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// PreProps defines the properties for the <pre> element
 type PreProps struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -2127,7 +2127,7 @@ type SelectElem struct {
 
 func (a *SelectElem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// SelectProps defines the properties for the <select> element
 type SelectProps struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -2225,7 +2225,7 @@ type SpanElem struct {
 
 func (a *SpanElem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// SpanProps defines the properties for the <span> element
 type SpanProps struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -2315,7 +2315,7 @@ type StrikeElem struct {
 
 func (a *StrikeElem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// StrikeProps defines the properties for the <strike> element
 type StrikeProps struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -2405,7 +2405,7 @@ type TableElem struct {
 
 func (a *TableElem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// TableProps defines the properties for the <table> element
 type TableProps struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -2495,7 +2495,7 @@ type TextAreaElem struct {
 
 func (a *TextAreaElem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// TextAreaProps defines the properties for the <textarea> element
 type TextAreaProps struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -2592,7 +2592,7 @@ type UlElem struct {
 
 func (a *UlElem) coreReactElement() {}
 
-// _AProps defines the properties for the <a> element
+// UlProps defines the properties for the <ul> element
 type UlProps struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool

@@ -182,7 +182,7 @@ func (a *{{.Name}}Elem) coreReactElement() {}
 func (l *{{$elem.Name}}Elem) {{.}} {}
 {{end}}
 
-// _AProps defines the properties for the <a> element
+// {{.Name}}Props defines the properties for the <{{.React}}> element
 type {{.Name}}Props struct {
 	{{- range .Attributes}}
 	{{.Name}} {{.Type -}}
