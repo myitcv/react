@@ -86,6 +86,11 @@ type divRef struct {
 }
 
 func (d *divRef) Ref(h *js.Object) {
+	if h == nil {
+		// unmounting
+		return
+	}
+
 	var div *dom.HTMLDivElement
 	if e := dom.WrapHTMLElement(h); e != nil {
 		div = e.(*dom.HTMLDivElement)

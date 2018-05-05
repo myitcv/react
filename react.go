@@ -11,7 +11,7 @@ For more information see https://github.com/myitcv/react/wiki
 */
 package react // import "myitcv.io/react"
 
-//go:generate reactGen
+//go:generate coreGen
 
 import (
 	"fmt"

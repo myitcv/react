@@ -11,6 +11,7 @@ import (
 var (
 	fLicenseFile = gogenerate.LicenseFileFlag()
 	fGoGenLog    = gogenerate.LogFlag()
+	fCore        = flag.Bool("core", false, "indicates we are generating for a core component (only do props expansion)")
 	fInit        initFlag
 )
 
@@ -46,13 +47,4 @@ func usage() {
 	l()
 
 	flag.PrintDefaults()
-
-	l()
-	l("The flag -init is very basic and only understands two value for now: minimal or ")
-	l("bootstrap. Both give you a minimal Gopher React application, the latter applies ")
-	l("a basic Bootstrap (http://getbootstrap.com/) template.")
-	l()
-	l("When -init is not specified, it is assumed that reactGen is being called indirectly")
-	l("via go generate. The options for -gglog and -licenseFile would therefore be set in")
-	l("via the //go:generate directives. See https://blog.golang.org/generate for more details.")
 }
