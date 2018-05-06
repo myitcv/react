@@ -8,51 +8,8 @@ import (
 	"honnef.co/go/js/dom"
 )
 
-type BasicNode struct {
-	o *js.Object
-}
-
-type BasicElement struct {
-	*BasicNode
-}
-
-func newBasicElement() *BasicElement {
-	return &BasicElement{
-		BasicNode: &BasicNode{object.New()},
-	}
-}
-
 type AriaSet map[string]string
 type DataSet map[string]string
-
-type BasicHTMLElement struct {
-	*BasicElement
-
-	AriaHasPopup   bool   `js:"aria-haspopup"`
-	AriaExpanded   bool   `js:"aria-expanded"`
-	AriaLabelledBy string `js:"aria-labelledby"`
-
-	ID        string `js:"id" react:"omitempty"`
-	Key       string `js:"key" react:"omitempty"`
-	ClassName string `js:"className"`
-	Role      string `js:"role"`
-	Style     *CSS   `js:"style"`
-
-	DataSet
-
-	OnChange `js:"onChange"`
-	OnClick  `js:"onClick"`
-
-	Ref `js:"ref"`
-
-	DangerouslySetInnerHTML *DangerousInnerHTML `js:"dangerouslySetInnerHTML"`
-}
-
-func newBasicHTMLElement() *BasicHTMLElement {
-	return &BasicHTMLElement{
-		BasicElement: newBasicElement(),
-	}
-}
 
 type SyntheticEvent struct {
 	o *js.Object
@@ -69,4 +26,27 @@ type SyntheticMouseEvent struct {
 	*SyntheticEvent
 
 	ClientX int `js:"clientX"`
+}
+
+type RendersLi interface {
+	Element
+	RendersLi(*LiElem)
+}
+
+type Event interface{}
+
+type Ref interface {
+	Ref(h *js.Object)
+}
+
+type OnChange interface {
+	Event
+
+	OnChange(e *SyntheticEvent)
+}
+
+type OnClick interface {
+	Event
+
+	OnClick(e *SyntheticMouseEvent)
 }

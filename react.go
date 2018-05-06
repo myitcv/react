@@ -11,6 +11,7 @@ For more information see https://github.com/myitcv/react/wiki
 */
 package react // import "myitcv.io/react"
 
+//go:generate cssGen
 //go:generate coreGen
 
 import (

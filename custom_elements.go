@@ -25,3 +25,18 @@ func NewDangerousInnerHTML(s string) *DangerousInnerHTML {
 }
 
 func (d *DangerousInnerHTML) reactElement() {}
+
+// FragmentElem is the special React Fragment element definition. Fragments let
+// you group a list of children without adding extra nodes to the DOM. See
+// https://reactjs.org/docs/fragments.html for more details.
+type FragmentElem struct {
+	Element
+}
+
+// Fragment creates a new instance of a <React.Fragment> element with the
+// provided children
+func Fragment(children ...Element) *FragmentElem {
+	return &FragmentElem{
+		Element: createElement(symbolFragment, nil, children...),
+	}
+}
