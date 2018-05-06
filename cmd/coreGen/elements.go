@@ -86,6 +86,28 @@ func (e *Elem) ChildArg() string {
 	return ""
 }
 
+func (e *Elem) ChildrenReactType() string {
+	if e.Children[0] == '*' {
+		return "*react." + e.Children[1:]
+	}
+
+	return "react." + e.Children
+}
+
+func (e *Elem) HTMLAttributes() map[string]*Attr {
+	res := make(map[string]*Attr)
+
+	for n, a := range e.Attributes {
+		if a.NoHTML || a.NoReact || a.IsEvent || a.Name == "Ref" {
+			continue
+		}
+
+		res[n] = a
+	}
+
+	return res
+}
+
 type Attr struct {
 	// The myitcv.io/react Name of the attribute - not set directly, taken from
 	// the key of the elements map.
@@ -95,6 +117,14 @@ type Attr struct {
 	// not equal to the lower-initial version of .Name
 	React string
 
+	// HTML is an override for the HTML attribute name if it is otherwise not equal
+	// to the lowercase version of .Name
+	HTML string
+
+	// HTMLConvert is a function that must be called on a JSX-parsed value before
+	// assignment. Default is nothing.
+	HTMLConvert string
+
 	// Type is an override for the type of the attribute. The zero value implies
 	// string
 	Type string
@@ -103,9 +133,13 @@ type Attr struct {
 	// element if the zero value of the attribute is set.
 	OmitEmpty bool
 
-	// NoJS indicates that this attribute should not attempt to be mapped directly
-	// to an underlying JS field.
-	NoJS bool
+	// NoReact indicates that this attribute should not attempt to be mapped directly
+	// to an underlying React attribute.
+	NoReact bool
+
+	// NoHTML indicates this attribute does not have an HTML equivalent, and hence
+	// should not appear during parsing.
+	NoHTML bool
 
 	// IsEvent indicates that the attribute is an event.
 	IsEvent bool
@@ -119,20 +153,28 @@ func (a *Attr) Tag() string {
 	return fmt.Sprintf("`js:\"%v\"%v`", a.React, omitEmpty)
 }
 
+func (a *Attr) HTMLConvertor(s string) string {
+	if a.HTMLConvert == "" {
+		return s
+	}
+
+	return fmt.Sprintf("%v(%v)", a.HTMLConvert, s)
+}
+
 // templates are the attribute templates to which elements can refer
 var templates = map[string]map[string]*Attr{
 	"html": {
-		"AriaHasPopup":            &Attr{React: "aria-haspopup", Type: "bool"},
-		"AriaExpanded":            &Attr{React: "aria-expanded", Type: "bool"},
-		"AriaLabelledBy":          &Attr{React: "aria-labelledby"},
-		"ClassName":               &Attr{},
-		"DangerouslySetInnerHTML": &Attr{Type: "*DangerousInnerHTML"},
-		"DataSet":                 &Attr{Type: "DataSet", NoJS: true},
+		"AriaHasPopup":            &Attr{React: "aria-haspopup", Type: "bool", HTML: "aria-haspopup"},
+		"AriaExpanded":            &Attr{React: "aria-expanded", Type: "bool", HTML: "aria-expanded"},
+		"AriaLabelledBy":          &Attr{React: "aria-labelledby", HTML: "aria-labelledby"},
+		"ClassName":               &Attr{HTML: "class"},
+		"DangerouslySetInnerHTML": &Attr{Type: "*DangerousInnerHTML", NoHTML: true},
+		"DataSet":                 &Attr{Type: "DataSet", NoReact: true},
 		"ID":                      &Attr{OmitEmpty: true, React: "id"},
 		"Key":                     &Attr{OmitEmpty: true},
 		"Ref":                     &Attr{Type: "Ref"},
 		"Role":                    &Attr{},
-		"Style":                   &Attr{Type: "*CSS"},
+		"Style":                   &Attr{Type: "*CSS", HTMLConvert: "parseCSS"},
 
 		// Events
 		"OnChange": &Attr{Type: "OnChange", IsEvent: true},

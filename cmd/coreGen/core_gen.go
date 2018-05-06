@@ -11,12 +11,14 @@ import (
 type coreGen struct {
 	buf  *bytes.Buffer
 	tbuf *bytes.Buffer
+	jbuf *bytes.Buffer
 }
 
 func newCoreGen() *coreGen {
 	return &coreGen{
 		buf:  bytes.NewBuffer(nil),
 		tbuf: bytes.NewBuffer(nil),
+		jbuf: bytes.NewBuffer(nil),
 	}
 }
 
@@ -28,6 +30,10 @@ func (c *coreGen) tpf(format string, vals ...interface{}) {
 	fmt.Fprintf(c.tbuf, format, vals...)
 }
 
+func (c *coreGen) jpf(format string, vals ...interface{}) {
+	fmt.Fprintf(c.jbuf, format, vals...)
+}
+
 func (c *coreGen) pln(vals ...interface{}) {
 	fmt.Fprintln(c.buf, vals...)
 }
@@ -36,12 +42,20 @@ func (c *coreGen) tpln(vals ...interface{}) {
 	fmt.Fprintln(c.tbuf, vals...)
 }
 
+func (c *coreGen) jpln(vals ...interface{}) {
+	fmt.Fprintln(c.jbuf, vals...)
+}
+
 func (c *coreGen) pt(tmpl string, val interface{}) {
 	tmplExec(c.buf, tmpl, val)
 }
 
 func (c *coreGen) tpt(tmpl string, val interface{}) {
 	tmplExec(c.tbuf, tmpl, val)
+}
+
+func (c *coreGen) jpt(tmpl string, val interface{}) {
+	tmplExec(c.jbuf, tmpl, val)
 }
 
 func tmplExec(w io.Writer, tmpl string, val interface{}) {
