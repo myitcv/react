@@ -109,6 +109,9 @@ func dogen(dir, pkgName, license string) {
 		if e.Dom == "" {
 			e.Dom = "HTML" + e.Name + "Element"
 		}
+		if e.HTML == "" {
+			e.HTML = strings.ToLower(e.Name)
+		}
 		for n, a := range e.Attributes {
 			a.Name = n
 			if a.React == "" {

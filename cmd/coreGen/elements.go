@@ -12,8 +12,12 @@ type Elem struct {
 	React string
 
 	// Dom is the name used by honnef.co/go/js/dom when referring to the underlying
-	// HTML element. Default is .Name
+	// HTML element. Default is HTML{{.Name}}Element
 	Dom string
+
+	// HTML is an override for the HTML 5 spec name of the element if it is otherwise
+	// not equal to the lowercase version of .Name
+	HTML string
 
 	// Attributes maps the name of an attribute to the definition of an
 	// attribute.
@@ -192,7 +196,41 @@ var elements = map[string]*Elem{
 			"Title":  &Attr{},
 		},
 	},
+	"Abbr": &Elem{
+		Dom: "BasicHTMLElement",
+	},
+	"Article": &Elem{
+		Dom: "BasicHTMLElement",
+	},
+	"Aside": &Elem{
+		Dom: "BasicHTMLElement",
+	},
+	"B": &Elem{
+		Dom: "BasicHTMLElement",
+	},
+	"Br": &Elem{
+		Dom: "HTMLBRElement",
+	},
+	"Button": &Elem{
+		Attributes: map[string]*Attr{
+			"Type": &Attr{},
+		},
+	},
+	"Caption": &Elem{
+		SkipTests: true,
+		Dom:       "BasicHTMLElement",
+	},
+	"Code": &Elem{
+		Dom: "BasicHTMLElement",
+	},
 	"Div": &Elem{},
+	"Em": &Elem{
+		Dom: "BasicHTMLElement",
+	},
+	"Footer": &Elem{
+		Dom: "BasicHTMLElement",
+	},
+	"Form": &Elem{},
 	"H1": &Elem{
 		Dom: "HTMLHeadingElement",
 	},
@@ -208,50 +246,22 @@ var elements = map[string]*Elem{
 	"H5": &Elem{
 		Dom: "HTMLHeadingElement",
 	},
-	"Br": &Elem{
-		Dom: "HTMLBRElement",
+	"H6": &Elem{
+		Dom: "HTMLHeadingElement",
 	},
-	"TextArea": &Elem{
-		Attributes: map[string]*Attr{
-			"Placeholder": &Attr{},
-			"Value":       &Attr{},
-		},
-	},
-	"Button": &Elem{
-		Attributes: map[string]*Attr{
-			"Type": &Attr{},
-		},
-	},
-	"Ul": &Elem{
-		Dom:      "HTMLUListElement",
-		Children: "RendersLi",
-	},
-	"Li": &Elem{
-		Dom:        "HTMLLIElement",
-		Implements: []string{"RendersLi(*LiElem)"},
-	},
-	"Span": &Elem{},
-	"Pre":  &Elem{},
-	"Nav": &Elem{
+	"Header": &Elem{
 		Dom: "BasicHTMLElement",
 	},
-	"Code": &Elem{
+	"Hr": &Elem{
+		Dom:          "HTMLHRElement",
+		EmptyElement: true,
+	},
+	"I": &Elem{
 		Dom: "BasicHTMLElement",
 	},
 	"IFrame": &Elem{
 		Attributes: map[string]*Attr{
 			"SrcDoc": &Attr{},
-		},
-	},
-	"Select": &Elem{
-		Attributes: map[string]*Attr{
-			"Value": &Attr{},
-		},
-		Children: "*OptionElem",
-	},
-	"Option": &Elem{
-		Attributes: map[string]*Attr{
-			"Value": &Attr{},
 		},
 	},
 	"Img": &Elem{
@@ -261,7 +271,13 @@ var elements = map[string]*Elem{
 			"Alt": &Attr{},
 		},
 	},
-	"Form": &Elem{},
+	"Input": &Elem{
+		Attributes: map[string]*Attr{
+			"Placeholder": &Attr{},
+			"Type":        &Attr{},
+			"Value":       &Attr{},
+		},
+	},
 	"Label": &Elem{
 		Attributes: map[string]*Attr{
 			"For": &Attr{
@@ -269,28 +285,69 @@ var elements = map[string]*Elem{
 			},
 		},
 	},
-	"Strike": &Elem{
+	"Li": &Elem{
+		Dom:        "HTMLLIElement",
+		Implements: []string{"RendersLi(*LiElem)"},
+	},
+	"Main": &Elem{
 		Dom: "BasicHTMLElement",
+	},
+	"Nav": &Elem{
+		Dom: "BasicHTMLElement",
+	},
+	"Option": &Elem{
+		Attributes: map[string]*Attr{
+			"Value": &Attr{},
+		},
 	},
 	"P": &Elem{
 		Dom: "HTMLParagraphElement",
 	},
-	"I": &Elem{
+	"Pre": &Elem{},
+	"Select": &Elem{
+		Attributes: map[string]*Attr{
+			"Value": &Attr{},
+		},
+		Children: "*OptionElem",
+	},
+	"Span": &Elem{},
+	"Strike": &Elem{
+		Dom:   "BasicHTMLElement",
+		React: "s",
+		HTML:  "s",
+	},
+	"Sup": &Elem{
 		Dom: "BasicHTMLElement",
 	},
 	"Table": &Elem{},
-	"Footer": &Elem{
-		Dom: "BasicHTMLElement",
+	"Tbody": &Elem{
+		SkipTests: true,
+		Dom:       "BasicHTMLElement",
 	},
-	"Hr": &Elem{
-		Dom:          "HTMLHRElement",
-		EmptyElement: true,
+	"Td": &Elem{
+		SkipTests: true,
+		Dom:       "BasicHTMLElement",
 	},
-	"Input": &Elem{
+	"TextArea": &Elem{
 		Attributes: map[string]*Attr{
 			"Placeholder": &Attr{},
-			"Type":        &Attr{},
 			"Value":       &Attr{},
 		},
+	},
+	"Th": &Elem{
+		SkipTests: true,
+		Dom:       "BasicHTMLElement",
+	},
+	"Thead": &Elem{
+		SkipTests: true,
+		Dom:       "BasicHTMLElement",
+	},
+	"Tr": &Elem{
+		SkipTests: true,
+		Dom:       "BasicHTMLElement",
+	},
+	"Ul": &Elem{
+		Dom:      "HTMLUListElement",
+		Children: "RendersLi",
 	},
 }

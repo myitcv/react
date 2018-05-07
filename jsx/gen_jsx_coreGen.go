@@ -26,17 +26,35 @@ func parse(n *html.Node) react.Element {
 	case "a":
 		return parseA(n)
 
+	case "abbr":
+		return parseAbbr(n)
+
+	case "article":
+		return parseArticle(n)
+
+	case "aside":
+		return parseAside(n)
+
+	case "b":
+		return parseB(n)
+
 	case "br":
 		return parseBr(n)
 
 	case "button":
 		return parseButton(n)
 
+	case "caption":
+		return parseCaption(n)
+
 	case "code":
 		return parseCode(n)
 
 	case "div":
 		return parseDiv(n)
+
+	case "em":
+		return parseEm(n)
 
 	case "footer":
 		return parseFooter(n)
@@ -59,6 +77,12 @@ func parse(n *html.Node) react.Element {
 	case "h5":
 		return parseH5(n)
 
+	case "h6":
+		return parseH6(n)
+
+	case "header":
+		return parseHeader(n)
+
 	case "hr":
 		return parseHr(n)
 
@@ -80,6 +104,9 @@ func parse(n *html.Node) react.Element {
 	case "li":
 		return parseLi(n)
 
+	case "main":
+		return parseMain(n)
+
 	case "nav":
 		return parseNav(n)
 
@@ -98,14 +125,32 @@ func parse(n *html.Node) react.Element {
 	case "span":
 		return parseSpan(n)
 
-	case "strike":
+	case "s":
 		return parseStrike(n)
+
+	case "sup":
+		return parseSup(n)
 
 	case "table":
 		return parseTable(n)
 
+	case "tbody":
+		return parseTbody(n)
+
+	case "td":
+		return parseTd(n)
+
 	case "textarea":
 		return parseTextArea(n)
+
+	case "th":
+		return parseTh(n)
+
+	case "thead":
+		return parseThead(n)
+
+	case "tr":
+		return parseTr(n)
 
 	case "ul":
 		return parseUl(n)
@@ -178,6 +223,234 @@ func parseA(n *html.Node) *react.AElem {
 	}
 
 	return react.A(vp, kids...)
+
+}
+func parseAbbr(n *html.Node) *react.AbbrElem {
+
+	var kids []react.Element
+
+	var vp *react.AbbrProps
+	var ds react.DataSet
+
+	if len(n.Attr) > 0 {
+		vp = new(react.AbbrProps)
+
+		for _, a := range n.Attr {
+			switch v := a.Key; {
+
+			case v == "aria-expanded":
+				vp.AriaExpanded = parseBool(a.Val)
+
+			case v == "aria-haspopup":
+				vp.AriaHasPopup = parseBool(a.Val)
+
+			case v == "aria-labelledby":
+				vp.AriaLabelledBy = a.Val
+
+			case v == "class":
+				vp.ClassName = a.Val
+
+			case v == "id":
+				vp.ID = a.Val
+
+			case v == "key":
+				vp.Key = a.Val
+
+			case v == "role":
+				vp.Role = a.Val
+
+			case v == "style":
+				vp.Style = parseCSS(a.Val)
+
+			case strings.HasPrefix(v, "data-"):
+				if ds == nil {
+					ds = make(react.DataSet)
+				}
+				ds[strings.TrimPrefix(v, "data-")] = a.Val
+			default:
+				panic(fmt.Errorf("don't know how to handle <abbr> attribute %q", a.Key))
+			}
+		}
+
+		vp.DataSet = ds
+	}
+
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		kids = append(kids, parse(c).(react.Element))
+	}
+
+	return react.Abbr(vp, kids...)
+
+}
+func parseArticle(n *html.Node) *react.ArticleElem {
+
+	var kids []react.Element
+
+	var vp *react.ArticleProps
+	var ds react.DataSet
+
+	if len(n.Attr) > 0 {
+		vp = new(react.ArticleProps)
+
+		for _, a := range n.Attr {
+			switch v := a.Key; {
+
+			case v == "aria-expanded":
+				vp.AriaExpanded = parseBool(a.Val)
+
+			case v == "aria-haspopup":
+				vp.AriaHasPopup = parseBool(a.Val)
+
+			case v == "aria-labelledby":
+				vp.AriaLabelledBy = a.Val
+
+			case v == "class":
+				vp.ClassName = a.Val
+
+			case v == "id":
+				vp.ID = a.Val
+
+			case v == "key":
+				vp.Key = a.Val
+
+			case v == "role":
+				vp.Role = a.Val
+
+			case v == "style":
+				vp.Style = parseCSS(a.Val)
+
+			case strings.HasPrefix(v, "data-"):
+				if ds == nil {
+					ds = make(react.DataSet)
+				}
+				ds[strings.TrimPrefix(v, "data-")] = a.Val
+			default:
+				panic(fmt.Errorf("don't know how to handle <article> attribute %q", a.Key))
+			}
+		}
+
+		vp.DataSet = ds
+	}
+
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		kids = append(kids, parse(c).(react.Element))
+	}
+
+	return react.Article(vp, kids...)
+
+}
+func parseAside(n *html.Node) *react.AsideElem {
+
+	var kids []react.Element
+
+	var vp *react.AsideProps
+	var ds react.DataSet
+
+	if len(n.Attr) > 0 {
+		vp = new(react.AsideProps)
+
+		for _, a := range n.Attr {
+			switch v := a.Key; {
+
+			case v == "aria-expanded":
+				vp.AriaExpanded = parseBool(a.Val)
+
+			case v == "aria-haspopup":
+				vp.AriaHasPopup = parseBool(a.Val)
+
+			case v == "aria-labelledby":
+				vp.AriaLabelledBy = a.Val
+
+			case v == "class":
+				vp.ClassName = a.Val
+
+			case v == "id":
+				vp.ID = a.Val
+
+			case v == "key":
+				vp.Key = a.Val
+
+			case v == "role":
+				vp.Role = a.Val
+
+			case v == "style":
+				vp.Style = parseCSS(a.Val)
+
+			case strings.HasPrefix(v, "data-"):
+				if ds == nil {
+					ds = make(react.DataSet)
+				}
+				ds[strings.TrimPrefix(v, "data-")] = a.Val
+			default:
+				panic(fmt.Errorf("don't know how to handle <aside> attribute %q", a.Key))
+			}
+		}
+
+		vp.DataSet = ds
+	}
+
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		kids = append(kids, parse(c).(react.Element))
+	}
+
+	return react.Aside(vp, kids...)
+
+}
+func parseB(n *html.Node) *react.BElem {
+
+	var kids []react.Element
+
+	var vp *react.BProps
+	var ds react.DataSet
+
+	if len(n.Attr) > 0 {
+		vp = new(react.BProps)
+
+		for _, a := range n.Attr {
+			switch v := a.Key; {
+
+			case v == "aria-expanded":
+				vp.AriaExpanded = parseBool(a.Val)
+
+			case v == "aria-haspopup":
+				vp.AriaHasPopup = parseBool(a.Val)
+
+			case v == "aria-labelledby":
+				vp.AriaLabelledBy = a.Val
+
+			case v == "class":
+				vp.ClassName = a.Val
+
+			case v == "id":
+				vp.ID = a.Val
+
+			case v == "key":
+				vp.Key = a.Val
+
+			case v == "role":
+				vp.Role = a.Val
+
+			case v == "style":
+				vp.Style = parseCSS(a.Val)
+
+			case strings.HasPrefix(v, "data-"):
+				if ds == nil {
+					ds = make(react.DataSet)
+				}
+				ds[strings.TrimPrefix(v, "data-")] = a.Val
+			default:
+				panic(fmt.Errorf("don't know how to handle <b> attribute %q", a.Key))
+			}
+		}
+
+		vp.DataSet = ds
+	}
+
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		kids = append(kids, parse(c).(react.Element))
+	}
+
+	return react.B(vp, kids...)
 
 }
 func parseBr(n *html.Node) *react.BrElem {
@@ -297,6 +570,63 @@ func parseButton(n *html.Node) *react.ButtonElem {
 	return react.Button(vp, kids...)
 
 }
+func parseCaption(n *html.Node) *react.CaptionElem {
+
+	var kids []react.Element
+
+	var vp *react.CaptionProps
+	var ds react.DataSet
+
+	if len(n.Attr) > 0 {
+		vp = new(react.CaptionProps)
+
+		for _, a := range n.Attr {
+			switch v := a.Key; {
+
+			case v == "aria-expanded":
+				vp.AriaExpanded = parseBool(a.Val)
+
+			case v == "aria-haspopup":
+				vp.AriaHasPopup = parseBool(a.Val)
+
+			case v == "aria-labelledby":
+				vp.AriaLabelledBy = a.Val
+
+			case v == "class":
+				vp.ClassName = a.Val
+
+			case v == "id":
+				vp.ID = a.Val
+
+			case v == "key":
+				vp.Key = a.Val
+
+			case v == "role":
+				vp.Role = a.Val
+
+			case v == "style":
+				vp.Style = parseCSS(a.Val)
+
+			case strings.HasPrefix(v, "data-"):
+				if ds == nil {
+					ds = make(react.DataSet)
+				}
+				ds[strings.TrimPrefix(v, "data-")] = a.Val
+			default:
+				panic(fmt.Errorf("don't know how to handle <caption> attribute %q", a.Key))
+			}
+		}
+
+		vp.DataSet = ds
+	}
+
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		kids = append(kids, parse(c).(react.Element))
+	}
+
+	return react.Caption(vp, kids...)
+
+}
 func parseCode(n *html.Node) *react.CodeElem {
 
 	var kids []react.Element
@@ -409,6 +739,63 @@ func parseDiv(n *html.Node) *react.DivElem {
 	}
 
 	return react.Div(vp, kids...)
+
+}
+func parseEm(n *html.Node) *react.EmElem {
+
+	var kids []react.Element
+
+	var vp *react.EmProps
+	var ds react.DataSet
+
+	if len(n.Attr) > 0 {
+		vp = new(react.EmProps)
+
+		for _, a := range n.Attr {
+			switch v := a.Key; {
+
+			case v == "aria-expanded":
+				vp.AriaExpanded = parseBool(a.Val)
+
+			case v == "aria-haspopup":
+				vp.AriaHasPopup = parseBool(a.Val)
+
+			case v == "aria-labelledby":
+				vp.AriaLabelledBy = a.Val
+
+			case v == "class":
+				vp.ClassName = a.Val
+
+			case v == "id":
+				vp.ID = a.Val
+
+			case v == "key":
+				vp.Key = a.Val
+
+			case v == "role":
+				vp.Role = a.Val
+
+			case v == "style":
+				vp.Style = parseCSS(a.Val)
+
+			case strings.HasPrefix(v, "data-"):
+				if ds == nil {
+					ds = make(react.DataSet)
+				}
+				ds[strings.TrimPrefix(v, "data-")] = a.Val
+			default:
+				panic(fmt.Errorf("don't know how to handle <em> attribute %q", a.Key))
+			}
+		}
+
+		vp.DataSet = ds
+	}
+
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		kids = append(kids, parse(c).(react.Element))
+	}
+
+	return react.Em(vp, kids...)
 
 }
 func parseFooter(n *html.Node) *react.FooterElem {
@@ -808,6 +1195,120 @@ func parseH5(n *html.Node) *react.H5Elem {
 	}
 
 	return react.H5(vp, kids...)
+
+}
+func parseH6(n *html.Node) *react.H6Elem {
+
+	var kids []react.Element
+
+	var vp *react.H6Props
+	var ds react.DataSet
+
+	if len(n.Attr) > 0 {
+		vp = new(react.H6Props)
+
+		for _, a := range n.Attr {
+			switch v := a.Key; {
+
+			case v == "aria-expanded":
+				vp.AriaExpanded = parseBool(a.Val)
+
+			case v == "aria-haspopup":
+				vp.AriaHasPopup = parseBool(a.Val)
+
+			case v == "aria-labelledby":
+				vp.AriaLabelledBy = a.Val
+
+			case v == "class":
+				vp.ClassName = a.Val
+
+			case v == "id":
+				vp.ID = a.Val
+
+			case v == "key":
+				vp.Key = a.Val
+
+			case v == "role":
+				vp.Role = a.Val
+
+			case v == "style":
+				vp.Style = parseCSS(a.Val)
+
+			case strings.HasPrefix(v, "data-"):
+				if ds == nil {
+					ds = make(react.DataSet)
+				}
+				ds[strings.TrimPrefix(v, "data-")] = a.Val
+			default:
+				panic(fmt.Errorf("don't know how to handle <h6> attribute %q", a.Key))
+			}
+		}
+
+		vp.DataSet = ds
+	}
+
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		kids = append(kids, parse(c).(react.Element))
+	}
+
+	return react.H6(vp, kids...)
+
+}
+func parseHeader(n *html.Node) *react.HeaderElem {
+
+	var kids []react.Element
+
+	var vp *react.HeaderProps
+	var ds react.DataSet
+
+	if len(n.Attr) > 0 {
+		vp = new(react.HeaderProps)
+
+		for _, a := range n.Attr {
+			switch v := a.Key; {
+
+			case v == "aria-expanded":
+				vp.AriaExpanded = parseBool(a.Val)
+
+			case v == "aria-haspopup":
+				vp.AriaHasPopup = parseBool(a.Val)
+
+			case v == "aria-labelledby":
+				vp.AriaLabelledBy = a.Val
+
+			case v == "class":
+				vp.ClassName = a.Val
+
+			case v == "id":
+				vp.ID = a.Val
+
+			case v == "key":
+				vp.Key = a.Val
+
+			case v == "role":
+				vp.Role = a.Val
+
+			case v == "style":
+				vp.Style = parseCSS(a.Val)
+
+			case strings.HasPrefix(v, "data-"):
+				if ds == nil {
+					ds = make(react.DataSet)
+				}
+				ds[strings.TrimPrefix(v, "data-")] = a.Val
+			default:
+				panic(fmt.Errorf("don't know how to handle <header> attribute %q", a.Key))
+			}
+		}
+
+		vp.DataSet = ds
+	}
+
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		kids = append(kids, parse(c).(react.Element))
+	}
+
+	return react.Header(vp, kids...)
 
 }
 func parseHr(n *html.Node) *react.HrElem {
@@ -1224,6 +1725,63 @@ func parseLi(n *html.Node) *react.LiElem {
 	return react.Li(vp, kids...)
 
 }
+func parseMain(n *html.Node) *react.MainElem {
+
+	var kids []react.Element
+
+	var vp *react.MainProps
+	var ds react.DataSet
+
+	if len(n.Attr) > 0 {
+		vp = new(react.MainProps)
+
+		for _, a := range n.Attr {
+			switch v := a.Key; {
+
+			case v == "aria-expanded":
+				vp.AriaExpanded = parseBool(a.Val)
+
+			case v == "aria-haspopup":
+				vp.AriaHasPopup = parseBool(a.Val)
+
+			case v == "aria-labelledby":
+				vp.AriaLabelledBy = a.Val
+
+			case v == "class":
+				vp.ClassName = a.Val
+
+			case v == "id":
+				vp.ID = a.Val
+
+			case v == "key":
+				vp.Key = a.Val
+
+			case v == "role":
+				vp.Role = a.Val
+
+			case v == "style":
+				vp.Style = parseCSS(a.Val)
+
+			case strings.HasPrefix(v, "data-"):
+				if ds == nil {
+					ds = make(react.DataSet)
+				}
+				ds[strings.TrimPrefix(v, "data-")] = a.Val
+			default:
+				panic(fmt.Errorf("don't know how to handle <main> attribute %q", a.Key))
+			}
+		}
+
+		vp.DataSet = ds
+	}
+
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		kids = append(kids, parse(c).(react.Element))
+	}
+
+	return react.Main(vp, kids...)
+
+}
 func parseNav(n *html.Node) *react.NavElem {
 
 	var kids []react.Element
@@ -1615,7 +2173,7 @@ func parseStrike(n *html.Node) *react.StrikeElem {
 				}
 				ds[strings.TrimPrefix(v, "data-")] = a.Val
 			default:
-				panic(fmt.Errorf("don't know how to handle <strike> attribute %q", a.Key))
+				panic(fmt.Errorf("don't know how to handle <s> attribute %q", a.Key))
 			}
 		}
 
@@ -1627,6 +2185,63 @@ func parseStrike(n *html.Node) *react.StrikeElem {
 	}
 
 	return react.Strike(vp, kids...)
+
+}
+func parseSup(n *html.Node) *react.SupElem {
+
+	var kids []react.Element
+
+	var vp *react.SupProps
+	var ds react.DataSet
+
+	if len(n.Attr) > 0 {
+		vp = new(react.SupProps)
+
+		for _, a := range n.Attr {
+			switch v := a.Key; {
+
+			case v == "aria-expanded":
+				vp.AriaExpanded = parseBool(a.Val)
+
+			case v == "aria-haspopup":
+				vp.AriaHasPopup = parseBool(a.Val)
+
+			case v == "aria-labelledby":
+				vp.AriaLabelledBy = a.Val
+
+			case v == "class":
+				vp.ClassName = a.Val
+
+			case v == "id":
+				vp.ID = a.Val
+
+			case v == "key":
+				vp.Key = a.Val
+
+			case v == "role":
+				vp.Role = a.Val
+
+			case v == "style":
+				vp.Style = parseCSS(a.Val)
+
+			case strings.HasPrefix(v, "data-"):
+				if ds == nil {
+					ds = make(react.DataSet)
+				}
+				ds[strings.TrimPrefix(v, "data-")] = a.Val
+			default:
+				panic(fmt.Errorf("don't know how to handle <sup> attribute %q", a.Key))
+			}
+		}
+
+		vp.DataSet = ds
+	}
+
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		kids = append(kids, parse(c).(react.Element))
+	}
+
+	return react.Sup(vp, kids...)
 
 }
 func parseTable(n *html.Node) *react.TableElem {
@@ -1684,6 +2299,120 @@ func parseTable(n *html.Node) *react.TableElem {
 	}
 
 	return react.Table(vp, kids...)
+
+}
+func parseTbody(n *html.Node) *react.TbodyElem {
+
+	var kids []react.Element
+
+	var vp *react.TbodyProps
+	var ds react.DataSet
+
+	if len(n.Attr) > 0 {
+		vp = new(react.TbodyProps)
+
+		for _, a := range n.Attr {
+			switch v := a.Key; {
+
+			case v == "aria-expanded":
+				vp.AriaExpanded = parseBool(a.Val)
+
+			case v == "aria-haspopup":
+				vp.AriaHasPopup = parseBool(a.Val)
+
+			case v == "aria-labelledby":
+				vp.AriaLabelledBy = a.Val
+
+			case v == "class":
+				vp.ClassName = a.Val
+
+			case v == "id":
+				vp.ID = a.Val
+
+			case v == "key":
+				vp.Key = a.Val
+
+			case v == "role":
+				vp.Role = a.Val
+
+			case v == "style":
+				vp.Style = parseCSS(a.Val)
+
+			case strings.HasPrefix(v, "data-"):
+				if ds == nil {
+					ds = make(react.DataSet)
+				}
+				ds[strings.TrimPrefix(v, "data-")] = a.Val
+			default:
+				panic(fmt.Errorf("don't know how to handle <tbody> attribute %q", a.Key))
+			}
+		}
+
+		vp.DataSet = ds
+	}
+
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		kids = append(kids, parse(c).(react.Element))
+	}
+
+	return react.Tbody(vp, kids...)
+
+}
+func parseTd(n *html.Node) *react.TdElem {
+
+	var kids []react.Element
+
+	var vp *react.TdProps
+	var ds react.DataSet
+
+	if len(n.Attr) > 0 {
+		vp = new(react.TdProps)
+
+		for _, a := range n.Attr {
+			switch v := a.Key; {
+
+			case v == "aria-expanded":
+				vp.AriaExpanded = parseBool(a.Val)
+
+			case v == "aria-haspopup":
+				vp.AriaHasPopup = parseBool(a.Val)
+
+			case v == "aria-labelledby":
+				vp.AriaLabelledBy = a.Val
+
+			case v == "class":
+				vp.ClassName = a.Val
+
+			case v == "id":
+				vp.ID = a.Val
+
+			case v == "key":
+				vp.Key = a.Val
+
+			case v == "role":
+				vp.Role = a.Val
+
+			case v == "style":
+				vp.Style = parseCSS(a.Val)
+
+			case strings.HasPrefix(v, "data-"):
+				if ds == nil {
+					ds = make(react.DataSet)
+				}
+				ds[strings.TrimPrefix(v, "data-")] = a.Val
+			default:
+				panic(fmt.Errorf("don't know how to handle <td> attribute %q", a.Key))
+			}
+		}
+
+		vp.DataSet = ds
+	}
+
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		kids = append(kids, parse(c).(react.Element))
+	}
+
+	return react.Td(vp, kids...)
 
 }
 func parseTextArea(n *html.Node) *react.TextAreaElem {
@@ -1747,6 +2476,177 @@ func parseTextArea(n *html.Node) *react.TextAreaElem {
 	}
 
 	return react.TextArea(vp, kids...)
+
+}
+func parseTh(n *html.Node) *react.ThElem {
+
+	var kids []react.Element
+
+	var vp *react.ThProps
+	var ds react.DataSet
+
+	if len(n.Attr) > 0 {
+		vp = new(react.ThProps)
+
+		for _, a := range n.Attr {
+			switch v := a.Key; {
+
+			case v == "aria-expanded":
+				vp.AriaExpanded = parseBool(a.Val)
+
+			case v == "aria-haspopup":
+				vp.AriaHasPopup = parseBool(a.Val)
+
+			case v == "aria-labelledby":
+				vp.AriaLabelledBy = a.Val
+
+			case v == "class":
+				vp.ClassName = a.Val
+
+			case v == "id":
+				vp.ID = a.Val
+
+			case v == "key":
+				vp.Key = a.Val
+
+			case v == "role":
+				vp.Role = a.Val
+
+			case v == "style":
+				vp.Style = parseCSS(a.Val)
+
+			case strings.HasPrefix(v, "data-"):
+				if ds == nil {
+					ds = make(react.DataSet)
+				}
+				ds[strings.TrimPrefix(v, "data-")] = a.Val
+			default:
+				panic(fmt.Errorf("don't know how to handle <th> attribute %q", a.Key))
+			}
+		}
+
+		vp.DataSet = ds
+	}
+
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		kids = append(kids, parse(c).(react.Element))
+	}
+
+	return react.Th(vp, kids...)
+
+}
+func parseThead(n *html.Node) *react.TheadElem {
+
+	var kids []react.Element
+
+	var vp *react.TheadProps
+	var ds react.DataSet
+
+	if len(n.Attr) > 0 {
+		vp = new(react.TheadProps)
+
+		for _, a := range n.Attr {
+			switch v := a.Key; {
+
+			case v == "aria-expanded":
+				vp.AriaExpanded = parseBool(a.Val)
+
+			case v == "aria-haspopup":
+				vp.AriaHasPopup = parseBool(a.Val)
+
+			case v == "aria-labelledby":
+				vp.AriaLabelledBy = a.Val
+
+			case v == "class":
+				vp.ClassName = a.Val
+
+			case v == "id":
+				vp.ID = a.Val
+
+			case v == "key":
+				vp.Key = a.Val
+
+			case v == "role":
+				vp.Role = a.Val
+
+			case v == "style":
+				vp.Style = parseCSS(a.Val)
+
+			case strings.HasPrefix(v, "data-"):
+				if ds == nil {
+					ds = make(react.DataSet)
+				}
+				ds[strings.TrimPrefix(v, "data-")] = a.Val
+			default:
+				panic(fmt.Errorf("don't know how to handle <thead> attribute %q", a.Key))
+			}
+		}
+
+		vp.DataSet = ds
+	}
+
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		kids = append(kids, parse(c).(react.Element))
+	}
+
+	return react.Thead(vp, kids...)
+
+}
+func parseTr(n *html.Node) *react.TrElem {
+
+	var kids []react.Element
+
+	var vp *react.TrProps
+	var ds react.DataSet
+
+	if len(n.Attr) > 0 {
+		vp = new(react.TrProps)
+
+		for _, a := range n.Attr {
+			switch v := a.Key; {
+
+			case v == "aria-expanded":
+				vp.AriaExpanded = parseBool(a.Val)
+
+			case v == "aria-haspopup":
+				vp.AriaHasPopup = parseBool(a.Val)
+
+			case v == "aria-labelledby":
+				vp.AriaLabelledBy = a.Val
+
+			case v == "class":
+				vp.ClassName = a.Val
+
+			case v == "id":
+				vp.ID = a.Val
+
+			case v == "key":
+				vp.Key = a.Val
+
+			case v == "role":
+				vp.Role = a.Val
+
+			case v == "style":
+				vp.Style = parseCSS(a.Val)
+
+			case strings.HasPrefix(v, "data-"):
+				if ds == nil {
+					ds = make(react.DataSet)
+				}
+				ds[strings.TrimPrefix(v, "data-")] = a.Val
+			default:
+				panic(fmt.Errorf("don't know how to handle <tr> attribute %q", a.Key))
+			}
+		}
+
+		vp.DataSet = ds
+	}
+
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		kids = append(kids, parse(c).(react.Element))
+	}
+
+	return react.Tr(vp, kids...)
 
 }
 func parseUl(n *html.Node) *react.UlElem {

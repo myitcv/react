@@ -105,6 +105,366 @@ func A(props *AProps, children ...Element) *AElem {
 	}
 }
 
+// AbbrElem is the React element definition corresponding to the HTML <abbr> element
+type AbbrElem struct {
+	Element
+}
+
+func (a *AbbrElem) coreReactElement() {}
+
+// AbbrProps defines the properties for the <abbr> element
+type AbbrProps struct {
+	AriaExpanded            bool
+	AriaHasPopup            bool
+	AriaLabelledBy          string
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	DataSet                 DataSet
+	ID                      string
+	Key                     string
+	OnChange                OnChange
+	OnClick                 OnClick
+	Ref                     Ref
+	Role                    string
+	Style                   *CSS
+}
+
+// Abbr creates a new instance of a <abbr> element with the provided props and
+// children
+func Abbr(props *AbbrProps, children ...Element) *AbbrElem {
+	type _AbbrProps struct {
+		o                       *js.Object
+		AriaExpanded            bool                `js:"aria-expanded"`
+		AriaHasPopup            bool                `js:"aria-haspopup"`
+		AriaLabelledBy          string              `js:"aria-labelledby"`
+		ClassName               string              `js:"className"`
+		DangerouslySetInnerHTML *DangerousInnerHTML `js:"dangerouslySetInnerHTML"`
+		ID                      string              `js:"id" react:"omitempty"`
+		Key                     string              `js:"key" react:"omitempty"`
+		OnChange                OnChange            `js:"onChange"`
+		OnClick                 OnClick             `js:"onClick"`
+		Ref                     Ref                 `js:"ref"`
+		Role                    string              `js:"role"`
+		Style                   *CSS                `js:"style"`
+	}
+
+	rprops := &_AbbrProps{
+		o: object.New(),
+	}
+
+	if props != nil {
+		rprops.AriaExpanded = props.AriaExpanded
+
+		rprops.AriaHasPopup = props.AriaHasPopup
+
+		rprops.AriaLabelledBy = props.AriaLabelledBy
+
+		rprops.ClassName = props.ClassName
+
+		rprops.DangerouslySetInnerHTML = props.DangerouslySetInnerHTML
+
+		if props.DataSet != nil {
+			for dk, dv := range props.DataSet {
+				rprops.o.Set("data-"+dk, dv)
+			}
+		}
+		if props.ID != "" {
+			rprops.ID = props.ID
+		}
+		if props.Key != "" {
+			rprops.Key = props.Key
+		}
+		if props.OnChange != nil {
+			rprops.o.Set("onChange", props.OnChange.OnChange)
+		}
+		if props.OnClick != nil {
+			rprops.o.Set("onClick", props.OnClick.OnClick)
+		}
+		if props.Ref != nil {
+			rprops.o.Set("ref", props.Ref.Ref)
+		}
+		rprops.Role = props.Role
+
+		// TODO: until we have a resolution on
+		// https://github.com/gopherjs/gopherjs/issues/236
+		rprops.Style = props.Style.hack()
+	}
+
+	return &AbbrElem{
+		Element: createElement("abbr", rprops, children...),
+	}
+}
+
+// ArticleElem is the React element definition corresponding to the HTML <article> element
+type ArticleElem struct {
+	Element
+}
+
+func (a *ArticleElem) coreReactElement() {}
+
+// ArticleProps defines the properties for the <article> element
+type ArticleProps struct {
+	AriaExpanded            bool
+	AriaHasPopup            bool
+	AriaLabelledBy          string
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	DataSet                 DataSet
+	ID                      string
+	Key                     string
+	OnChange                OnChange
+	OnClick                 OnClick
+	Ref                     Ref
+	Role                    string
+	Style                   *CSS
+}
+
+// Article creates a new instance of a <article> element with the provided props and
+// children
+func Article(props *ArticleProps, children ...Element) *ArticleElem {
+	type _ArticleProps struct {
+		o                       *js.Object
+		AriaExpanded            bool                `js:"aria-expanded"`
+		AriaHasPopup            bool                `js:"aria-haspopup"`
+		AriaLabelledBy          string              `js:"aria-labelledby"`
+		ClassName               string              `js:"className"`
+		DangerouslySetInnerHTML *DangerousInnerHTML `js:"dangerouslySetInnerHTML"`
+		ID                      string              `js:"id" react:"omitempty"`
+		Key                     string              `js:"key" react:"omitempty"`
+		OnChange                OnChange            `js:"onChange"`
+		OnClick                 OnClick             `js:"onClick"`
+		Ref                     Ref                 `js:"ref"`
+		Role                    string              `js:"role"`
+		Style                   *CSS                `js:"style"`
+	}
+
+	rprops := &_ArticleProps{
+		o: object.New(),
+	}
+
+	if props != nil {
+		rprops.AriaExpanded = props.AriaExpanded
+
+		rprops.AriaHasPopup = props.AriaHasPopup
+
+		rprops.AriaLabelledBy = props.AriaLabelledBy
+
+		rprops.ClassName = props.ClassName
+
+		rprops.DangerouslySetInnerHTML = props.DangerouslySetInnerHTML
+
+		if props.DataSet != nil {
+			for dk, dv := range props.DataSet {
+				rprops.o.Set("data-"+dk, dv)
+			}
+		}
+		if props.ID != "" {
+			rprops.ID = props.ID
+		}
+		if props.Key != "" {
+			rprops.Key = props.Key
+		}
+		if props.OnChange != nil {
+			rprops.o.Set("onChange", props.OnChange.OnChange)
+		}
+		if props.OnClick != nil {
+			rprops.o.Set("onClick", props.OnClick.OnClick)
+		}
+		if props.Ref != nil {
+			rprops.o.Set("ref", props.Ref.Ref)
+		}
+		rprops.Role = props.Role
+
+		// TODO: until we have a resolution on
+		// https://github.com/gopherjs/gopherjs/issues/236
+		rprops.Style = props.Style.hack()
+	}
+
+	return &ArticleElem{
+		Element: createElement("article", rprops, children...),
+	}
+}
+
+// AsideElem is the React element definition corresponding to the HTML <aside> element
+type AsideElem struct {
+	Element
+}
+
+func (a *AsideElem) coreReactElement() {}
+
+// AsideProps defines the properties for the <aside> element
+type AsideProps struct {
+	AriaExpanded            bool
+	AriaHasPopup            bool
+	AriaLabelledBy          string
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	DataSet                 DataSet
+	ID                      string
+	Key                     string
+	OnChange                OnChange
+	OnClick                 OnClick
+	Ref                     Ref
+	Role                    string
+	Style                   *CSS
+}
+
+// Aside creates a new instance of a <aside> element with the provided props and
+// children
+func Aside(props *AsideProps, children ...Element) *AsideElem {
+	type _AsideProps struct {
+		o                       *js.Object
+		AriaExpanded            bool                `js:"aria-expanded"`
+		AriaHasPopup            bool                `js:"aria-haspopup"`
+		AriaLabelledBy          string              `js:"aria-labelledby"`
+		ClassName               string              `js:"className"`
+		DangerouslySetInnerHTML *DangerousInnerHTML `js:"dangerouslySetInnerHTML"`
+		ID                      string              `js:"id" react:"omitempty"`
+		Key                     string              `js:"key" react:"omitempty"`
+		OnChange                OnChange            `js:"onChange"`
+		OnClick                 OnClick             `js:"onClick"`
+		Ref                     Ref                 `js:"ref"`
+		Role                    string              `js:"role"`
+		Style                   *CSS                `js:"style"`
+	}
+
+	rprops := &_AsideProps{
+		o: object.New(),
+	}
+
+	if props != nil {
+		rprops.AriaExpanded = props.AriaExpanded
+
+		rprops.AriaHasPopup = props.AriaHasPopup
+
+		rprops.AriaLabelledBy = props.AriaLabelledBy
+
+		rprops.ClassName = props.ClassName
+
+		rprops.DangerouslySetInnerHTML = props.DangerouslySetInnerHTML
+
+		if props.DataSet != nil {
+			for dk, dv := range props.DataSet {
+				rprops.o.Set("data-"+dk, dv)
+			}
+		}
+		if props.ID != "" {
+			rprops.ID = props.ID
+		}
+		if props.Key != "" {
+			rprops.Key = props.Key
+		}
+		if props.OnChange != nil {
+			rprops.o.Set("onChange", props.OnChange.OnChange)
+		}
+		if props.OnClick != nil {
+			rprops.o.Set("onClick", props.OnClick.OnClick)
+		}
+		if props.Ref != nil {
+			rprops.o.Set("ref", props.Ref.Ref)
+		}
+		rprops.Role = props.Role
+
+		// TODO: until we have a resolution on
+		// https://github.com/gopherjs/gopherjs/issues/236
+		rprops.Style = props.Style.hack()
+	}
+
+	return &AsideElem{
+		Element: createElement("aside", rprops, children...),
+	}
+}
+
+// BElem is the React element definition corresponding to the HTML <b> element
+type BElem struct {
+	Element
+}
+
+func (a *BElem) coreReactElement() {}
+
+// BProps defines the properties for the <b> element
+type BProps struct {
+	AriaExpanded            bool
+	AriaHasPopup            bool
+	AriaLabelledBy          string
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	DataSet                 DataSet
+	ID                      string
+	Key                     string
+	OnChange                OnChange
+	OnClick                 OnClick
+	Ref                     Ref
+	Role                    string
+	Style                   *CSS
+}
+
+// B creates a new instance of a <b> element with the provided props and
+// children
+func B(props *BProps, children ...Element) *BElem {
+	type _BProps struct {
+		o                       *js.Object
+		AriaExpanded            bool                `js:"aria-expanded"`
+		AriaHasPopup            bool                `js:"aria-haspopup"`
+		AriaLabelledBy          string              `js:"aria-labelledby"`
+		ClassName               string              `js:"className"`
+		DangerouslySetInnerHTML *DangerousInnerHTML `js:"dangerouslySetInnerHTML"`
+		ID                      string              `js:"id" react:"omitempty"`
+		Key                     string              `js:"key" react:"omitempty"`
+		OnChange                OnChange            `js:"onChange"`
+		OnClick                 OnClick             `js:"onClick"`
+		Ref                     Ref                 `js:"ref"`
+		Role                    string              `js:"role"`
+		Style                   *CSS                `js:"style"`
+	}
+
+	rprops := &_BProps{
+		o: object.New(),
+	}
+
+	if props != nil {
+		rprops.AriaExpanded = props.AriaExpanded
+
+		rprops.AriaHasPopup = props.AriaHasPopup
+
+		rprops.AriaLabelledBy = props.AriaLabelledBy
+
+		rprops.ClassName = props.ClassName
+
+		rprops.DangerouslySetInnerHTML = props.DangerouslySetInnerHTML
+
+		if props.DataSet != nil {
+			for dk, dv := range props.DataSet {
+				rprops.o.Set("data-"+dk, dv)
+			}
+		}
+		if props.ID != "" {
+			rprops.ID = props.ID
+		}
+		if props.Key != "" {
+			rprops.Key = props.Key
+		}
+		if props.OnChange != nil {
+			rprops.o.Set("onChange", props.OnChange.OnChange)
+		}
+		if props.OnClick != nil {
+			rprops.o.Set("onClick", props.OnClick.OnClick)
+		}
+		if props.Ref != nil {
+			rprops.o.Set("ref", props.Ref.Ref)
+		}
+		rprops.Role = props.Role
+
+		// TODO: until we have a resolution on
+		// https://github.com/gopherjs/gopherjs/issues/236
+		rprops.Style = props.Style.hack()
+	}
+
+	return &BElem{
+		Element: createElement("b", rprops, children...),
+	}
+}
+
 // BrElem is the React element definition corresponding to the HTML <br> element
 type BrElem struct {
 	Element
@@ -288,6 +648,96 @@ func Button(props *ButtonProps, children ...Element) *ButtonElem {
 	}
 }
 
+// CaptionElem is the React element definition corresponding to the HTML <caption> element
+type CaptionElem struct {
+	Element
+}
+
+func (a *CaptionElem) coreReactElement() {}
+
+// CaptionProps defines the properties for the <caption> element
+type CaptionProps struct {
+	AriaExpanded            bool
+	AriaHasPopup            bool
+	AriaLabelledBy          string
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	DataSet                 DataSet
+	ID                      string
+	Key                     string
+	OnChange                OnChange
+	OnClick                 OnClick
+	Ref                     Ref
+	Role                    string
+	Style                   *CSS
+}
+
+// Caption creates a new instance of a <caption> element with the provided props and
+// children
+func Caption(props *CaptionProps, children ...Element) *CaptionElem {
+	type _CaptionProps struct {
+		o                       *js.Object
+		AriaExpanded            bool                `js:"aria-expanded"`
+		AriaHasPopup            bool                `js:"aria-haspopup"`
+		AriaLabelledBy          string              `js:"aria-labelledby"`
+		ClassName               string              `js:"className"`
+		DangerouslySetInnerHTML *DangerousInnerHTML `js:"dangerouslySetInnerHTML"`
+		ID                      string              `js:"id" react:"omitempty"`
+		Key                     string              `js:"key" react:"omitempty"`
+		OnChange                OnChange            `js:"onChange"`
+		OnClick                 OnClick             `js:"onClick"`
+		Ref                     Ref                 `js:"ref"`
+		Role                    string              `js:"role"`
+		Style                   *CSS                `js:"style"`
+	}
+
+	rprops := &_CaptionProps{
+		o: object.New(),
+	}
+
+	if props != nil {
+		rprops.AriaExpanded = props.AriaExpanded
+
+		rprops.AriaHasPopup = props.AriaHasPopup
+
+		rprops.AriaLabelledBy = props.AriaLabelledBy
+
+		rprops.ClassName = props.ClassName
+
+		rprops.DangerouslySetInnerHTML = props.DangerouslySetInnerHTML
+
+		if props.DataSet != nil {
+			for dk, dv := range props.DataSet {
+				rprops.o.Set("data-"+dk, dv)
+			}
+		}
+		if props.ID != "" {
+			rprops.ID = props.ID
+		}
+		if props.Key != "" {
+			rprops.Key = props.Key
+		}
+		if props.OnChange != nil {
+			rprops.o.Set("onChange", props.OnChange.OnChange)
+		}
+		if props.OnClick != nil {
+			rprops.o.Set("onClick", props.OnClick.OnClick)
+		}
+		if props.Ref != nil {
+			rprops.o.Set("ref", props.Ref.Ref)
+		}
+		rprops.Role = props.Role
+
+		// TODO: until we have a resolution on
+		// https://github.com/gopherjs/gopherjs/issues/236
+		rprops.Style = props.Style.hack()
+	}
+
+	return &CaptionElem{
+		Element: createElement("caption", rprops, children...),
+	}
+}
+
 // CodeElem is the React element definition corresponding to the HTML <code> element
 type CodeElem struct {
 	Element
@@ -465,6 +915,96 @@ func Div(props *DivProps, children ...Element) *DivElem {
 
 	return &DivElem{
 		Element: createElement("div", rprops, children...),
+	}
+}
+
+// EmElem is the React element definition corresponding to the HTML <em> element
+type EmElem struct {
+	Element
+}
+
+func (a *EmElem) coreReactElement() {}
+
+// EmProps defines the properties for the <em> element
+type EmProps struct {
+	AriaExpanded            bool
+	AriaHasPopup            bool
+	AriaLabelledBy          string
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	DataSet                 DataSet
+	ID                      string
+	Key                     string
+	OnChange                OnChange
+	OnClick                 OnClick
+	Ref                     Ref
+	Role                    string
+	Style                   *CSS
+}
+
+// Em creates a new instance of a <em> element with the provided props and
+// children
+func Em(props *EmProps, children ...Element) *EmElem {
+	type _EmProps struct {
+		o                       *js.Object
+		AriaExpanded            bool                `js:"aria-expanded"`
+		AriaHasPopup            bool                `js:"aria-haspopup"`
+		AriaLabelledBy          string              `js:"aria-labelledby"`
+		ClassName               string              `js:"className"`
+		DangerouslySetInnerHTML *DangerousInnerHTML `js:"dangerouslySetInnerHTML"`
+		ID                      string              `js:"id" react:"omitempty"`
+		Key                     string              `js:"key" react:"omitempty"`
+		OnChange                OnChange            `js:"onChange"`
+		OnClick                 OnClick             `js:"onClick"`
+		Ref                     Ref                 `js:"ref"`
+		Role                    string              `js:"role"`
+		Style                   *CSS                `js:"style"`
+	}
+
+	rprops := &_EmProps{
+		o: object.New(),
+	}
+
+	if props != nil {
+		rprops.AriaExpanded = props.AriaExpanded
+
+		rprops.AriaHasPopup = props.AriaHasPopup
+
+		rprops.AriaLabelledBy = props.AriaLabelledBy
+
+		rprops.ClassName = props.ClassName
+
+		rprops.DangerouslySetInnerHTML = props.DangerouslySetInnerHTML
+
+		if props.DataSet != nil {
+			for dk, dv := range props.DataSet {
+				rprops.o.Set("data-"+dk, dv)
+			}
+		}
+		if props.ID != "" {
+			rprops.ID = props.ID
+		}
+		if props.Key != "" {
+			rprops.Key = props.Key
+		}
+		if props.OnChange != nil {
+			rprops.o.Set("onChange", props.OnChange.OnChange)
+		}
+		if props.OnClick != nil {
+			rprops.o.Set("onClick", props.OnClick.OnClick)
+		}
+		if props.Ref != nil {
+			rprops.o.Set("ref", props.Ref.Ref)
+		}
+		rprops.Role = props.Role
+
+		// TODO: until we have a resolution on
+		// https://github.com/gopherjs/gopherjs/issues/236
+		rprops.Style = props.Style.hack()
+	}
+
+	return &EmElem{
+		Element: createElement("em", rprops, children...),
 	}
 }
 
@@ -1095,6 +1635,186 @@ func H5(props *H5Props, children ...Element) *H5Elem {
 
 	return &H5Elem{
 		Element: createElement("h5", rprops, children...),
+	}
+}
+
+// H6Elem is the React element definition corresponding to the HTML <h6> element
+type H6Elem struct {
+	Element
+}
+
+func (a *H6Elem) coreReactElement() {}
+
+// H6Props defines the properties for the <h6> element
+type H6Props struct {
+	AriaExpanded            bool
+	AriaHasPopup            bool
+	AriaLabelledBy          string
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	DataSet                 DataSet
+	ID                      string
+	Key                     string
+	OnChange                OnChange
+	OnClick                 OnClick
+	Ref                     Ref
+	Role                    string
+	Style                   *CSS
+}
+
+// H6 creates a new instance of a <h6> element with the provided props and
+// children
+func H6(props *H6Props, children ...Element) *H6Elem {
+	type _H6Props struct {
+		o                       *js.Object
+		AriaExpanded            bool                `js:"aria-expanded"`
+		AriaHasPopup            bool                `js:"aria-haspopup"`
+		AriaLabelledBy          string              `js:"aria-labelledby"`
+		ClassName               string              `js:"className"`
+		DangerouslySetInnerHTML *DangerousInnerHTML `js:"dangerouslySetInnerHTML"`
+		ID                      string              `js:"id" react:"omitempty"`
+		Key                     string              `js:"key" react:"omitempty"`
+		OnChange                OnChange            `js:"onChange"`
+		OnClick                 OnClick             `js:"onClick"`
+		Ref                     Ref                 `js:"ref"`
+		Role                    string              `js:"role"`
+		Style                   *CSS                `js:"style"`
+	}
+
+	rprops := &_H6Props{
+		o: object.New(),
+	}
+
+	if props != nil {
+		rprops.AriaExpanded = props.AriaExpanded
+
+		rprops.AriaHasPopup = props.AriaHasPopup
+
+		rprops.AriaLabelledBy = props.AriaLabelledBy
+
+		rprops.ClassName = props.ClassName
+
+		rprops.DangerouslySetInnerHTML = props.DangerouslySetInnerHTML
+
+		if props.DataSet != nil {
+			for dk, dv := range props.DataSet {
+				rprops.o.Set("data-"+dk, dv)
+			}
+		}
+		if props.ID != "" {
+			rprops.ID = props.ID
+		}
+		if props.Key != "" {
+			rprops.Key = props.Key
+		}
+		if props.OnChange != nil {
+			rprops.o.Set("onChange", props.OnChange.OnChange)
+		}
+		if props.OnClick != nil {
+			rprops.o.Set("onClick", props.OnClick.OnClick)
+		}
+		if props.Ref != nil {
+			rprops.o.Set("ref", props.Ref.Ref)
+		}
+		rprops.Role = props.Role
+
+		// TODO: until we have a resolution on
+		// https://github.com/gopherjs/gopherjs/issues/236
+		rprops.Style = props.Style.hack()
+	}
+
+	return &H6Elem{
+		Element: createElement("h6", rprops, children...),
+	}
+}
+
+// HeaderElem is the React element definition corresponding to the HTML <header> element
+type HeaderElem struct {
+	Element
+}
+
+func (a *HeaderElem) coreReactElement() {}
+
+// HeaderProps defines the properties for the <header> element
+type HeaderProps struct {
+	AriaExpanded            bool
+	AriaHasPopup            bool
+	AriaLabelledBy          string
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	DataSet                 DataSet
+	ID                      string
+	Key                     string
+	OnChange                OnChange
+	OnClick                 OnClick
+	Ref                     Ref
+	Role                    string
+	Style                   *CSS
+}
+
+// Header creates a new instance of a <header> element with the provided props and
+// children
+func Header(props *HeaderProps, children ...Element) *HeaderElem {
+	type _HeaderProps struct {
+		o                       *js.Object
+		AriaExpanded            bool                `js:"aria-expanded"`
+		AriaHasPopup            bool                `js:"aria-haspopup"`
+		AriaLabelledBy          string              `js:"aria-labelledby"`
+		ClassName               string              `js:"className"`
+		DangerouslySetInnerHTML *DangerousInnerHTML `js:"dangerouslySetInnerHTML"`
+		ID                      string              `js:"id" react:"omitempty"`
+		Key                     string              `js:"key" react:"omitempty"`
+		OnChange                OnChange            `js:"onChange"`
+		OnClick                 OnClick             `js:"onClick"`
+		Ref                     Ref                 `js:"ref"`
+		Role                    string              `js:"role"`
+		Style                   *CSS                `js:"style"`
+	}
+
+	rprops := &_HeaderProps{
+		o: object.New(),
+	}
+
+	if props != nil {
+		rprops.AriaExpanded = props.AriaExpanded
+
+		rprops.AriaHasPopup = props.AriaHasPopup
+
+		rprops.AriaLabelledBy = props.AriaLabelledBy
+
+		rprops.ClassName = props.ClassName
+
+		rprops.DangerouslySetInnerHTML = props.DangerouslySetInnerHTML
+
+		if props.DataSet != nil {
+			for dk, dv := range props.DataSet {
+				rprops.o.Set("data-"+dk, dv)
+			}
+		}
+		if props.ID != "" {
+			rprops.ID = props.ID
+		}
+		if props.Key != "" {
+			rprops.Key = props.Key
+		}
+		if props.OnChange != nil {
+			rprops.o.Set("onChange", props.OnChange.OnChange)
+		}
+		if props.OnClick != nil {
+			rprops.o.Set("onClick", props.OnClick.OnClick)
+		}
+		if props.Ref != nil {
+			rprops.o.Set("ref", props.Ref.Ref)
+		}
+		rprops.Role = props.Role
+
+		// TODO: until we have a resolution on
+		// https://github.com/gopherjs/gopherjs/issues/236
+		rprops.Style = props.Style.hack()
+	}
+
+	return &HeaderElem{
+		Element: createElement("header", rprops, children...),
 	}
 }
 
@@ -1757,6 +2477,96 @@ func Li(props *LiProps, children ...Element) *LiElem {
 	}
 }
 
+// MainElem is the React element definition corresponding to the HTML <main> element
+type MainElem struct {
+	Element
+}
+
+func (a *MainElem) coreReactElement() {}
+
+// MainProps defines the properties for the <main> element
+type MainProps struct {
+	AriaExpanded            bool
+	AriaHasPopup            bool
+	AriaLabelledBy          string
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	DataSet                 DataSet
+	ID                      string
+	Key                     string
+	OnChange                OnChange
+	OnClick                 OnClick
+	Ref                     Ref
+	Role                    string
+	Style                   *CSS
+}
+
+// Main creates a new instance of a <main> element with the provided props and
+// children
+func Main(props *MainProps, children ...Element) *MainElem {
+	type _MainProps struct {
+		o                       *js.Object
+		AriaExpanded            bool                `js:"aria-expanded"`
+		AriaHasPopup            bool                `js:"aria-haspopup"`
+		AriaLabelledBy          string              `js:"aria-labelledby"`
+		ClassName               string              `js:"className"`
+		DangerouslySetInnerHTML *DangerousInnerHTML `js:"dangerouslySetInnerHTML"`
+		ID                      string              `js:"id" react:"omitempty"`
+		Key                     string              `js:"key" react:"omitempty"`
+		OnChange                OnChange            `js:"onChange"`
+		OnClick                 OnClick             `js:"onClick"`
+		Ref                     Ref                 `js:"ref"`
+		Role                    string              `js:"role"`
+		Style                   *CSS                `js:"style"`
+	}
+
+	rprops := &_MainProps{
+		o: object.New(),
+	}
+
+	if props != nil {
+		rprops.AriaExpanded = props.AriaExpanded
+
+		rprops.AriaHasPopup = props.AriaHasPopup
+
+		rprops.AriaLabelledBy = props.AriaLabelledBy
+
+		rprops.ClassName = props.ClassName
+
+		rprops.DangerouslySetInnerHTML = props.DangerouslySetInnerHTML
+
+		if props.DataSet != nil {
+			for dk, dv := range props.DataSet {
+				rprops.o.Set("data-"+dk, dv)
+			}
+		}
+		if props.ID != "" {
+			rprops.ID = props.ID
+		}
+		if props.Key != "" {
+			rprops.Key = props.Key
+		}
+		if props.OnChange != nil {
+			rprops.o.Set("onChange", props.OnChange.OnChange)
+		}
+		if props.OnClick != nil {
+			rprops.o.Set("onClick", props.OnClick.OnClick)
+		}
+		if props.Ref != nil {
+			rprops.o.Set("ref", props.Ref.Ref)
+		}
+		rprops.Role = props.Role
+
+		// TODO: until we have a resolution on
+		// https://github.com/gopherjs/gopherjs/issues/236
+		rprops.Style = props.Style.hack()
+	}
+
+	return &MainElem{
+		Element: createElement("main", rprops, children...),
+	}
+}
+
 // NavElem is the React element definition corresponding to the HTML <nav> element
 type NavElem struct {
 	Element
@@ -2308,14 +3118,14 @@ func Span(props *SpanProps, children ...Element) *SpanElem {
 	}
 }
 
-// StrikeElem is the React element definition corresponding to the HTML <strike> element
+// StrikeElem is the React element definition corresponding to the HTML <s> element
 type StrikeElem struct {
 	Element
 }
 
 func (a *StrikeElem) coreReactElement() {}
 
-// StrikeProps defines the properties for the <strike> element
+// StrikeProps defines the properties for the <s> element
 type StrikeProps struct {
 	AriaExpanded            bool
 	AriaHasPopup            bool
@@ -2332,7 +3142,7 @@ type StrikeProps struct {
 	Style                   *CSS
 }
 
-// Strike creates a new instance of a <strike> element with the provided props and
+// Strike creates a new instance of a <s> element with the provided props and
 // children
 func Strike(props *StrikeProps, children ...Element) *StrikeElem {
 	type _StrikeProps struct {
@@ -2394,7 +3204,97 @@ func Strike(props *StrikeProps, children ...Element) *StrikeElem {
 	}
 
 	return &StrikeElem{
-		Element: createElement("strike", rprops, children...),
+		Element: createElement("s", rprops, children...),
+	}
+}
+
+// SupElem is the React element definition corresponding to the HTML <sup> element
+type SupElem struct {
+	Element
+}
+
+func (a *SupElem) coreReactElement() {}
+
+// SupProps defines the properties for the <sup> element
+type SupProps struct {
+	AriaExpanded            bool
+	AriaHasPopup            bool
+	AriaLabelledBy          string
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	DataSet                 DataSet
+	ID                      string
+	Key                     string
+	OnChange                OnChange
+	OnClick                 OnClick
+	Ref                     Ref
+	Role                    string
+	Style                   *CSS
+}
+
+// Sup creates a new instance of a <sup> element with the provided props and
+// children
+func Sup(props *SupProps, children ...Element) *SupElem {
+	type _SupProps struct {
+		o                       *js.Object
+		AriaExpanded            bool                `js:"aria-expanded"`
+		AriaHasPopup            bool                `js:"aria-haspopup"`
+		AriaLabelledBy          string              `js:"aria-labelledby"`
+		ClassName               string              `js:"className"`
+		DangerouslySetInnerHTML *DangerousInnerHTML `js:"dangerouslySetInnerHTML"`
+		ID                      string              `js:"id" react:"omitempty"`
+		Key                     string              `js:"key" react:"omitempty"`
+		OnChange                OnChange            `js:"onChange"`
+		OnClick                 OnClick             `js:"onClick"`
+		Ref                     Ref                 `js:"ref"`
+		Role                    string              `js:"role"`
+		Style                   *CSS                `js:"style"`
+	}
+
+	rprops := &_SupProps{
+		o: object.New(),
+	}
+
+	if props != nil {
+		rprops.AriaExpanded = props.AriaExpanded
+
+		rprops.AriaHasPopup = props.AriaHasPopup
+
+		rprops.AriaLabelledBy = props.AriaLabelledBy
+
+		rprops.ClassName = props.ClassName
+
+		rprops.DangerouslySetInnerHTML = props.DangerouslySetInnerHTML
+
+		if props.DataSet != nil {
+			for dk, dv := range props.DataSet {
+				rprops.o.Set("data-"+dk, dv)
+			}
+		}
+		if props.ID != "" {
+			rprops.ID = props.ID
+		}
+		if props.Key != "" {
+			rprops.Key = props.Key
+		}
+		if props.OnChange != nil {
+			rprops.o.Set("onChange", props.OnChange.OnChange)
+		}
+		if props.OnClick != nil {
+			rprops.o.Set("onClick", props.OnClick.OnClick)
+		}
+		if props.Ref != nil {
+			rprops.o.Set("ref", props.Ref.Ref)
+		}
+		rprops.Role = props.Role
+
+		// TODO: until we have a resolution on
+		// https://github.com/gopherjs/gopherjs/issues/236
+		rprops.Style = props.Style.hack()
+	}
+
+	return &SupElem{
+		Element: createElement("sup", rprops, children...),
 	}
 }
 
@@ -2485,6 +3385,186 @@ func Table(props *TableProps, children ...Element) *TableElem {
 
 	return &TableElem{
 		Element: createElement("table", rprops, children...),
+	}
+}
+
+// TbodyElem is the React element definition corresponding to the HTML <tbody> element
+type TbodyElem struct {
+	Element
+}
+
+func (a *TbodyElem) coreReactElement() {}
+
+// TbodyProps defines the properties for the <tbody> element
+type TbodyProps struct {
+	AriaExpanded            bool
+	AriaHasPopup            bool
+	AriaLabelledBy          string
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	DataSet                 DataSet
+	ID                      string
+	Key                     string
+	OnChange                OnChange
+	OnClick                 OnClick
+	Ref                     Ref
+	Role                    string
+	Style                   *CSS
+}
+
+// Tbody creates a new instance of a <tbody> element with the provided props and
+// children
+func Tbody(props *TbodyProps, children ...Element) *TbodyElem {
+	type _TbodyProps struct {
+		o                       *js.Object
+		AriaExpanded            bool                `js:"aria-expanded"`
+		AriaHasPopup            bool                `js:"aria-haspopup"`
+		AriaLabelledBy          string              `js:"aria-labelledby"`
+		ClassName               string              `js:"className"`
+		DangerouslySetInnerHTML *DangerousInnerHTML `js:"dangerouslySetInnerHTML"`
+		ID                      string              `js:"id" react:"omitempty"`
+		Key                     string              `js:"key" react:"omitempty"`
+		OnChange                OnChange            `js:"onChange"`
+		OnClick                 OnClick             `js:"onClick"`
+		Ref                     Ref                 `js:"ref"`
+		Role                    string              `js:"role"`
+		Style                   *CSS                `js:"style"`
+	}
+
+	rprops := &_TbodyProps{
+		o: object.New(),
+	}
+
+	if props != nil {
+		rprops.AriaExpanded = props.AriaExpanded
+
+		rprops.AriaHasPopup = props.AriaHasPopup
+
+		rprops.AriaLabelledBy = props.AriaLabelledBy
+
+		rprops.ClassName = props.ClassName
+
+		rprops.DangerouslySetInnerHTML = props.DangerouslySetInnerHTML
+
+		if props.DataSet != nil {
+			for dk, dv := range props.DataSet {
+				rprops.o.Set("data-"+dk, dv)
+			}
+		}
+		if props.ID != "" {
+			rprops.ID = props.ID
+		}
+		if props.Key != "" {
+			rprops.Key = props.Key
+		}
+		if props.OnChange != nil {
+			rprops.o.Set("onChange", props.OnChange.OnChange)
+		}
+		if props.OnClick != nil {
+			rprops.o.Set("onClick", props.OnClick.OnClick)
+		}
+		if props.Ref != nil {
+			rprops.o.Set("ref", props.Ref.Ref)
+		}
+		rprops.Role = props.Role
+
+		// TODO: until we have a resolution on
+		// https://github.com/gopherjs/gopherjs/issues/236
+		rprops.Style = props.Style.hack()
+	}
+
+	return &TbodyElem{
+		Element: createElement("tbody", rprops, children...),
+	}
+}
+
+// TdElem is the React element definition corresponding to the HTML <td> element
+type TdElem struct {
+	Element
+}
+
+func (a *TdElem) coreReactElement() {}
+
+// TdProps defines the properties for the <td> element
+type TdProps struct {
+	AriaExpanded            bool
+	AriaHasPopup            bool
+	AriaLabelledBy          string
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	DataSet                 DataSet
+	ID                      string
+	Key                     string
+	OnChange                OnChange
+	OnClick                 OnClick
+	Ref                     Ref
+	Role                    string
+	Style                   *CSS
+}
+
+// Td creates a new instance of a <td> element with the provided props and
+// children
+func Td(props *TdProps, children ...Element) *TdElem {
+	type _TdProps struct {
+		o                       *js.Object
+		AriaExpanded            bool                `js:"aria-expanded"`
+		AriaHasPopup            bool                `js:"aria-haspopup"`
+		AriaLabelledBy          string              `js:"aria-labelledby"`
+		ClassName               string              `js:"className"`
+		DangerouslySetInnerHTML *DangerousInnerHTML `js:"dangerouslySetInnerHTML"`
+		ID                      string              `js:"id" react:"omitempty"`
+		Key                     string              `js:"key" react:"omitempty"`
+		OnChange                OnChange            `js:"onChange"`
+		OnClick                 OnClick             `js:"onClick"`
+		Ref                     Ref                 `js:"ref"`
+		Role                    string              `js:"role"`
+		Style                   *CSS                `js:"style"`
+	}
+
+	rprops := &_TdProps{
+		o: object.New(),
+	}
+
+	if props != nil {
+		rprops.AriaExpanded = props.AriaExpanded
+
+		rprops.AriaHasPopup = props.AriaHasPopup
+
+		rprops.AriaLabelledBy = props.AriaLabelledBy
+
+		rprops.ClassName = props.ClassName
+
+		rprops.DangerouslySetInnerHTML = props.DangerouslySetInnerHTML
+
+		if props.DataSet != nil {
+			for dk, dv := range props.DataSet {
+				rprops.o.Set("data-"+dk, dv)
+			}
+		}
+		if props.ID != "" {
+			rprops.ID = props.ID
+		}
+		if props.Key != "" {
+			rprops.Key = props.Key
+		}
+		if props.OnChange != nil {
+			rprops.o.Set("onChange", props.OnChange.OnChange)
+		}
+		if props.OnClick != nil {
+			rprops.o.Set("onClick", props.OnClick.OnClick)
+		}
+		if props.Ref != nil {
+			rprops.o.Set("ref", props.Ref.Ref)
+		}
+		rprops.Role = props.Role
+
+		// TODO: until we have a resolution on
+		// https://github.com/gopherjs/gopherjs/issues/236
+		rprops.Style = props.Style.hack()
+	}
+
+	return &TdElem{
+		Element: createElement("td", rprops, children...),
 	}
 }
 
@@ -2582,6 +3662,276 @@ func TextArea(props *TextAreaProps, children ...Element) *TextAreaElem {
 
 	return &TextAreaElem{
 		Element: createElement("textarea", rprops, children...),
+	}
+}
+
+// ThElem is the React element definition corresponding to the HTML <th> element
+type ThElem struct {
+	Element
+}
+
+func (a *ThElem) coreReactElement() {}
+
+// ThProps defines the properties for the <th> element
+type ThProps struct {
+	AriaExpanded            bool
+	AriaHasPopup            bool
+	AriaLabelledBy          string
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	DataSet                 DataSet
+	ID                      string
+	Key                     string
+	OnChange                OnChange
+	OnClick                 OnClick
+	Ref                     Ref
+	Role                    string
+	Style                   *CSS
+}
+
+// Th creates a new instance of a <th> element with the provided props and
+// children
+func Th(props *ThProps, children ...Element) *ThElem {
+	type _ThProps struct {
+		o                       *js.Object
+		AriaExpanded            bool                `js:"aria-expanded"`
+		AriaHasPopup            bool                `js:"aria-haspopup"`
+		AriaLabelledBy          string              `js:"aria-labelledby"`
+		ClassName               string              `js:"className"`
+		DangerouslySetInnerHTML *DangerousInnerHTML `js:"dangerouslySetInnerHTML"`
+		ID                      string              `js:"id" react:"omitempty"`
+		Key                     string              `js:"key" react:"omitempty"`
+		OnChange                OnChange            `js:"onChange"`
+		OnClick                 OnClick             `js:"onClick"`
+		Ref                     Ref                 `js:"ref"`
+		Role                    string              `js:"role"`
+		Style                   *CSS                `js:"style"`
+	}
+
+	rprops := &_ThProps{
+		o: object.New(),
+	}
+
+	if props != nil {
+		rprops.AriaExpanded = props.AriaExpanded
+
+		rprops.AriaHasPopup = props.AriaHasPopup
+
+		rprops.AriaLabelledBy = props.AriaLabelledBy
+
+		rprops.ClassName = props.ClassName
+
+		rprops.DangerouslySetInnerHTML = props.DangerouslySetInnerHTML
+
+		if props.DataSet != nil {
+			for dk, dv := range props.DataSet {
+				rprops.o.Set("data-"+dk, dv)
+			}
+		}
+		if props.ID != "" {
+			rprops.ID = props.ID
+		}
+		if props.Key != "" {
+			rprops.Key = props.Key
+		}
+		if props.OnChange != nil {
+			rprops.o.Set("onChange", props.OnChange.OnChange)
+		}
+		if props.OnClick != nil {
+			rprops.o.Set("onClick", props.OnClick.OnClick)
+		}
+		if props.Ref != nil {
+			rprops.o.Set("ref", props.Ref.Ref)
+		}
+		rprops.Role = props.Role
+
+		// TODO: until we have a resolution on
+		// https://github.com/gopherjs/gopherjs/issues/236
+		rprops.Style = props.Style.hack()
+	}
+
+	return &ThElem{
+		Element: createElement("th", rprops, children...),
+	}
+}
+
+// TheadElem is the React element definition corresponding to the HTML <thead> element
+type TheadElem struct {
+	Element
+}
+
+func (a *TheadElem) coreReactElement() {}
+
+// TheadProps defines the properties for the <thead> element
+type TheadProps struct {
+	AriaExpanded            bool
+	AriaHasPopup            bool
+	AriaLabelledBy          string
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	DataSet                 DataSet
+	ID                      string
+	Key                     string
+	OnChange                OnChange
+	OnClick                 OnClick
+	Ref                     Ref
+	Role                    string
+	Style                   *CSS
+}
+
+// Thead creates a new instance of a <thead> element with the provided props and
+// children
+func Thead(props *TheadProps, children ...Element) *TheadElem {
+	type _TheadProps struct {
+		o                       *js.Object
+		AriaExpanded            bool                `js:"aria-expanded"`
+		AriaHasPopup            bool                `js:"aria-haspopup"`
+		AriaLabelledBy          string              `js:"aria-labelledby"`
+		ClassName               string              `js:"className"`
+		DangerouslySetInnerHTML *DangerousInnerHTML `js:"dangerouslySetInnerHTML"`
+		ID                      string              `js:"id" react:"omitempty"`
+		Key                     string              `js:"key" react:"omitempty"`
+		OnChange                OnChange            `js:"onChange"`
+		OnClick                 OnClick             `js:"onClick"`
+		Ref                     Ref                 `js:"ref"`
+		Role                    string              `js:"role"`
+		Style                   *CSS                `js:"style"`
+	}
+
+	rprops := &_TheadProps{
+		o: object.New(),
+	}
+
+	if props != nil {
+		rprops.AriaExpanded = props.AriaExpanded
+
+		rprops.AriaHasPopup = props.AriaHasPopup
+
+		rprops.AriaLabelledBy = props.AriaLabelledBy
+
+		rprops.ClassName = props.ClassName
+
+		rprops.DangerouslySetInnerHTML = props.DangerouslySetInnerHTML
+
+		if props.DataSet != nil {
+			for dk, dv := range props.DataSet {
+				rprops.o.Set("data-"+dk, dv)
+			}
+		}
+		if props.ID != "" {
+			rprops.ID = props.ID
+		}
+		if props.Key != "" {
+			rprops.Key = props.Key
+		}
+		if props.OnChange != nil {
+			rprops.o.Set("onChange", props.OnChange.OnChange)
+		}
+		if props.OnClick != nil {
+			rprops.o.Set("onClick", props.OnClick.OnClick)
+		}
+		if props.Ref != nil {
+			rprops.o.Set("ref", props.Ref.Ref)
+		}
+		rprops.Role = props.Role
+
+		// TODO: until we have a resolution on
+		// https://github.com/gopherjs/gopherjs/issues/236
+		rprops.Style = props.Style.hack()
+	}
+
+	return &TheadElem{
+		Element: createElement("thead", rprops, children...),
+	}
+}
+
+// TrElem is the React element definition corresponding to the HTML <tr> element
+type TrElem struct {
+	Element
+}
+
+func (a *TrElem) coreReactElement() {}
+
+// TrProps defines the properties for the <tr> element
+type TrProps struct {
+	AriaExpanded            bool
+	AriaHasPopup            bool
+	AriaLabelledBy          string
+	ClassName               string
+	DangerouslySetInnerHTML *DangerousInnerHTML
+	DataSet                 DataSet
+	ID                      string
+	Key                     string
+	OnChange                OnChange
+	OnClick                 OnClick
+	Ref                     Ref
+	Role                    string
+	Style                   *CSS
+}
+
+// Tr creates a new instance of a <tr> element with the provided props and
+// children
+func Tr(props *TrProps, children ...Element) *TrElem {
+	type _TrProps struct {
+		o                       *js.Object
+		AriaExpanded            bool                `js:"aria-expanded"`
+		AriaHasPopup            bool                `js:"aria-haspopup"`
+		AriaLabelledBy          string              `js:"aria-labelledby"`
+		ClassName               string              `js:"className"`
+		DangerouslySetInnerHTML *DangerousInnerHTML `js:"dangerouslySetInnerHTML"`
+		ID                      string              `js:"id" react:"omitempty"`
+		Key                     string              `js:"key" react:"omitempty"`
+		OnChange                OnChange            `js:"onChange"`
+		OnClick                 OnClick             `js:"onClick"`
+		Ref                     Ref                 `js:"ref"`
+		Role                    string              `js:"role"`
+		Style                   *CSS                `js:"style"`
+	}
+
+	rprops := &_TrProps{
+		o: object.New(),
+	}
+
+	if props != nil {
+		rprops.AriaExpanded = props.AriaExpanded
+
+		rprops.AriaHasPopup = props.AriaHasPopup
+
+		rprops.AriaLabelledBy = props.AriaLabelledBy
+
+		rprops.ClassName = props.ClassName
+
+		rprops.DangerouslySetInnerHTML = props.DangerouslySetInnerHTML
+
+		if props.DataSet != nil {
+			for dk, dv := range props.DataSet {
+				rprops.o.Set("data-"+dk, dv)
+			}
+		}
+		if props.ID != "" {
+			rprops.ID = props.ID
+		}
+		if props.Key != "" {
+			rprops.Key = props.Key
+		}
+		if props.OnChange != nil {
+			rprops.o.Set("onChange", props.OnChange.OnChange)
+		}
+		if props.OnClick != nil {
+			rprops.o.Set("onClick", props.OnClick.OnClick)
+		}
+		if props.Ref != nil {
+			rprops.o.Set("ref", props.Ref.Ref)
+		}
+		rprops.Role = props.Role
+
+		// TODO: until we have a resolution on
+		// https://github.com/gopherjs/gopherjs/issues/236
+		rprops.Style = props.Style.hack()
+	}
+
+	return &TrElem{
+		Element: createElement("tr", rprops, children...),
 	}
 }
 

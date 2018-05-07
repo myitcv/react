@@ -25,6 +25,54 @@ func TestAElem(t *testing.T) {
 		t.Fatal("Failed to find <a> element")
 	}
 }
+func TestAbbrElem(t *testing.T) {
+	class := "test"
+
+	x := testutils.Wrapper(react.Abbr(&react.AbbrProps{ClassName: class}))
+	cont := testutils.RenderIntoDocument(x)
+
+	el := testutils.FindRenderedDOMComponentWithClass(cont, class)
+
+	if _, ok := el.(*dom.BasicHTMLElement); !ok {
+		t.Fatal("Failed to find <abbr> element")
+	}
+}
+func TestArticleElem(t *testing.T) {
+	class := "test"
+
+	x := testutils.Wrapper(react.Article(&react.ArticleProps{ClassName: class}))
+	cont := testutils.RenderIntoDocument(x)
+
+	el := testutils.FindRenderedDOMComponentWithClass(cont, class)
+
+	if _, ok := el.(*dom.BasicHTMLElement); !ok {
+		t.Fatal("Failed to find <article> element")
+	}
+}
+func TestAsideElem(t *testing.T) {
+	class := "test"
+
+	x := testutils.Wrapper(react.Aside(&react.AsideProps{ClassName: class}))
+	cont := testutils.RenderIntoDocument(x)
+
+	el := testutils.FindRenderedDOMComponentWithClass(cont, class)
+
+	if _, ok := el.(*dom.BasicHTMLElement); !ok {
+		t.Fatal("Failed to find <aside> element")
+	}
+}
+func TestBElem(t *testing.T) {
+	class := "test"
+
+	x := testutils.Wrapper(react.B(&react.BProps{ClassName: class}))
+	cont := testutils.RenderIntoDocument(x)
+
+	el := testutils.FindRenderedDOMComponentWithClass(cont, class)
+
+	if _, ok := el.(*dom.BasicHTMLElement); !ok {
+		t.Fatal("Failed to find <b> element")
+	}
+}
 func TestBrElem(t *testing.T) {
 	class := "test"
 
@@ -71,6 +119,18 @@ func TestDivElem(t *testing.T) {
 
 	if _, ok := el.(*dom.HTMLDivElement); !ok {
 		t.Fatal("Failed to find <div> element")
+	}
+}
+func TestEmElem(t *testing.T) {
+	class := "test"
+
+	x := testutils.Wrapper(react.Em(&react.EmProps{ClassName: class}))
+	cont := testutils.RenderIntoDocument(x)
+
+	el := testutils.FindRenderedDOMComponentWithClass(cont, class)
+
+	if _, ok := el.(*dom.BasicHTMLElement); !ok {
+		t.Fatal("Failed to find <em> element")
 	}
 }
 func TestFooterElem(t *testing.T) {
@@ -157,6 +217,30 @@ func TestH5Elem(t *testing.T) {
 		t.Fatal("Failed to find <h5> element")
 	}
 }
+func TestH6Elem(t *testing.T) {
+	class := "test"
+
+	x := testutils.Wrapper(react.H6(&react.H6Props{ClassName: class}))
+	cont := testutils.RenderIntoDocument(x)
+
+	el := testutils.FindRenderedDOMComponentWithClass(cont, class)
+
+	if _, ok := el.(*dom.HTMLHeadingElement); !ok {
+		t.Fatal("Failed to find <h6> element")
+	}
+}
+func TestHeaderElem(t *testing.T) {
+	class := "test"
+
+	x := testutils.Wrapper(react.Header(&react.HeaderProps{ClassName: class}))
+	cont := testutils.RenderIntoDocument(x)
+
+	el := testutils.FindRenderedDOMComponentWithClass(cont, class)
+
+	if _, ok := el.(*dom.BasicHTMLElement); !ok {
+		t.Fatal("Failed to find <header> element")
+	}
+}
 func TestHrElem(t *testing.T) {
 	class := "test"
 
@@ -241,6 +325,18 @@ func TestLiElem(t *testing.T) {
 		t.Fatal("Failed to find <li> element")
 	}
 }
+func TestMainElem(t *testing.T) {
+	class := "test"
+
+	x := testutils.Wrapper(react.Main(&react.MainProps{ClassName: class}))
+	cont := testutils.RenderIntoDocument(x)
+
+	el := testutils.FindRenderedDOMComponentWithClass(cont, class)
+
+	if _, ok := el.(*dom.BasicHTMLElement); !ok {
+		t.Fatal("Failed to find <main> element")
+	}
+}
 func TestNavElem(t *testing.T) {
 	class := "test"
 
@@ -322,7 +418,19 @@ func TestStrikeElem(t *testing.T) {
 	el := testutils.FindRenderedDOMComponentWithClass(cont, class)
 
 	if _, ok := el.(*dom.BasicHTMLElement); !ok {
-		t.Fatal("Failed to find <strike> element")
+		t.Fatal("Failed to find <s> element")
+	}
+}
+func TestSupElem(t *testing.T) {
+	class := "test"
+
+	x := testutils.Wrapper(react.Sup(&react.SupProps{ClassName: class}))
+	cont := testutils.RenderIntoDocument(x)
+
+	el := testutils.FindRenderedDOMComponentWithClass(cont, class)
+
+	if _, ok := el.(*dom.BasicHTMLElement); !ok {
+		t.Fatal("Failed to find <sup> element")
 	}
 }
 func TestTableElem(t *testing.T) {
