@@ -71,3 +71,5 @@ func (m MyType) IsMyIntf() {}
 var _ MyIntf = MyType([]string{})
 
 var _ = Dummy{} // ERROR
+
+type Blah = Dummy // ok; use of alias

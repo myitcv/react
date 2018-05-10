@@ -5,8 +5,8 @@ package main
 import "sort"
 import "myitcv.io/sorter"
 
-import "myitcv.io/sorter/cmd/sortGen/_testFiles/internal/other"
 import "bytes"
+import "myitcv.io/sorter/cmd/sortGen/_testFiles/internal/other"
 
 func sortByName(vs []person) {
 	sort.Sort(&sorter.Wrapper{

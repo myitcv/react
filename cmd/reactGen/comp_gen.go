@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go/ast"
 	"go/format"
+	"io/ioutil"
 	"strings"
 	"unicode"
 	"unicode/utf8"
@@ -392,15 +393,7 @@ var _ react.Props = {{.Name}}Props{}
 		toWrite = out
 	}
 
-	wrote, err := gogenerate.WriteIfDiff(toWrite, ofName)
-	if err != nil {
+	if err := ioutil.WriteFile(ofName, toWrite, 0644); err != nil {
 		fatalf("could not write %v: %v", ofName, err)
 	}
-
-	if wrote {
-		infof("writing %v", ofName)
-	} else {
-		infof("skipping writing of %v; it's identical", ofName)
-	}
-
 }

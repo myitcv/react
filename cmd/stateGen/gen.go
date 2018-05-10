@@ -9,6 +9,7 @@ import (
 	"go/token"
 	"html/template"
 	"io"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -126,15 +127,8 @@ func dogen(stderr io.Writer, dir, license string) bool {
 			toWrite = res
 		}
 
-		wrote, err := gogenerate.WriteIfDiff(toWrite, fp)
-		if err != nil {
+		if err := ioutil.WriteFile(fp, toWrite, 0644); err != nil {
 			panic(fmt.Errorf("unable to write to %v: %v", fp, err))
-		}
-
-		if wrote {
-			infof("wrote %v\n", fp)
-		} else {
-			infof("skipped writing %v; identical\n", fp)
 		}
 	}
 

@@ -182,6 +182,12 @@ func vet(wd string, specs []string) []immErr {
 }
 
 func (iv *immutableVetter) ensurePointerTyp(n ast.Node, typ ast.Expr) {
+	if ts, ok := n.(*ast.TypeSpec); ok {
+		if ts.Assign.IsValid() {
+			// we are an alias; this is fine in all cases
+			return
+		}
+	}
 	t := iv.info.Types[typ].Type
 	p := types.NewPointer(t)
 	switch util.IsImmType(p).(type) {

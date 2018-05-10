@@ -41,7 +41,9 @@ Checks:
 		}
 
 		// just in case we were sloppy in the test table
-		sort.Sort(byBase(c.matches))
+		sort.Slice(c.matches, func(i, j int) bool {
+			return filepath.Base(c.matches[i]) < filepath.Base(c.matches[j])
+		})
 		for i := range res {
 			if res[i] != c.matches[i] {
 				t.Errorf("Matches not up to expectations: %v vs %v", res, c.matches)

@@ -13,10 +13,12 @@ import (
 	"go/printer"
 	"go/token"
 	"html/template"
+	"io/ioutil"
 	"log"
 	"os"
 	"path"
 	"regexp"
+	"sort"
 	"strings"
 	"unicode"
 	"unicode/utf8"
@@ -558,7 +560,12 @@ func (g *generator) genMatches(funs []toGen, imps map[string]bool) {
 
 		`, g.pkg.Name, sorter.PkgName)
 
+	var impSlice []string
 	for i := range imps {
+		impSlice = append(impSlice, i)
+	}
+	sort.Strings(impSlice)
+	for _, i := range impSlice {
 		g.pf("import %v\n", i)
 	}
 
@@ -637,15 +644,8 @@ func (g *generator) genMatches(funs []toGen, imps map[string]bool) {
 		toWrite = res
 	}
 
-	wrote, err := gogenerate.WriteIfDiff(toWrite, ofName)
-	if err != nil {
+	if err := ioutil.WriteFile(ofName, toWrite, 0644); err != nil {
 		fatalf("could not write %v: %v", ofName, err)
-	}
-
-	if wrote {
-		infof("writing %v", ofName)
-	} else {
-		infof("skipping writing of %v; it's identical", ofName)
 	}
 }
 
