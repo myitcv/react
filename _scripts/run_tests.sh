@@ -86,9 +86,8 @@ go test myitcv.io/react/cmd/stateGen/_testFiles/
 if [ "${CI:-}" == "true" ]
 then
 	# off the back of https://github.com/myitcv/react/issues/116#issuecomment-380280847
-	# ensure that we can go get myitcv.io/react/... in a totally clean environment
+	# ensure that we can go get myitcv.io/react/... without _vendor
 	echo "Verify that we can go get myitcv.io/react/..."
-	cd `mktemp -d`
-	export GOPATH=$PWD
+	export GOPATH=$HOME/gopath
 	go get myitcv.io/react/...
 fi
