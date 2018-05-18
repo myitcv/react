@@ -1,5 +1,12 @@
 language: go
 
+notifications:
+  email:
+    recipients:
+      - paul@myitcv.io
+    on_success: change
+    on_failure: always
+
 addons:
   chrome: beta
 
