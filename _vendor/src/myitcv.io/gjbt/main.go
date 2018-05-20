@@ -180,10 +180,10 @@ func main() {
 
 			fmt.Println(line)
 		}
+	}
 
-		if err := driver.Stop(); err != nil {
-			panic(err)
-		}
+	if err := driver.Stop(); err != nil {
+		panic(err)
 	}
 
 	if failed {
