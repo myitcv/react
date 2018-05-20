@@ -1,5 +1,14 @@
 language: go
 
+matrix:
+  include:
+    - env: CHROME_CHANNEL=beta
+      addons:
+        chrome: beta
+    - env: CHROME_CHANNEL=stable
+      addons:
+        chrome: stable
+
 notifications:
   email:
     recipients:
@@ -16,7 +25,8 @@ go:
 go_import_path: myitcv.io/react
 
 before_script:
-  - curl -s https://chromedriver.storage.googleapis.com/2.33/chromedriver_linux64.zip > /tmp/chromedriver_linux64.zip
+  - mkdir /tmp/google-chrome-bin && ln -s /usr/bin/google-chrome-$CHROME_CHANNEL /tmp/google-chrome-bin/google-chrome && export PATH=/tmp/google-chrome-bin:$PATH
+  - curl -s https://chromedriver.storage.googleapis.com/2.37/chromedriver_linux64.zip > /tmp/chromedriver_linux64.zip
   - unzip -d /tmp/chromedriver_linux64 /tmp/chromedriver_linux64.zip
   - export PATH=$PATH:/tmp/chromedriver_linux64
 

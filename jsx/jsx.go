@@ -49,10 +49,38 @@ func HTML(s string) []react.Element {
 		panic(fmt.Errorf("failed to parse HTML %q: %v", s, err))
 	}
 
-	res := make([]react.Element, len(elems))
+	var toParse []*html.Node
+	var toWalk []*html.Node
 
-	for i, v := range elems {
-		res[i] = parse(v)
+	for _, v := range elems {
+		if v.Type == html.TextNode && strings.TrimSpace(v.Data) == "" {
+			continue
+		}
+		toParse = append(toParse, v)
+		toWalk = append(toWalk, v)
+	}
+
+	var v *html.Node
+
+	for len(toWalk) > 0 {
+		v, toWalk = toWalk[0], toWalk[1:]
+
+		c := v.FirstChild
+
+		for c != nil {
+			if c.Type == html.TextNode && strings.TrimSpace(c.Data) == "" {
+				v.RemoveChild(c)
+			}
+
+			toWalk = append(toWalk, c)
+			c = c.NextSibling
+		}
+	}
+
+	var res []react.Element
+
+	for _, v := range toParse {
+		res = append(res, parse(v))
 	}
 
 	htmlCache[s] = res

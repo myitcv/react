@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -64,12 +65,30 @@ func main() {
 		),
 	}
 
+	var binary string
+
 	if *fBinary != "" {
-		opts = append(opts,
-			agouti.ChromeOptions(
-				"binary", *fBinary,
-			))
+		binary = *fBinary
+	} else {
+		path := os.Getenv("PATH")
+		paths := filepath.SplitList(path)
+		for _, p := range paths {
+			path := filepath.Join(p, "google-chrome")
+			if _, err := os.Stat(path); err == nil {
+				binary = path
+				break
+			}
+		}
+
+		if binary == "" {
+			panic(fmt.Errorf("failed to find google-chrome in your PATH. Either adjust your PATH or using -binary"))
+		}
 	}
+
+	opts = append(opts,
+		agouti.ChromeOptions(
+			"binary", binary,
+		))
 
 	driver := agouti.ChromeDriver(opts...)
 

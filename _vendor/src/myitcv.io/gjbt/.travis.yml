@@ -2,22 +2,47 @@ language: go
 
 matrix:
   include:
-    - env: CHROME_VERSION=beta
+    - env: CHROMEDRIVER_VERSION=2.34 CHROME_CHANNEL=beta
       addons:
         chrome: beta
-    - env: CHROME_VERSION=stable
+    - env: CHROMEDRIVER_VERSION=2.34 CHROME_CHANNEL=stable
+      addons:
+        chrome: stable
+    - env: CHROMEDRIVER_VERSION=2.35 CHROME_CHANNEL=beta
+      addons:
+        chrome: beta
+    - env: CHROMEDRIVER_VERSION=2.35 CHROME_CHANNEL=stable
+      addons:
+        chrome: stable
+    - env: CHROMEDRIVER_VERSION=2.36 CHROME_CHANNEL=beta
+      addons:
+        chrome: beta
+    - env: CHROMEDRIVER_VERSION=2.36 CHROME_CHANNEL=stable
+      addons:
+        chrome: stable
+    - env: CHROMEDRIVER_VERSION=2.37 CHROME_CHANNEL=beta
+      addons:
+        chrome: beta
+    - env: CHROMEDRIVER_VERSION=2.37 CHROME_CHANNEL=stable
+      addons:
+        chrome: stable
+    - env: CHROMEDRIVER_VERSION=2.38 CHROME_CHANNEL=beta
+      addons:
+        chrome: beta
+    - env: CHROMEDRIVER_VERSION=2.38 CHROME_CHANNEL=stable
       addons:
         chrome: stable
 
 go:
-  - 1.x
+  - 1.10.x
 
 go_import_path: myitcv.io/gjbt
 
 before_script:
-  - curl -s https://chromedriver.storage.googleapis.com/2.35/chromedriver_linux64.zip > /tmp/chromedriver_linux64.zip
+  - mkdir /tmp/google-chrome-bin && ln -s /usr/bin/google-chrome-$CHROME_CHANNEL /tmp/google-chrome-bin/google-chrome && export PATH=/tmp/google-chrome-bin:$PATH
+  - curl -s https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip > /tmp/chromedriver_linux64.zip
   - unzip -d /tmp/chromedriver_linux64 /tmp/chromedriver_linux64.zip
-  - export PATH=$PATH:/tmp/chromedriver_linux64
+  - export PATH=/tmp/chromedriver_linux64:$PATH
 
 install: true
 

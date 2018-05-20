@@ -8,6 +8,8 @@ source "${BASH_SOURCE%/*}/common.bash"
 export PATH=$PWD/_vendor/bin:$GOPATH/bin:$PATH
 export GOPATH=$PWD/_vendor:$GOPATH
 
+google-chrome --version
+
 # ensure we are in the right directory
 cd "${BASH_SOURCE%/*}/.."
 
@@ -72,7 +74,9 @@ go list -f "{{ range .Deps}}{{.}}
 
 go test ./...
 
-gjbt myitcv.io/react
+# TODO work out a better way of excluding the cmd packages
+# or making them exclude themselves by virtue of a build tag
+go list myitcv.io/react/... | grep -v 'myitcv.io/react/cmd/' | xargs gjbt
 
 go vet ./...
 

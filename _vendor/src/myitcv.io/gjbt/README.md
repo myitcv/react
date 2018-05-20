@@ -24,7 +24,7 @@ PASS
 
 * [GopherJS](https://github.com/gopherjs/gopherjs)
 * [Google Chrome](https://www.google.com/chrome/) `>= 66`
-* [`chromedriver`](http://chromedriver.chromium.org/) `< 2.36` (see https://github.com/myitcv/gjbt/issues/6)
+* [`chromedriver`](http://chromedriver.chromium.org/) `>= 2.34`
 
 ### Test Requirements
 
