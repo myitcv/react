@@ -56,6 +56,11 @@ func strDiff(exp, act string) string {
 	actFn := mustTmpFile("", "").Name()
 	expFn := mustTmpFile("", "").Name()
 
+	defer func() {
+		os.Remove(actFn)
+		os.Remove(expFn)
+	}()
+
 	err := ioutil.WriteFile(actFn, []byte(act), 077)
 	if err != nil {
 		panic(err)

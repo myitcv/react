@@ -29,7 +29,6 @@ var (
 )
 
 // TODO only works for Chrome for now
-
 // TODO support verbose mode in some way
 
 func main() {
@@ -106,50 +105,53 @@ func main() {
 	}
 
 	for _, pkg := range pkgs {
-		tf, err := ioutil.TempFile("", "")
-		if err != nil {
-			panic(err)
-		}
+		func() {
+			tf, err := ioutil.TempFile("", "gjbt")
+			if err != nil {
+				panic(err)
+			}
+			defer func() {
+				n := tf.Name()
+				os.Remove(n)
+				os.Remove(n + ".map")
+			}()
 
-		bpkg, err := build.Import(pkg, wd, build.FindOnly)
-		if err != nil {
-			panic(err)
-		}
+			bpkg, err := build.Import(pkg, wd, build.FindOnly)
+			if err != nil {
+				panic(err)
+			}
 
-		args := []string{"test", "--tags", *fTags, "-c", "-o", tf.Name()}
+			args := []string{"test", "--tags", *fTags, "-c", "-o", tf.Name()}
 
-		args = append(args, pkg)
+			args = append(args, pkg)
 
-		cmd := exec.Command("gopherjs", args...)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
+			cmd := exec.Command("gopherjs", args...)
+			cmd.Stdout = os.Stdout
+			cmd.Stderr = os.Stderr
 
-		err = cmd.Run()
-		if err != nil {
-			os.Remove(tf.Name())
-			fmt.Printf("%v\n", err)
-			failed = true
-			continue
-		}
+			err = cmd.Run()
+			if err != nil {
+				fmt.Printf("%v\n", err)
+				failed = true
+				return
+			}
 
-		test, err := ioutil.ReadFile(tf.Name())
-		if err != nil {
-			panic(err)
-		}
+			test, err := ioutil.ReadFile(tf.Name())
+			if err != nil {
+				panic(err)
+			}
 
-		os.Remove(tf.Name())
+			p, err := driver.NewPage()
+			if err != nil {
+				panic(err)
+			}
 
-		p, err := driver.NewPage()
-		if err != nil {
-			panic(err)
-		}
+			var ec res
 
-		var ec res
+			status := "ok  "
+			start := time.Now()
 
-		status := "ok  "
-		start := time.Now()
-
-		err = p.RunScript(`try {
+			err = p.RunScript(`try {
 			`+string(test)+`
 		}
 		catch (e) {
@@ -165,40 +167,41 @@ func main() {
 		};
 		return window.$GopherJSTestResult`, nil, &ec)
 
-		if err != nil {
-			panic(err)
-		}
-
-		if ec.ExitCode != 0 {
-			status = "FAIL"
-			failed = true
-		}
-
-		if ec.Error != "" {
-			fmt.Println(ec.Error)
-		}
-		fmt.Printf("%s\t%s\t%.3fs\n", status, bpkg.ImportPath, time.Since(start).Seconds())
-
-		logs, err := p.ReadNewLogs("browser")
-		if err != nil {
-			panic(err)
-		}
-
-		for _, l := range logs {
-			parts := strings.SplitN(l.Message, " ", 3)
-
-			line := parts[2]
-
-			if strings.HasPrefix(line, "\"") && strings.HasSuffix(line, "\"") {
-				l, err := strconv.Unquote(parts[2])
-				if err != nil {
-					panic(err)
-				}
-				line = l
+			if err != nil {
+				panic(err)
 			}
 
-			fmt.Println(line)
-		}
+			if ec.ExitCode != 0 {
+				status = "FAIL"
+				failed = true
+			}
+
+			if ec.Error != "" {
+				fmt.Println(ec.Error)
+			}
+			fmt.Printf("%s\t%s\t%.3fs\n", status, bpkg.ImportPath, time.Since(start).Seconds())
+
+			logs, err := p.ReadNewLogs("browser")
+			if err != nil {
+				panic(err)
+			}
+
+			for _, l := range logs {
+				parts := strings.SplitN(l.Message, " ", 3)
+
+				line := parts[2]
+
+				if strings.HasPrefix(line, "\"") && strings.HasSuffix(line, "\"") {
+					l, err := strconv.Unquote(parts[2])
+					if err != nil {
+						panic(err)
+					}
+					line = l
+				}
+
+				fmt.Println(line)
+			}
+		}()
 	}
 
 	if err := driver.Stop(); err != nil {
