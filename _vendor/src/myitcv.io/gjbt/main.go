@@ -1,6 +1,6 @@
 // gjbt is a simple (temporary) wrapper for GopherJS to run tests in Chrome as
 // opposed to NodeJS.
-package main
+package main // import "myitcv.io/gjbt"
 
 import (
 	"flag"
@@ -43,7 +43,6 @@ func main() {
 		agouti.ChromeOptions(
 			"args", []string{
 				"headless",
-				"disable-gpu",
 				"no-default-browser-check",
 				"verbose",
 				"no-sandbox",
@@ -156,6 +155,9 @@ func main() {
 			failed = true
 		}
 
+		if ec.Error != "" {
+			fmt.Println(ec.Error)
+		}
 		fmt.Printf("%s\t%s\t%.3fs\n", status, bpkg.ImportPath, time.Since(start).Seconds())
 
 		logs, err := p.ReadNewLogs("browser")

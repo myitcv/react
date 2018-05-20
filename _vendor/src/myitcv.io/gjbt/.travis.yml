@@ -1,7 +1,13 @@
 language: go
 
-addons:
-  chrome: beta
+matrix:
+  include:
+    - env: CHROME_VERSION=beta
+      addons:
+        chrome: beta
+    - env: CHROME_VERSION=stable
+      addons:
+        chrome: stable
 
 go:
   - 1.x

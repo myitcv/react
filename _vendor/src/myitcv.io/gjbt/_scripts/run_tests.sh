@@ -16,4 +16,6 @@ do
 	go install $i
 done
 
+google-chrome --version
+
 gjbt myitcv.io/gjbt

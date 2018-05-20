@@ -1,11 +1,12 @@
-    ./_vendor/src/golang.org/x/sys                13d03a9a82fba647c21a0ef8fba44a795d0f0835  https://go.googlesource.com/sys
-    ./_vendor/src/golang.org/x/crypto             88942b9c40a4c9d203b82b3731787b672d6e809b  https://go.googlesource.com/crypto
-    ./_vendor/src/golang.org/x/tools              77106db15f689a60e7d4e085d967ac557b918fb2  https://go.googlesource.com/tools
-    ./_vendor/src/github.com/gopherjs/gopherjs    82b322028c96512b15077093b16a5f1c7ea897ac  git@github.com:gopherjs/gopherjs
+    ./_vendor/src/golang.org/x/sys                7c87d13f8e835d2fb3a70a2912c811ed0c1d241b  https://go.googlesource.com/sys
+    ./_vendor/src/golang.org/x/crypto             1a580b3eff7814fc9b40602fd35256c63b50f491  https://go.googlesource.com/crypto
+    ./_vendor/src/golang.org/x/tools              28aef64757f4d432485ab970b094e1af8b301e84  https://go.googlesource.com/tools
+    ./_vendor/src/github.com/gopherjs/gopherjs    8dffc02ea1cb8398bb73f30424697c60fcf8d4c5  git@github.com:gopherjs/gopherjs
     ./_vendor/src/github.com/kisielk/gotool       80517062f582ea3340cd4baf70e86d539ae7d84d  git@github.com:kisielk/gotool
     ./_vendor/src/github.com/fsnotify/fsnotify    c2828203cd70a50dcccfb2761f8b1f8ceef9a8e9  git@github.com:fsnotify/fsnotify
-    ./_vendor/src/github.com/spf13/cobra          a1f051bc3eba734da4772d60e2d677f47cf93ef4  git@github.com:spf13/cobra
-    ./_vendor/src/github.com/spf13/pflag          ee5fd03fd6acfd43e44aea0b4135958546ed8e73  git@github.com:spf13/pflag
+    ./_vendor/src/github.com/spf13/cobra          ef82de70bb3f60c65fb8eebacbb2d122ef517385  git@github.com:spf13/cobra
+    ./_vendor/src/github.com/spf13/pflag          583c0c0531f06d5278b7d917446061adc344b5cd  git@github.com:spf13/pflag
     ./_vendor/src/github.com/sclevine/agouti      6ada53bb069e86f8baf0953d4f0ddac081bc7610  git@github.com:sclevine/agouti
     ./_vendor/src/github.com/neelance/astrewrite  99348263ae862cc230986ce88deaddbf7edcc034  git@github.com:neelance/astrewrite
     ./_vendor/src/github.com/neelance/sourcemap   8c68805598ab8d5637b1a72b5f7d381ea0f39c31  git@github.com:neelance/sourcemap
+    ./_vendor/src/github.com/shurcooL/httpfs      809beceb23714880abc4a382a00c05f89d13b1cc  git@github.com:shurcooL/httpfs
