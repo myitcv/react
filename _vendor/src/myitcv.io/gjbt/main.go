@@ -3,6 +3,7 @@
 package main // import "myitcv.io/gjbt"
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"go/build"
@@ -23,16 +24,72 @@ type res struct {
 	ExitCode int
 }
 
+const (
+	// TODO this doesn't feel so good...
+	chromeBinaryName = "google-chrome"
+)
+
 var (
 	fTags   = flag.String("tags", "", "tags to pass to the GopherJS compiler")
 	fBinary = flag.String("binary", "", "path to Chrome binary")
+
+	testFailure = errors.New("test failure")
 )
 
-// TODO only works for Chrome for now
-// TODO support verbose mode in some way
+// TODO:
+// * only works for Chrome for now
+// * support verbose mode in some way
 
 func main() {
 	flag.Parse()
+
+	if err := runChrome(); err != nil {
+		handleError(err)
+	}
+}
+
+func handleError(err error) {
+	if err != testFailure {
+		// we will have other output
+		fmt.Fprintf(os.Stderr, "%v\n", err)
+	}
+	os.Exit(1)
+}
+
+type runnerData struct {
+	driver *agouti.WebDriver
+	wd     string
+	tags   string
+}
+
+func runChrome() error {
+
+	pkgs := gotool.ImportPaths(flag.Args())
+
+	wd, err := os.Getwd()
+	if err != nil {
+		handleError(fmt.Errorf("failed to get working directory: %v", err))
+	}
+
+	var binary string
+
+	if *fBinary != "" {
+		binary = *fBinary
+	} else {
+		path := os.Getenv("PATH")
+		paths := filepath.SplitList(path)
+		for _, p := range paths {
+			path := filepath.Join(p, chromeBinaryName)
+			if _, err := os.Stat(path); err == nil {
+				binary = path
+				break
+			}
+		}
+
+		if binary == "" {
+			handleError(fmt.Errorf("failed to find google-chrome in your PATH. Either adjust your PATH or using -binary"))
+		}
+	}
 
 	// for each package:
 	//
@@ -64,26 +121,6 @@ func main() {
 		),
 	}
 
-	var binary string
-
-	if *fBinary != "" {
-		binary = *fBinary
-	} else {
-		path := os.Getenv("PATH")
-		paths := filepath.SplitList(path)
-		for _, p := range paths {
-			path := filepath.Join(p, "google-chrome")
-			if _, err := os.Stat(path); err == nil {
-				binary = path
-				break
-			}
-		}
-
-		if binary == "" {
-			panic(fmt.Errorf("failed to find google-chrome in your PATH. Either adjust your PATH or using -binary"))
-		}
-	}
-
 	opts = append(opts,
 		agouti.ChromeOptions(
 			"binary", binary,
@@ -92,66 +129,99 @@ func main() {
 	driver := agouti.ChromeDriver(opts...)
 
 	if err := driver.Start(); err != nil {
-		panic(err)
+		return fmt.Errorf("failed to start driver: %v", err)
 	}
 
-	pkgs := gotool.ImportPaths(flag.Args())
+	runner := &runnerData{
+		driver: driver,
+		wd:     wd,
+		tags:   *fTags,
+	}
 
 	failed := false
 
-	wd, err := os.Getwd()
-	if err != nil {
-		panic(err)
+	for _, pkg := range pkgs {
+		testFail, err := runner.testPkg(pkg)
+		if err != nil {
+			return fmt.Errorf("error running test for %v: %v", pkg, err)
+		}
+		failed = failed || testFail
 	}
 
-	for _, pkg := range pkgs {
-		func() {
-			tf, err := ioutil.TempFile("", "gjbt")
-			if err != nil {
-				panic(err)
-			}
-			defer func() {
-				n := tf.Name()
-				os.Remove(n)
-				os.Remove(n + ".map")
-			}()
+	if err := driver.Stop(); err != nil {
+		return fmt.Errorf("failed to stop driver: %v", err)
+	}
 
-			bpkg, err := build.Import(pkg, wd, build.FindOnly)
-			if err != nil {
-				panic(err)
-			}
+	if failed {
+		return testFailure
+	}
 
-			args := []string{"test", "--tags", *fTags, "-c", "-o", tf.Name()}
+	return nil
+}
 
-			args = append(args, pkg)
+func (r *runnerData) testPkg(pkg string) (bool, error) {
+	fmtErr := func(format string, args ...interface{}) error {
+		args = append([]interface{}{pkg}, args...)
+		return fmt.Errorf("pkg %v: "+format, args...)
+	}
 
-			cmd := exec.Command("gopherjs", args...)
-			cmd.Stdout = os.Stdout
-			cmd.Stderr = os.Stderr
+	tf, err := ioutil.TempFile("", "gjbt")
+	if err != nil {
+		return false, fmtErr("failed to create temp file: %v", err)
+	}
+	defer func() {
+		n := tf.Name()
+		os.Remove(n)
+		os.Remove(n + ".map")
+	}()
 
-			err = cmd.Run()
-			if err != nil {
-				fmt.Printf("%v\n", err)
-				failed = true
-				return
-			}
+	failed := false
 
-			test, err := ioutil.ReadFile(tf.Name())
-			if err != nil {
-				panic(err)
-			}
+	bpkg, err := build.Import(pkg, r.wd, build.FindOnly)
+	if err != nil {
+		return false, fmtErr("failed to resolve import %v relative to %v: %v", pkg, r.wd, err)
+	}
 
-			p, err := driver.NewPage()
-			if err != nil {
-				panic(err)
-			}
+	args := []string{"test", "--tags", r.tags, "-c", "-o", tf.Name()}
 
-			var ec res
+	args = append(args, pkg)
 
-			status := "ok  "
-			start := time.Now()
+	// TODO if we can/want to make these tests concurrent then
+	// we will have to pass in a separate stdout and stderr
+	cmd := exec.Command("gopherjs", args...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 
-			err = p.RunScript(`try {
+	err = cmd.Run()
+	if err != nil {
+		if _, ok := err.(*exec.ExitError); ok {
+			// this actually represents success of running the command
+			// but it gave a non-zero exit code... which means the test
+			// failed. stderr will have everything at this point
+			return true, nil
+		}
+
+		return false, fmtErr("failed to run %v: %v", strings.Join(cmd.Args, " "), err)
+	}
+
+	test, err := ioutil.ReadFile(tf.Name())
+	if err != nil {
+		return false, fmtErr("failed to read from %v: %v", tf.Name(), err)
+	}
+
+	// TODO feels like we should be disposing of this resource once we're done with
+	// it... especially if we end up testing lots of packages
+	p, err := r.driver.NewPage()
+	if err != nil {
+		return false, fmtErr("failed to create new page for test: %v", err)
+	}
+
+	var ec res
+
+	status := "ok  "
+	start := time.Now()
+
+	err = p.RunScript(`try {
 			`+string(test)+`
 		}
 		catch (e) {
@@ -167,48 +237,46 @@ func main() {
 		};
 		return window.$GopherJSTestResult`, nil, &ec)
 
+	if err != nil {
+		return false, fmtErr("failed to run script: %v")
+	}
+
+	if ec.ExitCode != 0 {
+		status = "FAIL"
+		failed = true
+	}
+
+	logs, err := p.ReadNewLogs("browser")
+	if err != nil {
+		return false, fmtErr("failed to read logs: %v", err)
+	}
+
+	for _, log := range logs {
+		// Format is:
+		//
+		// log message "console-api 4694:19 \"Success\""
+		parts := strings.SplitN(log.Message, " ", 3)
+
+		line := parts[2]
+
+		// TODO need to understand more details on the format of the third
+		// "field" - sometimes it's quoted, sometimes not
+		if strings.HasPrefix(line, "\"") && strings.HasSuffix(line, "\"") {
+			l, err := strconv.Unquote(parts[2])
 			if err != nil {
-				panic(err)
+				return false, fmtErr("failed to properly parse log line output %q: %v", log.Message)
 			}
+			line = l
+		}
 
-			if ec.ExitCode != 0 {
-				status = "FAIL"
-				failed = true
-			}
-
-			if ec.Error != "" {
-				fmt.Println(ec.Error)
-			}
-			fmt.Printf("%s\t%s\t%.3fs\n", status, bpkg.ImportPath, time.Since(start).Seconds())
-
-			logs, err := p.ReadNewLogs("browser")
-			if err != nil {
-				panic(err)
-			}
-
-			for _, l := range logs {
-				parts := strings.SplitN(l.Message, " ", 3)
-
-				line := parts[2]
-
-				if strings.HasPrefix(line, "\"") && strings.HasSuffix(line, "\"") {
-					l, err := strconv.Unquote(parts[2])
-					if err != nil {
-						panic(err)
-					}
-					line = l
-				}
-
-				fmt.Println(line)
-			}
-		}()
+		// We output to stdout for now
+		fmt.Println(line)
 	}
 
-	if err := driver.Stop(); err != nil {
-		panic(err)
+	if ec.Error != "" {
+		fmt.Fprintln(os.Stderr, ec.Error)
 	}
+	fmt.Printf("%s\t%s\t%.3fs\n", status, bpkg.ImportPath, time.Since(start).Seconds())
 
-	if failed {
-		os.Exit(1)
-	}
+	return failed, nil
 }

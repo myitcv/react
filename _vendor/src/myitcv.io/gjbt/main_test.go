@@ -1,17 +1,28 @@
-// +build js
+// +build !js
 
-package main_test
+package main
 
 import (
 	"testing"
-
-	"github.com/gopherjs/gopherjs/js"
 )
 
-func TestWindow(t *testing.T) {
-	w := js.Global.Get("window")
+func TestSuccessNoOutput(t *testing.T) {
+	r := testRunner(t, "test.001")
+	r.run()
+	r.exitCode(0)
+	r.grepBoth("ok", "failed to find test pass message")
+}
 
-	if w == nil {
-		t.Fatalf("expected to be able to access window")
-	}
+func TestSuccessOutput(t *testing.T) {
+	r := testRunner(t, "test.002")
+	r.run()
+	r.exitCode(0)
+	r.grepBoth("Some output", "failed to find output")
+}
+
+func TestFail(t *testing.T) {
+	r := testRunner(t, "test.003")
+	r.run()
+	r.exitCode(1)
+	r.grepBoth("failed for no reason", "failed to find fail output")
 }

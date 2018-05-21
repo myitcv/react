@@ -29,7 +29,7 @@ PASS
 ### Test Requirements
 
 (For now) A small wrapper is required around `TestMain` in each package to be tested. It is sufficient to copy
-[`init_test.go`](https://github.com/myitcv/gjbt/blob/master/init_test.go), modifying the test package name, to your
+[`init_test.go`](https://github.com/myitcv/gjbt/blob/master/testdata/test.001/init_test.go), modifying the test package name, to your
 package.
 
 ### DOM Access

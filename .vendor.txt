@@ -18,7 +18,7 @@
     ./_vendor/src/github.com/russross/blackfriday            b253417e1cb644d645a0a3bb1fa5034c8030127c  git@github.com:russross/blackfriday
     ./_vendor/src/myitcv.io/highlightjs                      e0ea663591fbdbce10ca2658c680ba7be2391ff8  git@github.com:myitcv/highlightjs
     ./_vendor/src/myitcv.io/gogenerate                       99436ff35ff9bbe6e17d0b1e93d483d6b5d76528  git@github.com:myitcv/gogenerate
-    ./_vendor/src/myitcv.io/gjbt                             de4e64705c24cc39760110ae9bc4907a64ece3d7  git@github.com:myitcv/gjbt.git
+    ./_vendor/src/myitcv.io/gjbt                             380934b3729925dd61d0eda6b7513042cfea6914  git@github.com:myitcv/gjbt.git
     ./_vendor/src/myitcv.io/gg                               6081cb6439ba00f382553b2eadd85c5b3a577816  git@github.com:myitcv/gg
     ./_vendor/src/myitcv.io/remarkable                       6e8b85d04c0c2559fec23559cf88780db6d93083  git@github.com:myitcv/remarkable
     ./_vendor/src/myitcv.io/sorter                           b66c9061eedc0adeb2e46c786bc5a33de021fe24  git@github.com:myitcv/sorter
