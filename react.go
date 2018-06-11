@@ -119,7 +119,7 @@ type State interface {
 }
 
 func (c ComponentDef) Props() Props {
-	return unwrapValue(c.elem.Get(reactCompProps).Get(nestedProps)).(Props)
+	return *(unwrapValue(c.elem.Get(reactCompProps).Get(nestedProps)).(*Props))
 }
 
 func (c ComponentDef) Children() []Element {
@@ -129,20 +129,20 @@ func (c ComponentDef) Children() []Element {
 		return nil
 	}
 
-	return unwrapValue(v).([]Element)
+	return *(unwrapValue(v).(*[]Element))
 }
 
 func (c ComponentDef) SetState(i State) {
 	rs := c.elem.Get(reactCompState)
 	is := rs.Get(nestedState)
 
-	cur := unwrapValue(is.Get(reactCompLastState)).(State)
+	cur := *(unwrapValue(is.Get(reactCompLastState)).(*State))
 
 	if i.EqualsIntf(cur) {
 		return
 	}
 
-	is.Set(reactCompLastState, wrapValue(i))
+	is.Set(reactCompLastState, wrapValue(&i))
 	c.elem.Call(reactCompForceUpdate)
 }
 
@@ -150,7 +150,7 @@ func (c ComponentDef) State() State {
 	rs := c.elem.Get(reactCompState)
 	is := rs.Get(nestedState)
 
-	cur := unwrapValue(is.Get(reactCompLastState)).(State)
+	cur := *(unwrapValue(is.Get(reactCompLastState)).(*State))
 
 	return cur
 }
@@ -173,11 +173,11 @@ func CreateElement(buildCmp ComponentBuilder, newprops Props, children ...Elemen
 
 	propsWrap := object.New()
 	if newprops != nil {
-		propsWrap.Set(nestedProps, wrapValue(newprops))
+		propsWrap.Set(nestedProps, wrapValue(&newprops))
 	}
 
 	if children != nil {
-		propsWrap.Set(nestedChildren, wrapValue(children))
+		propsWrap.Set(nestedChildren, wrapValue(&children))
 	}
 
 	args := []interface{}{comp, propsWrap}
@@ -219,7 +219,7 @@ func buildReactComponent(typ reflect.Type, builder ComponentBuilder) *js.Object 
 
 		if cmp, ok := cmp.(componentWithGetInitialState); ok {
 			x := cmp.GetInitialStateIntf()
-			wv = wrapValue(x)
+			wv = wrapValue(&x)
 		}
 
 		res.Set(nestedState, is)
@@ -242,7 +242,7 @@ func buildReactComponent(typ reflect.Type, builder ComponentBuilder) *js.Object 
 			if p := this.Get(reactCompProps); p != nil {
 				if ok, err := jsbuiltin.In(nestedProps, p); err == nil && ok {
 					if v := (p.Get(nestedProps)); v != nil {
-						curProps = unwrapValue(v).(Props)
+						curProps = *(unwrapValue(v).(*Props))
 					}
 				} else {
 					return false
@@ -252,7 +252,7 @@ func buildReactComponent(typ reflect.Type, builder ComponentBuilder) *js.Object 
 
 		if arguments[0] != nil {
 			if ok, err := jsbuiltin.In(nestedProps, arguments[0]); err == nil && ok {
-				nextProps = unwrapValue(arguments[0].Get(nestedProps)).(Props)
+				nextProps = *(unwrapValue(arguments[0].Get(nestedProps)).(*Props))
 			}
 		}
 
@@ -275,7 +275,7 @@ func buildReactComponent(typ reflect.Type, builder ComponentBuilder) *js.Object 
 		cmp := builder(ComponentDef{elem: elem})
 
 		if cmp, ok := cmp.(componentWithWillReceiveProps); ok {
-			ourProps := unwrapValue(arguments[0].Get(nestedProps))
+			ourProps := *(unwrapValue(arguments[0].Get(nestedProps)).(*Props))
 			cmp.ComponentWillReceivePropsIntf(ourProps)
 		}
 
