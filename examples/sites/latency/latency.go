@@ -11,7 +11,6 @@ import (
 	"myitcv.io/react/jsx"
 )
 
-//go:generate reactGen
 //go:generate immutableGen
 
 type location string

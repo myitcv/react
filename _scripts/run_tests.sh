@@ -38,7 +38,7 @@ find -path ./_vendor -prune -o -name "gen_*.go" -exec rm '{}' \;
 	popd
 }
 
-gg ./...
+go generate ./...
 
 z=$(goimports -l !(_vendor|_talks)/**/!(gen_*).go !(gen_*).go)
 if [ ! -z "$z" ]

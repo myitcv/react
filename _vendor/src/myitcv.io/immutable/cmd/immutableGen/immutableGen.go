@@ -52,12 +52,12 @@ func main() {
 		fatalf("could not determine if we are the first file: %v", err)
 	}
 
-	if len(dirFiles) == 0 {
+	if dirFiles == nil {
 		fatalf("cannot find any files containing the %v directive", immutableGenCmd)
 	}
 
-	if envFile != dirFiles[0] {
-		return
+	if dirFiles[envFile] != 1 {
+		fatalf("expected a single occurrence of %v directive in %v. Got: %v", immutableGenCmd, envFile, dirFiles)
 	}
 
 	licenseHeader, err := gogenerate.CommentLicenseHeader(fLicenseFile)

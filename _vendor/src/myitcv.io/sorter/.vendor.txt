@@ -1,3 +1,3 @@
+    ./_vendor/src/myitcv.io/gogenerate  8ad09dd98465cdb14438b1f82397ad8eb745ec01  git@github.com:myitcv/gogenerate
+    ./_vendor/src/myitcv.io/immutable   d40652f0ca28eff7665d58d506d2ba98ac863f56  git@github.com:myitcv/immutable
     ./_vendor/src/golang.org/x/tools    721f218496963f33ebc9fbc5cdbdeed007ad9c49  https://go.googlesource.com/tools
-    ./_vendor/src/myitcv.io/gogenerate  99436ff35ff9bbe6e17d0b1e93d483d6b5d76528  git@github.com:myitcv/gogenerate
-    ./_vendor/src/myitcv.io/immutable   35777ee564a2a4f5ed15aa68792f7e913288409c  git@github.com:myitcv/immutable

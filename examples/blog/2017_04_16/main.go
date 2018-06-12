@@ -8,8 +8,6 @@ import (
 	"honnef.co/go/js/dom"
 )
 
-//go:generate reactGen
-
 var document = dom.GetWindow().Document()
 
 func main() {

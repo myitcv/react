@@ -1,5 +1,12 @@
 language: go
 
+notifications:
+  email:
+    recipients:
+      - paul@myitcv.io
+    on_success: change
+    on_failure: always
+
 go:
   - 1.x
 

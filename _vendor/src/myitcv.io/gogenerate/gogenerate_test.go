@@ -6,7 +6,6 @@ package gogenerate
 import (
 	"os"
 	"path/filepath"
-	"sort"
 	"testing"
 )
 
@@ -18,10 +17,10 @@ func TestFilesContaining(t *testing.T) {
 
 	checks := []struct {
 		d       string
-		cmds    []string
-		matches []string
+		cmds    string
+		matches map[string]int
 	}{
-		{"_testFiles/eg01", []string{"ls", "/bin/ls"}, []string{"a.go", "b.go", "c.go", "d.go"}},
+		{"_testFiles/eg01", "/bin/ls", map[string]int{"a.go": 1, "b.go": 1, "c.go": 1, "d.go": 2}},
 	}
 
 Checks:
@@ -29,7 +28,7 @@ Checks:
 
 		path := filepath.Join(cwd, c.d)
 
-		res, err := FilesContainingCmd(path, c.cmds...)
+		res, err := FilesContainingCmd(path, c.cmds)
 		if err != nil {
 			t.Errorf("Got unexpected error find matches in %v: %v", c.d, err)
 			continue Checks
@@ -40,10 +39,6 @@ Checks:
 			continue Checks
 		}
 
-		// just in case we were sloppy in the test table
-		sort.Slice(c.matches, func(i, j int) bool {
-			return filepath.Base(c.matches[i]) < filepath.Base(c.matches[j])
-		})
 		for i := range res {
 			if res[i] != c.matches[i] {
 				t.Errorf("Matches not up to expectations: %v vs %v", res, c.matches)
