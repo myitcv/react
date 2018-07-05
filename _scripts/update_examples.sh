@@ -8,9 +8,9 @@ source "${BASH_SOURCE%/*}/common.bash"
 r=$(mktemp -d)
 t=$(mktemp -d)
 
-echo "Cloning git@github.com:myitcv/gopherjs_examples_sites.git into $r"
+echo "Cloning https://github.com/myitcv/gopherjs_examples_sites into $r"
 
-git clone -q git@github.com:myitcv/gopherjs_examples_sites.git $r/gopherjs_examples_sites
+git clone -q https://github.com/myitcv/gopherjs_examples_sites $r/gopherjs_examples_sites
 rm -rf $r/gopherjs_examples_sites/*
 
 mkdir $r/gopherjs_examples_sites/blog
