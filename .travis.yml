@@ -20,7 +20,7 @@ addons:
   chrome: beta
 
 go:
-  - stable
+  - 1.10.x
 
 go_import_path: myitcv.io/react
 
