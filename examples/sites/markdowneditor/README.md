@@ -1,11 +1,7 @@
-A simple web app that showcases the MarkdownEditor example component.
+## `** myitcv.io/react/examples/sites/markdowneditor **` has moved
 
-To run this web app locally:
+The repository hosting `myitcv.io/react/examples/sites/markdowneditor` has changed.
 
-```bash
-gopherjs serve
-```
+`myitcv.io/react/examples/sites/markdowneditor` can now be found at:
 
-Now navigate to [http://localhost:8080/myitcv.io/react/examples/sites/markdowneditor/](http://localhost:8080/myitcv.io/react/examples/sites/markdowneditor/).
-
-See [the wiki](https://github.com/myitcv/react/wiki) for more details
+https://github.com/myitcv/x/tree/master/react/examples/sites/markdowneditor

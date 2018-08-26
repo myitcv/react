@@ -1,11 +1,7 @@
-A simple web app that showcases the HelloMessage example component.
+## `** myitcv.io/react/examples/sites/hellomessage **` has moved
 
-To run this web app locally:
+The repository hosting `myitcv.io/react/examples/sites/hellomessage` has changed.
 
-```bash
-gopherjs serve
-```
+`myitcv.io/react/examples/sites/hellomessage` can now be found at:
 
-Now navigate to [http://localhost:8080/myitcv.io/react/examples/sites/hellomessage/](http://localhost:8080/myitcv.io/react/examples/sites/hellomessage/).
-
-See [the wiki](https://github.com/myitcv/react/wiki) for more details
+https://github.com/myitcv/x/tree/master/react/examples/sites/hellomessage

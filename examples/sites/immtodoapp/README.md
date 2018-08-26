@@ -1,11 +1,7 @@
-A simple web app that showcases the immutable-type-based TodoApp example component.
+## `** myitcv.io/react/examples/sites/immtodoapp **` has moved
 
-To run this web app locally:
+The repository hosting `myitcv.io/react/examples/sites/immtodoapp` has changed.
 
-```bash
-gopherjs serve
-```
+`myitcv.io/react/examples/sites/immtodoapp` can now be found at:
 
-Now navigate to [http://localhost:8080/myitcv.io/react/examples/sites/immtodoapp/](http://localhost:8080/myitcv.io/react/examples/sites/immtodoapp/).
-
-See [the wiki](https://github.com/myitcv/react/wiki) for more details
+https://github.com/myitcv/x/tree/master/react/examples/sites/immtodoapp

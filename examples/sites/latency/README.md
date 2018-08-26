@@ -1,12 +1,7 @@
-By kind permission of [@tj](https://github.com/tj), a basic, component-based version of the beautiful
-APEX [Latency Tool](https://latency.apex.sh/), that uses randomly generated latency values.
+## `** myitcv.io/react/examples/sites/latency **` has moved
 
-To run this web app locally:
+The repository hosting `myitcv.io/react/examples/sites/latency` has changed.
 
-```bash
-gopherjs serve
-```
+`myitcv.io/react/examples/sites/latency` can now be found at:
 
-Now navigate to [http://localhost:8080/myitcv.io/react/examples/sites/latency/](http://localhost:8080/myitcv.io/react/examples/sites/latency/).
-
-See [the wiki](https://github.com/myitcv/react/wiki) for more details
+https://github.com/myitcv/x/tree/master/react/examples/sites/latency

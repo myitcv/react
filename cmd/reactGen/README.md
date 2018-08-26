@@ -1,6 +1,7 @@
-## `myitcv.io/react/cmd/reactGen`
+## `** myitcv.io/react/cmd/reactGen **` has moved
 
-`reactGen` is a `go generate` generator that helps to automate the process of
-writing GopherJS React web applications.
+The repository hosting `myitcv.io/react/cmd/reactGen` has changed.
 
-For more information see https://github.com/myitcv/react/wiki
+`myitcv.io/react/cmd/reactGen` can now be found at:
+
+https://github.com/myitcv/x/tree/master/react/cmd/reactGen

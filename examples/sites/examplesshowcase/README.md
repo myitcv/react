@@ -1,11 +1,7 @@
-A simple web app that showcases various examples of GopherJS React copmonents.
+## `** myitcv.io/react/examples/sites/examplesshowcase **` has moved
 
-To run this web app locally:
+The repository hosting `myitcv.io/react/examples/sites/examplesshowcase` has changed.
 
-```bash
-gopherjs serve
-```
+`myitcv.io/react/examples/sites/examplesshowcase` can now be found at:
 
-Now navigate to [http://localhost:8080/myitcv.io/react/examples/sites/examplesshowcase/](http://localhost:8080/myitcv.io/react/examples/sites/examplesshowcase/).
-
-See [the wiki](https://github.com/myitcv/react/wiki) for more details
+https://github.com/myitcv/x/tree/master/react/examples/sites/examplesshowcase

@@ -1,5 +1,7 @@
-## `myitcv.io/react/cmd/reactVet`
+## `** myitcv.io/react/cmd/reactVet **` has moved
 
-`reactVet` is a vet program used to check the correctness of `myitcv.io/react`-based packages.
+The repository hosting `myitcv.io/react/cmd/reactVet` has changed.
 
-For more information see https://github.com/myitcv/react/wiki/reactVet
+`myitcv.io/react/cmd/reactVet` can now be found at:
+
+https://github.com/myitcv/x/tree/master/react/cmd/reactVet

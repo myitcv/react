@@ -1,6 +1,7 @@
-## `myitcv.io/react/cmd/stateGen`
+## `** myitcv.io/react/cmd/stateGen **` has moved
 
-`stateGen` is a `go generate` generator that helps to automate the process of
-creating state trees that are global to components.
+The repository hosting `myitcv.io/react/cmd/stateGen` has changed.
 
-For more information see https://github.com/myitcv/react/wiki
+`myitcv.io/react/cmd/stateGen` can now be found at:
+
+https://github.com/myitcv/x/tree/master/react/cmd/stateGen

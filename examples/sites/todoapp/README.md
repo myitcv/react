@@ -1,11 +1,7 @@
-A simple web app that showcases the TodoApp example component.
+## `** myitcv.io/react/examples/sites/todoapp **` has moved
 
-To run this web app locally:
+The repository hosting `myitcv.io/react/examples/sites/todoapp` has changed.
 
-```bash
-gopherjs serve
-```
+`myitcv.io/react/examples/sites/todoapp` can now be found at:
 
-Now navigate to [http://localhost:8080/myitcv.io/react/examples/sites/todoapp/](http://localhost:8080/myitcv.io/react/examples/sites/todoapp/).
-
-See [the wiki](https://github.com/myitcv/react/wiki) for more details
+https://github.com/myitcv/x/tree/master/react/examples/sites/todoapp
